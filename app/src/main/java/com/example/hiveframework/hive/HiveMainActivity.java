@@ -105,7 +105,7 @@ public class HiveMainActivity extends GameMainActivity {
     public LocalGame createLocalGame(GameState gameState){
         if(gameState == null)
             return new HiveLocalGame();
-        return new HiveLocalGame((HiveState) gameState);
+        return new HiveLocalGame((HiveGameState) gameState);
     }
 
     /**
@@ -131,7 +131,7 @@ public class HiveMainActivity extends GameMainActivity {
         String appName = getGameString(gameName);
         super.loadGame(appName);
         Logger.log(TAG, "Loading: " + gameName);
-        return (GameState) new HiveState((HiveState) Saving.readFromFile(appName, this.getApplicationContext()));
+        return (GameState) new HiveGameState((HiveGameState) Saving.readFromFile(appName, this.getApplicationContext()));
     }
 
 }
