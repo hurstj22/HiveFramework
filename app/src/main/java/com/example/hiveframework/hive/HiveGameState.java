@@ -1,10 +1,12 @@
 package com.example.hiveframework.hive;
 
 
+import com.example.hiveframework.GameFramework.infoMessage.GameState;
+
 import java.util.ArrayList;
 import java.util.Queue;
 
-public class HiveGameState {
+public class HiveGameState extends GameState {
 
     public enum Turn{
         PLAYER1,
