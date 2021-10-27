@@ -6,13 +6,386 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <FrameLayout
+        android:id="@+id/mainFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/mainGameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/interfaceLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/leftButtonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/playButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#4CAF50"
+                        android:padding="10sp"
+                        android:text="@string/play_text" />
+
+                    <Button
+                        android:id="@+id/quitButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#E53935"
+                        android:padding="10sp"
+                        android:text="@string/quit_text" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/centerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/currentTurnTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:gravity="center"
+                        android:padding="10sp"
+                        android:text="@string/turn_banner"
+                        android:textColor="#F44336"
+                        android:textSize="42sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rightButtonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/RulesButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#00BCD4"
+                        android:padding="10sp"
+                        android:text="@string/rules_text" />
+
+                    <Button
+                        android:id="@+id/endTurnButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#03A9F4"
+                        android:padding="10sp"
+                        android:text="@string/end_turn_text" />
+
+                    <Button
+                        android:id="@+id/undoButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#2196F3"
+                        android:padding="10sp"
+                        android:text="@string/undo_move_move" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/PlayableAreaLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/playerOneLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/PlayerOneTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="top|left"
+                        android:padding="10sp"
+                        android:text="@string/player_one_text"
+                        android:textSize="20sp" />
+
+                    <FrameLayout
+                        android:id="@+id/player1Layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/playerOneHolder"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/hive_piece_holder" />
+
+                        <LinearLayout
+                            android:id="@+id/pieceHolderP1Layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/beeP1Image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/bensonbeehexcropped" />
+
+                            <TextView
+                                android:id="@+id/beeP1Counter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/beeP1Counter"
+                                android:textColor="#FF5722" />
+
+                            <ImageView
+                                android:id="@+id/spiderP1Image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/spiderhexcropped" />
+
+                            <TextView
+                                android:id="@+id/spiderP1Counter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/spiderP1Counter"
+                                android:textColor="#FF5722" />
+
+                            <ImageView
+                                android:id="@+id/beetleP1Image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/beetlehexcropped" />
+
+                            <TextView
+                                android:id="@+id/beetleP1Counter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/beetleP1Counter"
+                                android:textColor="#FF5722" />
+
+                            <ImageView
+                                android:id="@+id/antP1Image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/anthexcropped" />
+
+                            <TextView
+                                android:id="@+id/antP1Counter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/antP1Counter"
+                                android:textColor="#FF5722" />
+
+                            <ImageView
+                                android:id="@+id/grasshopperP1Image"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/grasshopperhexcropped" />
+
+                            <TextView
+                                android:id="@+id/grasshopperP1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/grasshopperP1Counter"
+                                android:textColor="#FF5722" />
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <com.example.hiveframework.hive.HiveSurfaceView
+                    android:id="@+id/hiveSurfaceView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="20"
+                    android:backgroundTint="#FFFF00" />
+
+                <LinearLayout
+                    android:id="@+id/playerTwoLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/playerTwoTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="right|top"
+                        android:padding="10sp"
+                        android:text="@string/player_two_text"
+                        android:textSize="20sp" />
+
+                    <FrameLayout
+                        android:id="@+id/player2FrameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/playerTwoHolder"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/hive_piece_holder" />
+
+                        <LinearLayout
+                            android:id="@+id/pieceHolderP2Layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/beeP2Image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/bensonbeehexcropped" />
+
+                            <TextView
+                                android:id="@+id/beeP2Counter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/beeP2Counter"
+                                android:textColor="#03A9F4" />
+
+                            <ImageView
+                                android:id="@+id/spiderP2Image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/spiderhexcropped" />
+
+                            <TextView
+                                android:id="@+id/spiderP2Counter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/spiderP2Counter"
+                                android:textColor="#03A9F4" />
+
+                            <ImageView
+                                android:id="@+id/beetleP2Image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/beetlehexcropped" />
+
+                            <TextView
+                                android:id="@+id/beetleP2Counter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/beetleP2Counter"
+                                android:textColor="#03A9F4" />
+
+                            <ImageView
+                                android:id="@+id/antP2Image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/anthexcropped" />
+
+                            <TextView
+                                android:id="@+id/antP2Counter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/antP2Counter"
+                                android:textColor="#03A9F4" />
+
+                            <ImageView
+                                android:id="@+id/grasshopperP2Image"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:cropToPadding="true"
+                                android:scaleX="0.5"
+                                android:scaleY="0.5"
+                                app:srcCompat="@drawable/grasshopperhexcropped" />
+
+                            <TextView
+                                android:id="@+id/grasshopperP2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/grasshopperP2Counter"
+                                android:textColor="#03A9F4" />
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
