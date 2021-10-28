@@ -54,7 +54,7 @@ public class HiveMainActivity extends GameMainActivity {
             }
         });
 
-        // game of 33
+        // game of 33 I don't think we need this.....
         playerTypes.add(new GamePlayerType("Local Human Player (game of 33)") {
             public GamePlayer createPlayer(String name) {
                 return new hiveHumanPlayer2(name);
