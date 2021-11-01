@@ -76,7 +76,7 @@ public class HiveLocalGame extends LocalGame {
      * 		true iff the player is allowed to move
      */
     protected boolean canMove(int playerIdx) {
-        return playerIdx == ((HiveGameState)state).getWhoseMove();
+        return playerIdx == ((HiveGameState)state).getWhoseTurn();
     }
 
     /**
@@ -98,10 +98,10 @@ public class HiveLocalGame extends LocalGame {
         int playerId = getPlayerIdx(tm.getPlayer());
 
         // get the 0/1 id of the player whose move it is
-        int whoseMove = state.getWhoseMove();
+        int whoseMove = state.getWhoseTurn();
 
         // make it the other player's turn
-        state.setWhoseMove(1 - whoseMove);
+        state.setWhoseTurn(1 - whoseMove);
 
         // return true, indicating the it was a legal move
         return true;

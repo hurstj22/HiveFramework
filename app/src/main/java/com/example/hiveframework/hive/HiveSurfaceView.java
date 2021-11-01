@@ -8,10 +8,24 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
-public class HiveSurfaceView extends SurfaceView {
+import com.example.hiveframework.GameFramework.utilities.FlashSurfaceView;
+
+public class HiveSurfaceView extends FlashSurfaceView {
 
     private Paint redPaint;
     private Paint bluePaint;
+
+    // the game's state
+    protected HiveGameState state;
+
+    /**
+     * Constructor for the TTTSurfaceView class.
+     *
+     * @param context - a reference to the activity this animation is run under
+     */
+    public HiveSurfaceView(Context context) {
+        super(context);
+    }
 
     public HiveSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -43,5 +57,9 @@ public class HiveSurfaceView extends SurfaceView {
         drawPolygon(canvas, 330, 330, 40, 6, 0, false, redPaint);
         drawPolygon(canvas, 390, 300, 40, 6, 0, false, bluePaint);
 
+    }
+
+    public void setState(HiveGameState state) {
+        this.state = state;
     }
 }

@@ -3,16 +3,15 @@ package com.example.hiveframework.hive;
 
 import com.example.hiveframework.GameFramework.infoMessage.GameState;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Queue;
 
-public class HiveGameState extends GameState {
+public class HiveGameState extends GameState implements Serializable {
 
-    public enum Turn{
-        PLAYER1,
-        PLAYER2,
-        NETWORKPLAYER
-    }
+    //Tag for logging
+    private static final String TAG = "HiveGameState";
+    private static final long serialVersionUID = 7552321013488624386L;
 
     public enum Direction {
         UP_LEFT,
@@ -27,7 +26,7 @@ public class HiveGameState extends GameState {
     private ArrayList<ArrayList<Tile>> gameBoard;
     private ArrayList<ArrayList<Tile>> displayBoard;
     private int piecesRemain[][]; //represents how many of each bug a player has
-    private Turn whoseTurn;
+    private int whoseTurn;
     private int countVisited;
 
     private static final int tileSize = 300;
@@ -85,7 +84,7 @@ public class HiveGameState extends GameState {
                 }
             }
         }
-        whoseTurn = Turn.PLAYER1; //initialize the gameboard with Player1 going first
+        whoseTurn = 0; //initialize the gameboard with Player1 going first
     }
 
     /**
@@ -1181,13 +1180,7 @@ public class HiveGameState extends GameState {
      * @param bug the bug piece to decrement in the "hand"
      */
     public void removePiecesRemain(Tile.Bug bug){
-        int player;
-        if(getWhoseTurn() == Turn.PLAYER1){
-            player = 0;
-        }
-        else{
-            player = 1;
-        }
+        int player = getWhoseTurn();
         switch(bug){
             case QUEEN_BEE: // 1 Queen Bee
                 piecesRemain[player][0]--;
@@ -1231,13 +1224,12 @@ public class HiveGameState extends GameState {
         return piecesRemain;
     }
 
-    public void setWhoseTurn(Turn turn){
+    public void setWhoseTurn(int turn){
         whoseTurn = turn;
     }
 
-    public Turn getWhoseTurn(){
+    public int getWhoseTurn(){
         return whoseTurn;
     }
-
 
 }

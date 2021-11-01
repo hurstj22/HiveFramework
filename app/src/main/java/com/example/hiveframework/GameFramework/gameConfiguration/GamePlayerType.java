@@ -1,6 +1,6 @@
 package com.example.hiveframework.GameFramework.gameConfiguration;
 
-import edu.up.cs301.game.GameFramework.players.GamePlayer;
+import com.example.hiveframework.GameFramework.players.GamePlayer;
 
 /**
  * class GamePlayerType

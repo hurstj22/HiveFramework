@@ -40,24 +40,10 @@ public class HiveMainActivity extends GameMainActivity {
         // Define the allowed player types
         ArrayList<GamePlayerType> playerTypes = new ArrayList<GamePlayerType>();
 
-        // yellow-on-blue GUI
-        playerTypes.add(new GamePlayerType("Local Human Player (blue-yellow)") {
+        // Hive gui
+        playerTypes.add(new GamePlayerType("Local Human Player") {
             public GamePlayer createPlayer(String name) {
-                return new HiveHumanPlayer1(name, R.layout.hive_human_player1);
-            }
-        });
-
-        // red-on-yellow GUI
-        playerTypes.add(new GamePlayerType("Local Human Player (yellow-red)") {
-            public GamePlayer createPlayer(String name) {
-                return new HiveHumanPlayer1(name, R.layout.hive_human_player1_flipped);
-            }
-        });
-
-        // game of 33 I don't think we need this.....
-        playerTypes.add(new GamePlayerType("Local Human Player (game of 33)") {
-            public GamePlayer createPlayer(String name) {
-                return new hiveHumanPlayer2(name);
+                return new HiveHumanPlayer1(name, R.layout.activity_main);
             }
         });
 
@@ -75,15 +61,15 @@ public class HiveMainActivity extends GameMainActivity {
             }
         });
 
-        // Create a game configuration class for Tic-tac-toe
+        // Create a game configuration class for Hive
         GameConfig defaultConfig = new GameConfig(playerTypes, 2,2, "Hive", PORT_NUMBER);
 
         // Add the default players
         defaultConfig.addPlayer("Human", 0); // yellow-on-blue GUI
-        defaultConfig.addPlayer("Computer", 3); // dumb computer player
+        defaultConfig.addPlayer("Computer", 1); // dumb computer player
 
         // Set the initial information for the remote player
-        defaultConfig.setRemoteData("Remote Player", "", 1); // red-on-yellow GUI
+        defaultConfig.setRemoteData("Remote Player", "", 1); // GUI
 
         //done!
         return defaultConfig;

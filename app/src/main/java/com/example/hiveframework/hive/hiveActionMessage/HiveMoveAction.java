@@ -24,30 +24,33 @@ public class HiveMoveAction extends GameAction {
 
     /**
      * Constructor for HiveMoveAction
+     * <p>
+     * //@param source the player making the move
      *
-     //@param source the player making the move
      * @param row the row of the square selected (0-2)
      * @param col the column of the square selected
      */
-    public HiveMoveAction(GamePlayer player, int row, int col)
-    {
+    public HiveMoveAction(GamePlayer player, int row, int col) {
         // invoke superclass constructor to set the player
         super(player);
     }
 
-        /**
-         * get the object's row
-         *
-         * @return the row selected
-         */
-        public int getRow() { return row; }
-
-        /**
-         * get the object's column
-         *
-         * @return the column selected
-         */
-        public int getCol() { return col; }
-
+    /**
+     * get the object's row
+     *
+     * @return the row selected
+     */
+    public int getRow() {
+        return row;
     }
+
+    /**
+     * get the object's column
+     *
+     * @return the column selected
+     */
+    public int getCol() {
+        return col;
+    }
+
 }
