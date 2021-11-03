@@ -3,7 +3,7 @@ package com.example.hiveframework.GameFramework.actionMessage;
 
 import java.io.Serializable;
 
-import edu.up.cs301.game.GameFramework.players.GamePlayer;
+import com.example.hiveframework.GameFramework.players.GamePlayer;
 
 /**
  * An action for a generic game.  A game action is something that a player

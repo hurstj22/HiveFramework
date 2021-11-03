@@ -1,6 +1,6 @@
 package com.example.hiveframework.GameFramework.infoMessage;
 
-import edu.up.cs301.game.GameFramework.Game;
+import com.example.hiveframework.GameFramework.Game;
 
 /**
  * A message from the game to a player that tells the player:

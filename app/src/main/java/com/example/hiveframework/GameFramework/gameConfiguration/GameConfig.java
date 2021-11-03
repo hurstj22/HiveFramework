@@ -1,6 +1,6 @@
 package com.example.hiveframework.GameFramework.gameConfiguration;
 
-import static edu.up.cs301.game.GameFramework.utilities.EqualityMethods.arrayEquals;
+import static com.example.hiveframework.GameFramework.utilities.EqualityMethods.arrayEquals;
 
 import android.content.Context;
 import android.util.Pair;
@@ -14,10 +14,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import edu.up.cs301.game.GameFramework.GameMainActivity;
-import edu.up.cs301.game.GameFramework.players.GamePlayer;
-import edu.up.cs301.game.GameFramework.players.ProxyPlayer;
-import edu.up.cs301.game.GameFramework.utilities.Logger;
+import com.example.hiveframework.GameFramework.GameMainActivity;
+import com.example.hiveframework.GameFramework.players.GamePlayer;
+import com.example.hiveframework.GameFramework.players.ProxyPlayer;
+import com.example.hiveframework.GameFramework.utilities.Logger;
 
 /**
  * GameConfig class
