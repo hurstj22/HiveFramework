@@ -12,9 +12,10 @@ import com.example.hiveframework.GameFramework.utilities.FlashSurfaceView;
 
 public class HiveSurfaceView extends FlashSurfaceView {
 
-    private Paint redPaint;
+    private Paint whitePaint;
     private Paint bluePaint;
-
+    private Paint redPaint;
+    private Paint yellowPaint;
     // the game's state
     protected HiveGameState state;
 
@@ -30,10 +31,25 @@ public class HiveSurfaceView extends FlashSurfaceView {
     public HiveSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
-        redPaint = new Paint();
-        redPaint.setColor(Color.RED);
+        whitePaint = new Paint();
+        whitePaint.setColor(Color.WHITE);
+        whitePaint.setStyle(Paint.Style.STROKE);
+        whitePaint.setStrokeWidth(10);
+
         bluePaint = new Paint();
         bluePaint.setColor(Color.BLUE);
+        bluePaint.setStyle(Paint.Style.STROKE);
+        bluePaint.setStrokeWidth(10);
+
+        redPaint = new Paint();
+        redPaint.setColor(Color.RED);
+        redPaint.setStyle(Paint.Style.STROKE);
+        redPaint.setStrokeWidth(10);
+
+        yellowPaint = new Paint();
+        yellowPaint.setColor(Color.YELLOW);
+        yellowPaint.setStyle(Paint.Style.STROKE);
+        yellowPaint.setStrokeWidth(10);
     }
 
     private void drawPolygon(Canvas mCanvas, float x, float y, float radius, float sides, float startAngle, boolean anticlockwise, Paint paint) {
@@ -54,9 +70,20 @@ public class HiveSurfaceView extends FlashSurfaceView {
     }
 
     public void onDraw(Canvas canvas){
-        drawPolygon(canvas, 330, 330, 40, 6, 0, false, redPaint);
-        drawPolygon(canvas, 390, 300, 40, 6, 0, false, bluePaint);
-
+        int startX = 50;
+        int startY = 100;
+        int radius = 50;
+        int separation = 2* radius + 5;
+        for (int i = 0; i < 11; i++){
+            for (int j = 0; j < 20; j++){
+                if (i%2 == 0){ //even row
+                    drawPolygon(canvas, 2*startX + j*separation, startY + i*separation, radius, 6, 90, false, whitePaint);
+                }
+                else{ //odd row
+                    drawPolygon(canvas, startX + j*separation, startY + i*separation, radius, 6, 90, false, whitePaint);
+                }
+            }
+        }
     }
 
     public void setState(HiveGameState state) {
