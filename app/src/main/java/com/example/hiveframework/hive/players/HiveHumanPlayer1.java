@@ -3,6 +3,10 @@ package com.example.hiveframework.hive.players;
 import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.hiveframework.GameFramework.GameMainActivity;
 import com.example.hiveframework.GameFramework.infoMessage.GameInfo;
@@ -13,19 +17,53 @@ import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.GameFramework.utilities.Logger;
 import com.example.hiveframework.hive.HiveGameState;
 import com.example.hiveframework.hive.HiveSurfaceView;
+import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
+import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
 
 import edu.up.cs301.game.R;
 
-public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchListener {
+public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchListener, View.OnClickListener {
 
     //Tag for logging
     private static final String TAG = "TTTHumanPlayer1";
-
     // the surface view
     private HiveSurfaceView surfaceView;
-
+    private FrameLayout mainFrame; //the main frame which houses all the buttons on the sides
     // the ID for the layout to use
     private int layoutId;
+
+    //These variables will reference widgets that will be modifed during play
+    private TextView currentTurnTextView = null; //Who's turn it is
+    private TextView playerOneTextView = null;
+    private TextView playerTwoTextView = null;
+
+    //TextViews that display how many of each bug a given player has
+    private TextView beeP1Counter = null;
+    private TextView spiderP1Counter = null;
+    private TextView beetleP1Counter = null;
+    private TextView antP1Counter = null;
+    private TextView grasshopperP1Counter = null;
+    private TextView beeP2Counter = null;
+    private TextView spiderP2Counter = null;
+    private TextView beetleP2Counter = null;
+    private TextView antP2Counter = null;
+    private TextView grasshopperP2Counter = null;
+
+    //ImageButtons for each of the players bugs in their hand
+    private ImageButton beeP1Image = null;
+    private ImageButton spiderP1Image = null;
+    private ImageButton beetleP1Image = null;
+    private ImageButton antP1Image = null;
+    private ImageButton grasshopperP1Image = null;
+    private ImageButton beeP2Image = null;
+    private ImageButton spiderP2Image = null;
+    private ImageButton beetleP2Image = null;
+    private ImageButton antP2Image = null;
+    private ImageButton grasshopperP2Image = null;
+
+    //the gameState and activity that we are working with when passed in
+    private HiveGameState hiveGame;
+    private GameMainActivity myActivity = null;
 
     /**
      * constructor
@@ -59,7 +97,33 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             // if we do not have a HiveGameState, ignore
             return;
         else {
-            surfaceView.setState((HiveGameState)info);
+            //make a copy of the passed in gameState to pull data from
+            hiveGame = new HiveGameState((HiveGameState) info);
+
+            //change the color of the turn banner to the player's color then change the text
+            if(this.playerNum == 0){ //first player
+                currentTurnTextView.setTextColor(Color.RED);
+            }
+            else{
+                currentTurnTextView.setTextColor(Color.BLUE);
+            }
+            currentTurnTextView.setText("" + this.allPlayerNames[playerNum] + "'s Turn");
+
+            //update player 1's piece counters
+            beeP1Counter.setText("" + hiveGame.getPiecesRemain()[0][0]);
+            spiderP1Counter.setText("" + hiveGame.getPiecesRemain()[0][1]);
+            beetleP1Counter.setText("" + hiveGame.getPiecesRemain()[0][2]);
+            grasshopperP1Counter.setText("" + hiveGame.getPiecesRemain()[0][3]);
+            antP1Counter.setText("" + hiveGame.getPiecesRemain()[0][4]);
+
+            //update player 2's piece counters
+            beeP2Counter.setText("" + hiveGame.getPiecesRemain()[1][0]);
+            spiderP2Counter.setText("" + hiveGame.getPiecesRemain()[1][1]);
+            beetleP2Counter.setText("" + hiveGame.getPiecesRemain()[1][2]);
+            grasshopperP2Counter.setText("" + hiveGame.getPiecesRemain()[1][3]);
+            antP2Counter.setText("" + hiveGame.getPiecesRemain()[1][4]);
+
+            surfaceView.setState(hiveGame);
             surfaceView.invalidate();
             Logger.log(TAG, "receiving");
         }
@@ -70,14 +134,58 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      * sets the current player as the activity's GUI
      */
     public void setAsGui(GameMainActivity activity) {
+        //remember the activity coming in
+        myActivity = activity;
 
         // Load the layout resource for the new configuration
         activity.setContentView(layoutId);
 
+        //Initialize the widget reference member variables declared at the top
+        currentTurnTextView = (TextView)activity.findViewById(R.id.currentTurnTextView); //Who's turn it is
+        playerOneTextView = (TextView)activity.findViewById(R.id.playerOneTextView);
+        playerTwoTextView = (TextView)activity.findViewById(R.id.playerTwoTextView);
+        beeP1Counter = (TextView)activity.findViewById(R.id.beeP1Counter);
+        spiderP1Counter = (TextView)activity.findViewById(R.id.spiderP1Counter);
+        beetleP1Counter = (TextView)activity.findViewById(R.id.beetleP1Counter);
+        antP1Counter = (TextView)activity.findViewById(R.id.antP1Counter);
+        grasshopperP1Counter = (TextView)activity.findViewById(R.id.grasshopperP1Counter);
+        beeP2Counter = (TextView)activity.findViewById(R.id.beeP2Counter);
+        spiderP2Counter = (TextView)activity.findViewById(R.id.spiderP2Counter);
+        beetleP2Counter = (TextView)activity.findViewById(R.id.beetleP2Counter);
+        antP2Counter = (TextView)activity.findViewById(R.id.antP2Counter);
+        grasshopperP2Counter = (TextView)activity.findViewById(R.id.grasshopperP2Counter);
+
+        //Player 1's imageButton initializations
+        beeP1Image = (ImageButton)activity.findViewById(R.id.beeP1Image);
+        beeP1Image.setImageResource(R.drawable.bensonbeehexcropped);
+        spiderP1Image = (ImageButton)activity.findViewById(R.id.spiderP1Image);
+        spiderP1Image.setImageResource(R.drawable.spiderhexcropped);
+        beetleP1Image = (ImageButton)activity.findViewById(R.id.beetleP1Image);
+        beetleP1Image.setImageResource(R.drawable.beetlehexcropped);
+        antP1Image = (ImageButton)activity.findViewById(R.id.antP1Image);
+        antP1Image.setImageResource(R.drawable.anthexcropped);
+        grasshopperP1Image = (ImageButton)activity.findViewById(R.id.grasshopperP1Image);
+        grasshopperP1Image.setImageResource(R.drawable.grasshopperhexcropped);
+
+        //Player 2's imageButton initializations
+        beeP2Image = (ImageButton)activity.findViewById(R.id.beeP2Image);
+        beeP2Image.setImageResource(R.drawable.bensonbeehexcropped);
+        spiderP2Image = (ImageButton)activity.findViewById(R.id.spiderP2Image);
+        spiderP2Image.setImageResource(R.drawable.spiderhexcropped);
+        beetleP2Image = (ImageButton)activity.findViewById(R.id.beetleP2Image);
+        beetleP2Image.setImageResource(R.drawable.beetlehexcropped);
+        antP2Image = (ImageButton)activity.findViewById(R.id.antP2Image);
+        antP2Image.setImageResource(R.drawable.anthexcropped);
+        grasshopperP2Image = (ImageButton)activity.findViewById(R.id.grasshopperP2Image);
+        grasshopperP2Image.setImageResource(R.drawable.grasshopperhexcropped);
+
         // set the surfaceView instance variable
         surfaceView = (HiveSurfaceView)myActivity.findViewById(R.id.hiveSurfaceView);
+        mainFrame = (FrameLayout)myActivity.findViewById(R.id.mainFrameLayout);
         Logger.log("set listener","OnTouch");
         surfaceView.setOnTouchListener(this);
+        Logger.log("set listener","OnClick");
+        mainFrame.setOnClickListener(this);
     }
 
     /**
@@ -94,5 +202,39 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+        HiveMoveAction moveAction = new HiveMoveAction(this);
+        HiveSelectAction selectAction = new HiveSelectAction(this);
+
+        switch(view.getId()){
+            case R.id.playButton: //restarts the game with the same selected options
+                myActivity.restartGame();
+                break;
+            case R.id.endTurnButton: //switches the current player's turn
+                hiveGame.setWhoseTurn(hiveGame.getWhoseTurn() - 1);
+                break;
+            case R.id.quitButton: //exits the game
+                myActivity.finishAffinity();
+                break;
+            case R.id.rulesButton: //pull up the rules
+                //yet to be coded
+                break;
+            case R.id.undoButton: //undo the last move by resetting the gameState to a previous one
+                //yet to be coded
+                break;
+        }
+
+        if(view instanceof ImageButton){ //one of the bug buttons from a player's hand has been selected
+            game.sendAction(selectAction);
+            //try {
+            //    Thread.sleep(500);
+            //} catch (InterruptedException e) {
+            //    e.printStackTrace();
+            //}
+        }
+
     }
 }

@@ -30,7 +30,7 @@ public class HiveGameState extends GameState implements Serializable {
     private int countVisited;
 
     private static final int tileSize = 300;
-    private final int GBSIZE = 10; //size of the gameboard
+    private final int GBSIZE = 8; //size of the gameboard
     private ArrayList<Tile> potentialMoves;
     /**
      * Default constructor.
@@ -125,11 +125,10 @@ public class HiveGameState extends GameState implements Serializable {
     /**
      * Creates a new gamestate object and
      * is called when the new game button is clicked
-     * @return true if successfully created a new blank gameState
+     * @return the new blank gameState
      */
-    public boolean newGame(){
-        new HiveGameState(); //creates a new blank gameState object
-        return true;
+    public HiveGameState newGame(){
+        return new HiveGameState(); //creates a new blank gameState object
     }
 
     /**
@@ -1203,7 +1202,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
     }
 
-    //testing classes for playing Oracle
+    //testing class for playing Oracle
     public void addTile(Tile newTile){
         gameBoard.get(newTile.getIndexX()).set(newTile.getIndexY(), newTile);
     }
@@ -1230,6 +1229,10 @@ public class HiveGameState extends GameState implements Serializable {
 
     public int getWhoseTurn(){
         return whoseTurn;
+    }
+
+    public int getBoardSize(){
+        return GBSIZE;
     }
 
 }

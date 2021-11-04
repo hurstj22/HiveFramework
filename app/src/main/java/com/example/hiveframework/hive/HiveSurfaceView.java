@@ -7,15 +7,20 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.example.hiveframework.GameFramework.GameMainActivity;
 import com.example.hiveframework.GameFramework.utilities.FlashSurfaceView;
 
 public class HiveSurfaceView extends FlashSurfaceView {
 
-    private Paint whitePaint;
-    private Paint bluePaint;
-    private Paint redPaint;
-    private Paint yellowPaint;
+    //the paints used in the UI
+    private Paint whitePaint; //default empty tiles
+    private Paint bluePaint; //player 2's border
+    private Paint redPaint; //player 1's border
+    private Paint yellowPaint; //potential movement's available
+
     // the game's state
     protected HiveGameState state;
 
@@ -74,13 +79,15 @@ public class HiveSurfaceView extends FlashSurfaceView {
         int startY = 100;
         int radius = 50;
         int separation = 2* radius + 5;
-        for (int i = 0; i < 11; i++){
-            for (int j = 0; j < 20; j++){
-                if (i%2 == 0){ //even row
-                    drawPolygon(canvas, 2*startX + j*separation, startY + i*separation, radius, 6, 90, false, whitePaint);
-                }
-                else{ //odd row
-                    drawPolygon(canvas, startX + j*separation, startY + i*separation, radius, 6, 90, false, whitePaint);
+        //draws the gameboard hexes
+        if(state != null) {
+            for (int i = 0; i < state.getBoardSize(); i++) {
+                for (int j = 0; j < state.getBoardSize() * 2; j++) {
+                    if (i % 2 == 0) { //even row
+                        drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
+                    } else { //odd row
+                        drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
+                    }
                 }
             }
         }
