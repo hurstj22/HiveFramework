@@ -9,9 +9,8 @@ import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.GameFramework.utilities.Logger;
 import com.example.hiveframework.GameFramework.utilities.Saving;
 import com.example.hiveframework.hive.players.HiveHumanPlayer1;
-import com.example.hiveframework.hive.players.hiveComputerPlayer1;
-import com.example.hiveframework.hive.players.hiveComputerPlayer2;
-import com.example.hiveframework.hive.players.hiveHumanPlayer2;
+import com.example.hiveframework.hive.players.HiveComputerPlayer1;
+import com.example.hiveframework.hive.players.HiveComputerPlayer2;
 
 import java.util.ArrayList;
 
@@ -50,14 +49,14 @@ public class HiveMainActivity extends GameMainActivity {
         // dumb computer player
         playerTypes.add(new GamePlayerType("Computer Player (dumb)") {
             public GamePlayer createPlayer(String name) {
-                return new hiveComputerPlayer1(name);
+                return new HiveComputerPlayer1(name);
             }
         });
 
         // smarter computer player
         playerTypes.add(new GamePlayerType("Computer Player (smart)") {
             public GamePlayer createPlayer(String name) {
-                return new hiveComputerPlayer2(name);
+                return new HiveComputerPlayer2(name);
             }
         });
 

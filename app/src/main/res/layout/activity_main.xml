@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:screenOrientation="landscape"
+    android:orientation="horizontal" >
+
 
     <FrameLayout
         android:id="@+id/mainFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:id="@+id/mainGameLayout"
@@ -251,8 +254,7 @@
                     android:id="@+id/hiveSurfaceView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="20"
-                    android:backgroundTint="#FFFF00" />
+                    android:layout_weight="20" />
 
                 <LinearLayout
                     android:id="@+id/playerTwoLayout"

@@ -5,9 +5,17 @@
       <map>
         <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/layout/game_config_main.xml" value="0.1" />
+        <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/layout/game_config_tabhost.xml" value="0.1" />
+        <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/layout/game_local_tab.xml" value="0.1" />
+        <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/layout/game_no_gui.xml" value="0.1" />
+        <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/layout/game_player_list_row.xml" value="0.1" />
+        <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/layout/game_remote_tab.xml" value="0.1" />
+        <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/layout/game_settings_tab.xml" value="0.1" />
+        <entry key="..\:/CS/CS301/HiveFramework/app/src/main/res/menu/game_main.xml" value="0.190625" />
       </map>
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

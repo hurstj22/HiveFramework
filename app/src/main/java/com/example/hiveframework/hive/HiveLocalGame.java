@@ -9,7 +9,6 @@ public class HiveLocalGame extends LocalGame {
     //Tag for logging
     private static final String TAG = "HiveLocalGame";
 
-
     /**
      * Constructor for the HiveLocalGame.
      */
@@ -46,8 +45,9 @@ public class HiveLocalGame extends LocalGame {
 
         // if we get here, then we've found a winner, so return the 0/1
         // value that corresponds to that mark; then return a message
-        int gameWinner = 0;
-        return playerNames[gameWinner]+" is the winner.";
+        int gameWinner = state.getWhoseTurn();
+        //return playerNames[gameWinner]+" is the winner.";
+        return null;
     }
 
     /**
@@ -63,7 +63,6 @@ public class HiveLocalGame extends LocalGame {
     protected void sendUpdatedStateTo(GamePlayer p) {
         // make a copy of the state, and send it to the player
         p.sendInfo(new HiveGameState(((HiveGameState) state)));
-
     }
 
     /**
