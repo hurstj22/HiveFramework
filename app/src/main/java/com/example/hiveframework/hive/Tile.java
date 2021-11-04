@@ -28,6 +28,9 @@ public class Tile {
     private int indexX; //integer index in the arrayList of tiles
     private int indexY;
     private boolean visited; //variable for the DFS
+    private int id; //holds image id
+
+    //make helper method
 
     /**
      * Makes a default constructor for a tile
@@ -42,6 +45,7 @@ public class Tile {
         indexY = y;
         this.piece = piece;
         visited = false;
+        id = -1; //set the id in makeMove or some class related to the humanPlayer
     }
 
     /**
@@ -56,6 +60,7 @@ public class Tile {
         onTopOf = onTop;
         indexX = x;
         indexY = y;
+        id = -1;
     }
 
     /**
@@ -74,6 +79,7 @@ public class Tile {
             this.onTopOf = new Tile(other.getOnTopOf());
             this.type = other.getType();
             this.visited = other.visited;
+            this.id = other.id;
         }
     }
 
@@ -133,5 +139,18 @@ public class Tile {
         path.close();
         mCanvas.drawPath(path, paint);
         mCanvas.restore();
+    }
+
+    //draw the tiles here according to their type then loop through in surface view
+    //public void drawTile(Canvas canvas, float x, float y){
+
+    //}
+
+    public void setId(int idx){
+        this.id = idx;
+    }
+
+    public int getId(){
+        return id;
     }
 }

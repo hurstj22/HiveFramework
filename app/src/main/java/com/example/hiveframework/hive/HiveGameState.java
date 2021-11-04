@@ -6,7 +6,15 @@ import com.example.hiveframework.GameFramework.infoMessage.GameState;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Queue;
-
+/**
+ * this is the game state which holds all info/actions related to a state of the Hive game
+ *
+ * @author Isaac Reinhard
+ * @author Kelly Ngyuen
+ * @author Ali Sheehan
+ * @author James Hurst
+ * @version October 2021
+ */
 public class HiveGameState extends GameState implements Serializable {
 
     //Tag for logging
@@ -36,13 +44,13 @@ public class HiveGameState extends GameState implements Serializable {
      * Default constructor.
      */
     public HiveGameState(){
-        //Initialize gameBoard to be 14 rows of empty tiles
+        //Initialize gameBoard to be 8 rows of empty tiles
         gameBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
             gameBoard.add(new ArrayList<Tile>(GBSIZE));
         }
         for(int i = 0; i < GBSIZE; i++){
-            for(int j = 0; j < GBSIZE; j++){
+            for(int j = 0; j < GBSIZE; j++){ //add twice as many columns as rows to make rect grid
                 gameBoard.get(i).add(j, new Tile (i, j, Tile.PlayerPiece.EMPTY));
             }
         }

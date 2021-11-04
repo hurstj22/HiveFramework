@@ -44,6 +44,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     private TextView antP1Counter = null;
     private TextView grasshopperP1Counter = null;
     private TextView beeP2Counter = null;
+
     private TextView spiderP2Counter = null;
     private TextView beetleP2Counter = null;
     private TextView antP2Counter = null;
@@ -64,6 +65,13 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     //the gameState and activity that we are working with when passed in
     private HiveGameState hiveGame;
     private GameMainActivity myActivity = null;
+
+    //human player needs to highlight what button was tapped
+    //remember if a tap happened before
+    boolean hasTapped;
+    ImageButton selectedImgButton = null; //if null nothing selected, if not null this points to what is selected
+    //array list of buttons to easily loop through and highlight the selected one
+    //add it all to a list.
 
     /**
      * constructor
@@ -186,6 +194,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         surfaceView.setOnTouchListener(this);
         Logger.log("set listener","OnClick");
         mainFrame.setOnClickListener(this);
+        beeP1Image.setOnClickListener(this);
+
     }
 
     /**

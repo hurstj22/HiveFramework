@@ -24,6 +24,14 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
 
     @Override
     protected void receiveInfo(GameInfo info) {
-
+        if(info == null){
+            return;
+        }
+        if(info instanceof HiveGameState) {
+            hiveGame = new HiveGameState((HiveGameState) info);
+            if (this.playerNum != hiveGame.getWhoseTurn()) {
+                return; //not you're turn
+            }
+        }
     }
 }

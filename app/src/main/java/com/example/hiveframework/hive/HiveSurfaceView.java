@@ -1,6 +1,9 @@
 package com.example.hiveframework.hive;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +15,15 @@ import android.widget.TextView;
 
 import com.example.hiveframework.GameFramework.GameMainActivity;
 import com.example.hiveframework.GameFramework.utilities.FlashSurfaceView;
+/**
+ * this is the custom HiveSurface view which holds the display board
+ *
+ * @author Isaac Reinhard
+ * @author Kelly Ngyuen
+ * @author Ali Sheehan
+ * @author James Hurst
+ * @version October 2021
+ */
 
 public class HiveSurfaceView extends FlashSurfaceView {
 
@@ -20,6 +32,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private Paint bluePaint; //player 2's border
     private Paint redPaint; //player 1's border
     private Paint yellowPaint; //potential movement's available
+    private Activity myActivity;
 
     // the game's state
     protected HiveGameState state;
@@ -91,9 +104,23 @@ public class HiveSurfaceView extends FlashSurfaceView {
                 }
             }
         }
+
+        //loop through all pieces in their locations and ask piece to draw itself
+        //use the id from Tile to draw the appropriate bitmap
+        for (int i = 0; i < state.getBoardSize(); i++) {
+            for (int j = 0; j < state.getBoardSize() * 2; j++) {
+                int id = state.getGameBoard().get(i).get(j).getId();
+                if (id != -1) {
+
+                    Bitmap map = BitmapFactory.decodeResource(myActivity.getResources(), id);
+                    canvas.drawBitmap(map, map, startY + i * separation);
+                }
+            }
+        }
     }
 
-    public void setState(HiveGameState state) {
-        this.state = state;
+    public void setState(HiveGameState state){
+            this.state = state;
+        }
     }
 }
