@@ -10,8 +10,9 @@ public class HiveSelectAction extends GameAction {
     private static final long serialVersionUID = -2242980258970485343L;
 
     // instance variables: the selected row and column
-    private int row;
-    private int col;
+    private float xCoord;
+    private float yCoord;
+    private int id;
 
     /**
      * constructor for GameAction
@@ -20,18 +21,62 @@ public class HiveSelectAction extends GameAction {
      */
     public HiveSelectAction(GamePlayer player) {
         super(player);
+        id = -1;
     }
 
     /**
-     * Constructor for HiveMoveAction
+     * Constructor for HiveSelectAction
      * <p>
      * //@param source the player making the move
      *
-     * @param row the row of the square selected (0-2)
-     * @param col the column of the square selected
+     * @param xCoord x coordinate coming in from the onTouch
+     * @param yCoord y coordinate coming in from the onTouch
      */
-    public HiveSelectAction(GamePlayer player, int row, int col) {
+    public HiveSelectAction(GamePlayer player, float xCoord, float yCoord) {
         // invoke superclass constructor to set the player
         super(player);
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
+        id = -1; //Didn't select from player's hand
+    }
+
+    /**
+     * Constructor for HiveSelectAction
+     * <p>
+     * //@param source the player making the move
+     *
+     * @param id the id number of the button pressed
+     */
+    public HiveSelectAction(GamePlayer player, int id) {
+        // invoke superclass constructor to set the player
+        super(player);
+        this.id = id;
+    }
+
+    /**
+     * get the object's x
+     *
+     * @return the row selected
+     */
+    public float getX() {
+        return xCoord;
+    }
+
+    /**
+     * get the object's y
+     *
+     * @return the column selected
+     */
+    public float getY() {
+        return yCoord;
+    }
+
+    /**
+     * get the object's id that was selected
+     *
+     * @return the id of a selected image
+     */
+    public int getId() {
+        return id;
     }
 }

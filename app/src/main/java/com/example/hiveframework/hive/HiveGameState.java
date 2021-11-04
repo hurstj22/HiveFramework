@@ -36,6 +36,7 @@ public class HiveGameState extends GameState implements Serializable {
     private int piecesRemain[][]; //represents how many of each bug a player has
     private int whoseTurn;
     private int countVisited;
+    private int currentIdSelected;
 
     private static final int tileSize = 300;
     private final int GBSIZE = 8; //size of the gameboard
@@ -50,11 +51,12 @@ public class HiveGameState extends GameState implements Serializable {
             gameBoard.add(new ArrayList<Tile>(GBSIZE));
         }
         for(int i = 0; i < GBSIZE; i++){
-            for(int j = 0; j < GBSIZE; j++){ //add twice as many columns as rows to make rect grid
+            for(int j = 0; j < GBSIZE*2; j++){ //add twice as many columns as rows to make rect grid
                 gameBoard.get(i).add(j, new Tile (i, j, Tile.PlayerPiece.EMPTY));
             }
         }
         //Initialize displayBoard to be mirror gameBoard
+        //HELLO! I don't think we need this if we draw everything based on the gameBoard
         displayBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
             displayBoard.add(new ArrayList<Tile>(GBSIZE));
@@ -93,6 +95,7 @@ public class HiveGameState extends GameState implements Serializable {
             }
         }
         whoseTurn = 0; //initialize the gameboard with Player1 going first
+        currentIdSelected = -1;
     }
 
     /**
@@ -106,11 +109,12 @@ public class HiveGameState extends GameState implements Serializable {
         }
 
         for (int row = 0; row < GBSIZE; row++){
-            for (int col = 0; col < GBSIZE; col++){
+            for (int col = 0; col < GBSIZE*2; col++){
                 Tile copyTile = new Tile(other.gameBoard.get(row).get(col));
                 this.gameBoard.get(row).add(col, copyTile);
             }
         }
+
         this.displayBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
             this.displayBoard.add(new ArrayList<Tile>(GBSIZE));
@@ -196,7 +200,7 @@ public class HiveGameState extends GameState implements Serializable {
         //copy the old gameBoard into a new temporary board to perform dfs on
         ArrayList<ArrayList<Tile>> testBoard = new ArrayList<ArrayList<Tile>>();
         for(int i = 0; i < gameBoard.size(); i++){
-            for(int j = 0; j < gameBoard.size(); j++){
+            for(int j = 0; j < gameBoard.get(i).size(); j++){
                 if(i == tile.getIndexX() && j == tile.getIndexY()){
                     testBoard.get(i).set(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
                 }
@@ -341,7 +345,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
 
         if(tile.getIndexX() < 0 || tile.getIndexY() < 0 ||
-           tile.getIndexX() >= gameBoard.size() || tile.getIndexY() >= gameBoard.size()){
+           tile.getIndexX() >= gameBoard.size()*2 || tile.getIndexY() >= gameBoard.size()){
             return false; //out of bounds
         }
 
@@ -1241,6 +1245,13 @@ public class HiveGameState extends GameState implements Serializable {
 
     public int getBoardSize(){
         return GBSIZE;
+    }
+
+    public int getCurrentIdSelected(){
+        return currentIdSelected;
+    }
+    public void setCurrentIdSelected(int id){
+        currentIdSelected = id;
     }
 
 }

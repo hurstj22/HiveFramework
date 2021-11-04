@@ -4,6 +4,8 @@ import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.GameFramework.LocalGame;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
+import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
+import com.example.hiveframework.hive.players.HiveHumanPlayer1;
 
 public class HiveLocalGame extends LocalGame {
     //Tag for logging
@@ -22,7 +24,7 @@ public class HiveLocalGame extends LocalGame {
     }
 
     /**
-     * Constructor for the HiveLocalGame with loaded tttState
+     * Constructor for the HiveLocalGame with loaded HiveState
      * @param hiveGameState
      */
     public HiveLocalGame(HiveGameState hiveGameState){
@@ -88,25 +90,39 @@ public class HiveLocalGame extends LocalGame {
      */
     @Override
     protected boolean makeMove(GameAction action) {
+        if(action == null){
+            return false;
+        }
 
-        // get the row and column position of the player's move
-        HiveMoveAction tm = (HiveMoveAction) action;
-        HiveGameState state = (HiveGameState) super.state;
-
+        HiveGameState hiveState = (HiveGameState) super.state; //cast new state to reference as a hiveState
+        HiveHumanPlayer1 player;
         // get the 0/1 id of our player
-        int playerId = getPlayerIdx(tm.getPlayer());
-
+        int playerId = getPlayerIdx(action.getPlayer());
         // get the 0/1 id of the player whose move it is
-        int whoseMove = state.getWhoseTurn();
+        int whoseMove = hiveState.getWhoseTurn();
 
-        // make it the other player's turn
-        state.setWhoseTurn(1 - whoseMove);
+        if(canMove(playerId)) {
+            if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
+                HiveSelectAction select = (HiveSelectAction) action;
+                player = (HiveHumanPlayer1) action.getPlayer();
 
-        // return true, indicating the it was a legal move
-        return true;
+                if(player.getSelectedImageButton() != null){ //selecting from the player's hand
+                    //loop through array list of resource id's, if it matches an id then call gameState isValid on it to select
+
+                    if(player.getNewX() != -1) //already selected from the player's hand and destination
+                }
+                else{ //selecting from the game board
+                    //get newX and newY and determine what tile they correspond to, then call gameState isValid on those
+                }
+
+            } else if (action instanceof HiveMoveAction) { //we've been passed a request to move a piece
+                HiveMoveAction move = (HiveMoveAction) action;
+            }
+            // return true, indicating the it was a legal move
+            return true;
+        }
+        return false;
     }
-
-    //TESTING
 
     public int whoWon(){
         String gameOver = checkIfGameOver();

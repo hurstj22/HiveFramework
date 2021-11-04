@@ -10,8 +10,8 @@ public class HiveMoveAction extends GameAction {
     private static final long serialVersionUID = -2242980258970485343L;
 
     // instance variables: the selected row and column
-    private int row;
-    private int col;
+    private float xCoord;
+    private float yCoord;
 
     /**
      * constructor for GameAction
@@ -27,30 +27,32 @@ public class HiveMoveAction extends GameAction {
      * <p>
      * //@param source the player making the move
      *
-     * @param row the row of the square selected (0-2)
-     * @param col the column of the square selected
+     * @param xCoord x coordinate coming in from the onTouch
+     * @param yCoord y coordinate coming in from the onTouch
      */
-    public HiveMoveAction(GamePlayer player, int row, int col) {
+    public HiveMoveAction(GamePlayer player, float xCoord, float yCoord) {
         // invoke superclass constructor to set the player
         super(player);
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
     }
 
     /**
-     * get the object's row
+     * get the object's x
      *
      * @return the row selected
      */
-    public int getRow() {
-        return row;
+    public float getX() {
+        return xCoord;
     }
 
     /**
-     * get the object's column
+     * get the object's y
      *
      * @return the column selected
      */
-    public int getCol() {
-        return col;
+    public float getY() {
+        return yCoord;
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.hiveframework.hive.players;
 import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -62,16 +63,22 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     private ImageButton antP2Image = null;
     private ImageButton grasshopperP2Image = null;
 
+    private Button playButton = null;
+    private Button quitButton = null;
+    private Button rulesButton = null;
+    private Button endTurnButton = null;
+    private Button undoButton = null;
+
     //the gameState and activity that we are working with when passed in
     private HiveGameState hiveGame;
     private GameMainActivity myActivity = null;
 
     //human player needs to highlight what button was tapped
     //remember if a tap happened before
-    boolean hasTapped;
-    ImageButton selectedImgButton = null; //if null nothing selected, if not null this points to what is selected
+    private float newX = -1;
+    private float newY = -1; //store the coordinates that the player wants to move to, used in the touch event
+    private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
-    //add it all to a list.
 
     /**
      * constructor
@@ -149,9 +156,16 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         activity.setContentView(layoutId);
 
         //Initialize the widget reference member variables declared at the top
+        playButton = (Button)activity.findViewById(R.id.playButton);
+        quitButton = (Button)activity.findViewById(R.id.quitButton);
+        rulesButton = (Button)activity.findViewById(R.id.rulesButton);
+        endTurnButton = (Button)activity.findViewById(R.id.endTurnButton);
+        undoButton = (Button)activity.findViewById(R.id.undoButton);
+
         currentTurnTextView = (TextView)activity.findViewById(R.id.currentTurnTextView); //Who's turn it is
         playerOneTextView = (TextView)activity.findViewById(R.id.playerOneTextView);
         playerTwoTextView = (TextView)activity.findViewById(R.id.playerTwoTextView);
+
         beeP1Counter = (TextView)activity.findViewById(R.id.beeP1Counter);
         spiderP1Counter = (TextView)activity.findViewById(R.id.spiderP1Counter);
         beetleP1Counter = (TextView)activity.findViewById(R.id.beetleP1Counter);
@@ -194,8 +208,24 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         surfaceView.setOnTouchListener(this);
         Logger.log("set listener","OnClick");
         mainFrame.setOnClickListener(this);
-        beeP1Image.setOnClickListener(this);
 
+        //set the onClickListeners for all the buttons
+        beeP1Image.setOnClickListener(this);
+        spiderP1Image.setOnClickListener(this);
+        beetleP1Image.setOnClickListener(this);
+        antP1Image.setOnClickListener(this);
+        grasshopperP1Image.setOnClickListener(this);
+        beeP2Image.setOnClickListener(this);
+        spiderP2Image.setOnClickListener(this);
+        beetleP2Image.setOnClickListener(this);
+        antP2Image.setOnClickListener(this);
+        grasshopperP2Image.setOnClickListener(this);
+
+        playButton.setOnClickListener(this);
+        quitButton.setOnClickListener(this);
+        rulesButton.setOnClickListener(this);
+        endTurnButton.setOnClickListener(this);
+        undoButton.setOnClickListener(this);
     }
 
     /**
@@ -211,20 +241,32 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            newX = motionEvent.getX();
+            newY = motionEvent.getY();
+
+            if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
+                game.sendAction(new HiveMoveAction(this, newX, newY));
+            }
+            else{ //selecting from the board so pass a selectAction with the x and y coords
+                game.sendAction(new HiveSelectAction(this, newX, newY));
+            }
+            return true;
+        }
         return false;
     }
 
     @Override
     public void onClick(View view) {
-        HiveMoveAction moveAction = new HiveMoveAction(this);
+        //HiveMoveAction moveAction = new HiveMoveAction(this);
         HiveSelectAction selectAction = new HiveSelectAction(this);
 
-        switch(view.getId()){
+        switch(view.getId()) {
             case R.id.playButton: //restarts the game with the same selected options
                 myActivity.restartGame();
                 break;
             case R.id.endTurnButton: //switches the current player's turn
-                hiveGame.setWhoseTurn(hiveGame.getWhoseTurn() - 1);
+                hiveGame.setWhoseTurn(1 - hiveGame.getWhoseTurn());
                 break;
             case R.id.quitButton: //exits the game
                 myActivity.finishAffinity();
@@ -236,15 +278,45 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 //yet to be coded
                 break;
         }
-
-        if(view instanceof ImageButton){ //one of the bug buttons from a player's hand has been selected
-            game.sendAction(selectAction);
-            //try {
-            //    Thread.sleep(500);
-            //} catch (InterruptedException e) {
-            //    e.printStackTrace();
-            //}
+        if(view instanceof ImageButton){
+            //one of the player's bug pieces from their hand was selected, thus update the imageButton object
+            selectedImageButton = (ImageButton) view; //local game can access the id and perform the appropriate actions
+            game.sendAction(selectAction); //then pass a select action
         }
 
+                /* case R.id.beeP1Image:
+                hiveGame.setCurrentIdSelected(R.id.beeP1Image);
+                game.sendAction(selectAction);
+                break;
+            case R.id.spiderP1Image:
+                hiveGame.setCurrentIdSelected(R.id.spiderP1Image);
+                game.sendAction(selectAction);
+                break;
+            case R.id.beetleP1Image:
+                hiveGame.setCurrentIdSelected(R.id.beetleP1Image);
+                game.sendAction(selectAction);
+                break;
+            case R.id.antP1Image:
+                hiveGame.setCurrentIdSelected(R.id.antP1Image);
+                game.sendAction(selectAction);
+                break;
+            case R.id.grasshopperP1Image:
+                hiveGame.setCurrentIdSelected(R.id.grasshopperP1Image);
+                game.sendAction(selectAction);
+                break; */
+
+    }
+
+    //setter and getters for instance variables
+    public ImageButton getSelectedImageButton() {
+        return selectedImageButton;
+    }
+
+    public float getNewX() {
+        return newX;
+    }
+
+    public float getNewY() {
+        return newY;
     }
 }

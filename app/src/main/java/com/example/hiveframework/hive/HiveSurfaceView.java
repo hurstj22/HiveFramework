@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -103,24 +104,31 @@ public class HiveSurfaceView extends FlashSurfaceView {
                     }
                 }
             }
-        }
 
-        //loop through all pieces in their locations and ask piece to draw itself
-        //use the id from Tile to draw the appropriate bitmap
-        for (int i = 0; i < state.getBoardSize(); i++) {
-            for (int j = 0; j < state.getBoardSize() * 2; j++) {
-                int id = state.getGameBoard().get(i).get(j).getId();
-                if (id != -1) {
+            //loop through all pieces in their locations and ask piece to draw itself
+            //use the id from Tile to draw the appropriate bitmap
+            for (int i = 0; i < state.getBoardSize(); i++) {
+                for (int j = 0; j < state.getBoardSize() * 2; j++) {
+                    int id = state.getGameBoard().get(i).get(j).getId();
+                    if (id != -1) {
+                        Matrix matrix = new Matrix();
+                        Bitmap image = BitmapFactory.decodeResource(myActivity.getResources(), id); //create image using tile's id
 
-                    Bitmap map = BitmapFactory.decodeResource(myActivity.getResources(), id);
-                    canvas.drawBitmap(map, map, startY + i * separation);
+                        if (i % 2 == 0) { //even row
+                            canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
+                                    2 * startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                        } else { //odd row
+                            canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
+                                    startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                        }
+
+                    }
                 }
             }
         }
     }
 
-    public void setState(HiveGameState state){
-            this.state = state;
-        }
+    public void setState(HiveGameState state) {
+        this.state = state;
     }
 }
