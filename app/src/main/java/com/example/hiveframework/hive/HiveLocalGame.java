@@ -102,21 +102,27 @@ public class HiveLocalGame extends LocalGame {
         int whoseMove = hiveState.getWhoseTurn();
 
         if(canMove(playerId)) {
+            player = (HiveHumanPlayer1) action.getPlayer();
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
                 HiveSelectAction select = (HiveSelectAction) action;
-                player = (HiveHumanPlayer1) action.getPlayer();
 
                 if(player.getSelectedImageButton() != null){ //selecting from the player's hand
                     //loop through array list of resource id's, if it matches an id then call gameState isValid on it to select
 
-                    if(player.getNewX() != -1) //already selected from the player's hand and destination
                 }
                 else{ //selecting from the game board
                     //get newX and newY and determine what tile they correspond to, then call gameState isValid on those
+
                 }
 
             } else if (action instanceof HiveMoveAction) { //we've been passed a request to move a piece
                 HiveMoveAction move = (HiveMoveAction) action;
+                if(player.getSelectedImageButton() != null){ //moving from hand to board
+                    //access newX/Y for spot moving to
+                }
+                else{ //moving from board spot to board spot
+                    //access oldX/Y for spot moving from, newX/Y for spot moving to
+                }
             }
             // return true, indicating the it was a legal move
             return true;

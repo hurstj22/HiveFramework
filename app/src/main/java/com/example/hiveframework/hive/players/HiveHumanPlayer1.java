@@ -75,8 +75,11 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     //human player needs to highlight what button was tapped
     //remember if a tap happened before
+    private boolean hasTapped = false;
     private float newX = -1;
     private float newY = -1; //store the coordinates that the player wants to move to, used in the touch event
+    private float oldX = -1;
+    private float oldY = -1;
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
 
@@ -248,8 +251,13 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
                 game.sendAction(new HiveMoveAction(this, newX, newY));
             }
-            else{ //selecting from the board so pass a selectAction with the x and y coords
-                game.sendAction(new HiveSelectAction(this, newX, newY));
+            else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
+                oldX = newX;
+                oldY = newY;
+                game.sendAction(new HiveSelectAction(this, oldX, oldY));
+            }
+            else if(hasTapped && oldX != -1){ //this is the second time tapping so you've selected a gameboard tile and now another gameboard tile
+                game.sendAction(new HiveMoveAction(this, newX, newY));
             }
             return true;
         }
