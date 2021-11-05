@@ -283,6 +283,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             newY = gameBoardPosition[0]; 
 
             if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
+                setSelectedImageButton(null); //reset the selected image since either nothing is going to happen or the pieces will move
                 game.sendAction(new HiveMoveAction(this, newX, newY));
             }
             else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
