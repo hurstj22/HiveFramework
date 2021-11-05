@@ -133,6 +133,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
                     }
                     //Now draw all the tiles in the right spot, scaled
                     Matrix matrix = new Matrix();
+                    matrix.setScale(0.5F, 0.5F);
                     //assign the right color to draw the border based on who owns the tile
                     if(state.getGameBoard().get(i).get(j).getPlayerPiece() == Tile.PlayerPiece.W){
                         tileColor = redPaint;
