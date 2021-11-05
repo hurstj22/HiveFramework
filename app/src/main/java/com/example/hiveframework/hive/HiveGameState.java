@@ -1249,6 +1249,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
     }
 
+
     //testing class for playing Oracle
     public void addTile(Tile newTile){
         gameBoard.get(newTile.getIndexX()).set(newTile.getIndexY(), newTile);
