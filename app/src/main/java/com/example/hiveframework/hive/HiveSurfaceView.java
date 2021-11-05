@@ -40,6 +40,13 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private Activity myActivity;
     int id; //id number of the resources to draw
 
+    private int radius = 50;
+    private double halfWidth = Math.sqrt((radius*radius) - ((radius/2)*(radius/2)));
+    private double gridWidth = halfWidth*2;
+    private double c = Math.sqrt((radius*radius) - (halfWidth*halfWidth));
+    private double gridHeight = (2*radius) - c;
+    private double m = c / halfWidth;
+
     // the game's state
     protected HiveGameState state;
 
@@ -96,9 +103,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     public void onDraw(Canvas canvas){
         int startX = 50;
         int startY = 100;
-        int radius = 50;
-        int separation = 2* radius + 5;
-
+        int separation = 2*radius + 5;
         //draws the gameboard hexes
         if(state != null) {
             for (int i = 0; i < state.getBoardSize(); i++) {
@@ -168,6 +173,57 @@ public class HiveSurfaceView extends FlashSurfaceView {
             }
 
         } //end of state if statement
+    }
+
+    /**
+     * Maps where user clicks to row and column in gameBoard array
+     * @param x - input x coordinate
+     * @param y - input y coordinate
+     * @return column, row
+     */
+    public int[] mapPixelToSquare(float x, float y) {
+
+        // Find the row and column of the box that the point falls in.
+        int row = (int) (y / gridHeight);
+        int column;
+
+        boolean rowIsOdd = row % 2 == 1;
+
+        // Is the row an odd number?
+        if (rowIsOdd) { // Yes: Offset x to match the indent of the row
+            column = (int) ((x - halfWidth) / gridWidth);
+        } else { // No: Calculate normally
+            column = (int) (x / gridWidth);
+        }
+
+        // Work out the position of the point relative to the box it is in
+        double relY = y - (row * gridHeight);
+        double relX;
+
+        if (rowIsOdd) {
+            relX = (x - (column * gridWidth)) - halfWidth;
+        } else {
+            relX = x - (column * gridWidth);
+        }
+
+        // Work out if the point is above either of the hexagon's top edges
+        if (relY < (-m * relX) + c){ // LEFT edge
+            row--;
+            if (!rowIsOdd) {
+                column--;
+            }
+        }
+        else if (relY < (m * relX) - c) { // RIGHT edge
+            row--;
+            if (rowIsOdd) {
+                column++;
+            }
+        }
+
+        int returnArray[] = new int[2];
+        returnArray[0] = column;
+        returnArray[1] = row;
+        return returnArray;
     }
 
     public void setState(HiveGameState state) {
