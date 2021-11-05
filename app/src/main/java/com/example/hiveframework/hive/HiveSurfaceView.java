@@ -145,11 +145,15 @@ public class HiveSurfaceView extends FlashSurfaceView {
                     }
                     else{
                         if (i % 2 == 0) { //even row
-                            
+                            canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
+                                    2 * startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
                         } else { //odd row
-
+                            canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
+                                    startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                        }
                     }
-                }
+
+                } //end of for loops
             }
 
         } //end of state if statement
