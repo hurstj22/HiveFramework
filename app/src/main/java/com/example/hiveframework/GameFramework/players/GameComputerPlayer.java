@@ -3,20 +3,20 @@ package com.example.hiveframework.GameFramework.players;
 import android.os.Handler;
 import android.os.Looper;
 
-import edu.up.cs301.game.GameFramework.Game;
-import edu.up.cs301.game.GameFramework.GameMainActivity;
-import edu.up.cs301.game.GameFramework.actionMessage.GameOverAckAction;
-import edu.up.cs301.game.GameFramework.actionMessage.MyNameIsAction;
-import edu.up.cs301.game.GameFramework.actionMessage.ReadyAction;
-import edu.up.cs301.game.GameFramework.infoMessage.BindGameInfo;
-import edu.up.cs301.game.GameFramework.infoMessage.GameInfo;
-import edu.up.cs301.game.GameFramework.infoMessage.GameOverInfo;
-import edu.up.cs301.game.GameFramework.infoMessage.StartGameInfo;
-import edu.up.cs301.game.GameFramework.infoMessage.TimerInfo;
-import edu.up.cs301.game.GameFramework.utilities.GameTimer;
-import edu.up.cs301.game.GameFramework.utilities.Logger;
-import edu.up.cs301.game.GameFramework.utilities.MessageBox;
-import edu.up.cs301.game.GameFramework.utilities.Tickable;
+import com.example.hiveframework.GameFramework.Game;
+import com.example.hiveframework.GameFramework.GameMainActivity;
+import com.example.hiveframework.GameFramework.actionMessage.GameOverAckAction;
+import com.example.hiveframework.GameFramework.actionMessage.MyNameIsAction;
+import com.example.hiveframework.GameFramework.actionMessage.ReadyAction;
+import com.example.hiveframework.GameFramework.infoMessage.BindGameInfo;
+import com.example.hiveframework.GameFramework.infoMessage.GameInfo;
+import com.example.hiveframework.GameFramework.infoMessage.GameOverInfo;
+import com.example.hiveframework.GameFramework.infoMessage.StartGameInfo;
+import com.example.hiveframework.GameFramework.infoMessage.TimerInfo;
+import com.example.hiveframework.GameFramework.utilities.GameTimer;
+import com.example.hiveframework.GameFramework.utilities.Logger;
+import com.example.hiveframework.GameFramework.utilities.MessageBox;
+import com.example.hiveframework.GameFramework.utilities.Tickable;
 
 /**
  * An abstract computerized game player player. This is an abstract class, that

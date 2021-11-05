@@ -1,4 +1,5 @@
 package com.example.hiveframework.hive;
+import com.example.hiveframework.GameFramework.infoMessage.GameState;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.GameFramework.LocalGame;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
@@ -6,7 +7,7 @@ import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
 
 public class HiveLocalGame extends LocalGame {
     //Tag for logging
-    private static final String TAG = "TTTLocalGame";
+    private static final String TAG = "HiveLocalGame";
 
 
     /**
@@ -17,17 +18,17 @@ public class HiveLocalGame extends LocalGame {
         // perform superclass initialization
         super();
 
-        // create a new, unfilled-in TTTState object
-        super.state = new HiveState();
+        // create a new, unfilled-in HiveGameState object
+        super.state = new HiveGameState();
     }
 
     /**
      * Constructor for the HiveLocalGame with loaded tttState
-     * @param hiveState
+     * @param hiveGameState
      */
-    public HiveLocalGame(HiveState hiveState){
+    public HiveLocalGame(HiveGameState hiveGameState){
         super();
-        super.state = new HiveState(hiveState);
+        super.state = new HiveGameState(hiveGameState);
     }
 
     /**
@@ -41,7 +42,7 @@ public class HiveLocalGame extends LocalGame {
     @Override
     protected String checkIfGameOver() {
 
-        HiveState state = (HiveState) super.state;
+        HiveGameState state = (HiveGameState) super.state;
 
         // if we get here, then we've found a winner, so return the 0/1
         // value that corresponds to that mark; then return a message
@@ -61,7 +62,7 @@ public class HiveLocalGame extends LocalGame {
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
         // make a copy of the state, and send it to the player
-        p.sendInfo(new HiveState(((HiveState) state)));
+        p.sendInfo(new HiveGameState(((HiveGameState) state)));
 
     }
 
@@ -75,7 +76,7 @@ public class HiveLocalGame extends LocalGame {
      * 		true iff the player is allowed to move
      */
     protected boolean canMove(int playerIdx) {
-        return playerIdx == ((HiveState)state).getWhoseMove();
+        return playerIdx == ((HiveGameState)state).getWhoseTurn();
     }
 
     /**
@@ -91,16 +92,16 @@ public class HiveLocalGame extends LocalGame {
 
         // get the row and column position of the player's move
         HiveMoveAction tm = (HiveMoveAction) action;
-        HiveState state = (HiveState) super.state;
+        HiveGameState state = (HiveGameState) super.state;
 
         // get the 0/1 id of our player
         int playerId = getPlayerIdx(tm.getPlayer());
 
         // get the 0/1 id of the player whose move it is
-        int whoseMove = state.getWhoseMove();
+        int whoseMove = state.getWhoseTurn();
 
         // make it the other player's turn
-        state.setWhoseMove(1 - whoseMove);
+        state.setWhoseTurn(1 - whoseMove);
 
         // return true, indicating the it was a legal move
         return true;
