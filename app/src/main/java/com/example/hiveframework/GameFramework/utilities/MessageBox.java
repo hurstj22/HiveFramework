@@ -10,7 +10,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.example.hiveframework.GameFramework.GameMainActivity;
-import com.example.hiveframework.R;
+import edu.up.cs301.game.R;
+//import com.example.hiveframework.R;
 
 /**
  * Helper-class for showing dialog boxes

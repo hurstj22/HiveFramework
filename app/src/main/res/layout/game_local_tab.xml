@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/config_horiz_margin"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
 
     <TableLayout
         android:id="@+id/configTableLayout"

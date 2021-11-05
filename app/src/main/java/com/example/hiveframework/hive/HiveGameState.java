@@ -6,7 +6,15 @@ import com.example.hiveframework.GameFramework.infoMessage.GameState;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Queue;
-
+/**
+ * this is the game state which holds all info/actions related to a state of the Hive game
+ *
+ * @author Isaac Reinhard
+ * @author Kelly Ngyuen
+ * @author Ali Sheehan
+ * @author James Hurst
+ * @version October 2021
+ */
 public class HiveGameState extends GameState implements Serializable {
 
     //Tag for logging
@@ -28,25 +36,27 @@ public class HiveGameState extends GameState implements Serializable {
     private int piecesRemain[][]; //represents how many of each bug a player has
     private int whoseTurn;
     private int countVisited;
+    private int currentIdSelected;
 
     private static final int tileSize = 300;
-    private final int GBSIZE = 10; //size of the gameboard
+    private final int GBSIZE = 8; //size of the gameboard
     private ArrayList<Tile> potentialMoves;
     /**
      * Default constructor.
      */
     public HiveGameState(){
-        //Initialize gameBoard to be 14 rows of empty tiles
+        //Initialize gameBoard to be 8 rows of empty tiles
         gameBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
             gameBoard.add(new ArrayList<Tile>(GBSIZE));
         }
         for(int i = 0; i < GBSIZE; i++){
-            for(int j = 0; j < GBSIZE; j++){
+            for(int j = 0; j < GBSIZE*2; j++){ //add twice as many columns as rows to make rect grid
                 gameBoard.get(i).add(j, new Tile (i, j, Tile.PlayerPiece.EMPTY));
             }
         }
         //Initialize displayBoard to be mirror gameBoard
+        //HELLO! I don't think we need this if we draw everything based on the gameBoard
         displayBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
             displayBoard.add(new ArrayList<Tile>(GBSIZE));
@@ -85,6 +95,7 @@ public class HiveGameState extends GameState implements Serializable {
             }
         }
         whoseTurn = 0; //initialize the gameboard with Player1 going first
+        currentIdSelected = -1;
     }
 
     /**
@@ -98,11 +109,12 @@ public class HiveGameState extends GameState implements Serializable {
         }
 
         for (int row = 0; row < GBSIZE; row++){
-            for (int col = 0; col < GBSIZE; col++){
+            for (int col = 0; col < GBSIZE*2; col++){
                 Tile copyTile = new Tile(other.gameBoard.get(row).get(col));
                 this.gameBoard.get(row).add(col, copyTile);
             }
         }
+
         this.displayBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
             this.displayBoard.add(new ArrayList<Tile>(GBSIZE));
@@ -125,11 +137,10 @@ public class HiveGameState extends GameState implements Serializable {
     /**
      * Creates a new gamestate object and
      * is called when the new game button is clicked
-     * @return true if successfully created a new blank gameState
+     * @return the new blank gameState
      */
-    public boolean newGame(){
-        new HiveGameState(); //creates a new blank gameState object
-        return true;
+    public HiveGameState newGame(){
+        return new HiveGameState(); //creates a new blank gameState object
     }
 
     /**
@@ -189,7 +200,7 @@ public class HiveGameState extends GameState implements Serializable {
         //copy the old gameBoard into a new temporary board to perform dfs on
         ArrayList<ArrayList<Tile>> testBoard = new ArrayList<ArrayList<Tile>>();
         for(int i = 0; i < gameBoard.size(); i++){
-            for(int j = 0; j < gameBoard.size(); j++){
+            for(int j = 0; j < gameBoard.get(i).size(); j++){
                 if(i == tile.getIndexX() && j == tile.getIndexY()){
                     testBoard.get(i).set(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
                 }
@@ -334,7 +345,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
 
         if(tile.getIndexX() < 0 || tile.getIndexY() < 0 ||
-           tile.getIndexX() >= gameBoard.size() || tile.getIndexY() >= gameBoard.size()){
+           tile.getIndexX() >= gameBoard.size()*2 || tile.getIndexY() >= gameBoard.size()){
             return false; //out of bounds
         }
 
@@ -1165,25 +1176,29 @@ public class HiveGameState extends GameState implements Serializable {
         oldTileCords[1] = moveTile.getIndexY();
 
         //if potentialMoves holds tile at newPosition then swap
-        //if(potentialMoves.contains(gameBoard.get(newXIndex).get(newYIndex))){
+        if(potentialMoves.contains(gameBoard.get(newXIndex).get(newYIndex))) {
 
-        //assign newIndexes to move Tile
-        moveTile.setIndexX(newXIndex);
-        moveTile.setIndexY(newYIndex);
+            //assign newIndexes to move Tile
+            moveTile.setIndexX(newXIndex);
+            moveTile.setIndexY(newYIndex);
 
-            //not on top of something so make new empty till
-        if(moveTile.getOnTopOf() == null){
-            gameBoard.get(newXIndex).set(newYIndex, moveTile);
-            Tile emptyTile = new Tile(oldTileCords[0], oldTileCords[1], Tile.PlayerPiece.EMPTY);
-            gameBoard.get(oldTileCords[0]).set(oldTileCords[1], emptyTile);
-        }
+            //not on top of something so make new empty tile
+            if (moveTile.getOnTopOf() == null) {
+                gameBoard.get(newXIndex).set(newYIndex, moveTile);
+                if(oldTileCords[0] != -1) { //if the tile coming in is not from the player's hand perform swap,
+                                            //otherwise just update the gameBoard with the new tile.
+                    Tile emptyTile = new Tile(oldTileCords[0], oldTileCords[1], Tile.PlayerPiece.EMPTY);
+                    gameBoard.get(oldTileCords[0]).set(oldTileCords[1], emptyTile);
+                }
+            }
 
             //on top of something so don't make new empty tile
-        else{
-            gameBoard.get(newXIndex).set(newYIndex, moveTile);
+            else {
+                gameBoard.get(newXIndex).set(newYIndex, moveTile);
+            }
+            return true;
         }
-        return true;
-       // return false;
+       return false;
     }
 
     /**
@@ -1233,7 +1248,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
     }
 
-    //testing classes for playing Oracle
+    //testing class for playing Oracle
     public void addTile(Tile newTile){
         gameBoard.get(newTile.getIndexX()).set(newTile.getIndexY(), newTile);
     }
@@ -1250,6 +1265,10 @@ public class HiveGameState extends GameState implements Serializable {
         return displayBoard;
     }
 
+    public ArrayList<Tile> getPotentialMoves() {
+        return potentialMoves;
+    }
+
     public int[][] getPiecesRemain(){
         return piecesRemain;
     }
@@ -1260,6 +1279,17 @@ public class HiveGameState extends GameState implements Serializable {
 
     public int getWhoseTurn(){
         return whoseTurn;
+    }
+
+    public int getBoardSize(){
+        return GBSIZE;
+    }
+
+    public int getCurrentIdSelected(){
+        return currentIdSelected;
+    }
+    public void setCurrentIdSelected(int id){
+        currentIdSelected = id;
     }
 
 }

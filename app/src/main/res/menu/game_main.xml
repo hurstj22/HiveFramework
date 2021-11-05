@@ -1,4 +1,5 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:screenOrientation="landscape">
     <item android:id="@+id/menu_help"
         android:title="@string/menu_help"
         android:orderInCategory="100"/>

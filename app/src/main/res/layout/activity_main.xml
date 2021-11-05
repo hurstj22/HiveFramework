@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:screenOrientation="landscape"
+    android:orientation="horizontal" >
+
 
     <FrameLayout
         android:id="@+id/mainFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:id="@+id/mainGameLayout"
@@ -80,7 +83,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/RulesButton"
+                        android:id="@+id/rulesButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5sp"
@@ -126,13 +129,13 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/PlayerOneTextView"
+                        android:id="@+id/playerOneTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="top|left"
-                        android:padding="10sp"
+                        android:padding="5sp"
                         android:text="@string/player_one_text"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <FrameLayout
                         android:id="@+id/player1Layout"
@@ -151,14 +154,14 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/beeP1Image"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/bensonbeehexcropped" />
 
                             <TextView
@@ -169,14 +172,14 @@
                                 android:text="@string/beeP1Counter"
                                 android:textColor="#FF5722" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/spiderP1Image"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/spiderhexcropped" />
 
                             <TextView
@@ -187,14 +190,14 @@
                                 android:text="@string/spiderP1Counter"
                                 android:textColor="#FF5722" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/beetleP1Image"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/beetlehexcropped" />
 
                             <TextView
@@ -205,14 +208,14 @@
                                 android:text="@string/beetleP1Counter"
                                 android:textColor="#FF5722" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/antP1Image"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/anthexcropped" />
 
                             <TextView
@@ -223,18 +226,18 @@
                                 android:text="@string/antP1Counter"
                                 android:textColor="#FF5722" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/grasshopperP1Image"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/grasshopperhexcropped" />
 
                             <TextView
-                                android:id="@+id/grasshopperP1"
+                                android:id="@+id/grasshopperP1Counter"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
@@ -251,8 +254,7 @@
                     android:id="@+id/hiveSurfaceView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="20"
-                    android:backgroundTint="#FFFF00" />
+                    android:layout_weight="20" />
 
                 <LinearLayout
                     android:id="@+id/playerTwoLayout"
@@ -266,9 +268,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:gravity="right|top"
-                        android:padding="10sp"
+                        android:padding="5sp"
                         android:text="@string/player_two_text"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <FrameLayout
                         android:id="@+id/player2FrameLayout"
@@ -287,14 +289,14 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/beeP2Image"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/bensonbeehexcropped" />
 
                             <TextView
@@ -305,14 +307,14 @@
                                 android:text="@string/beeP2Counter"
                                 android:textColor="#03A9F4" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/spiderP2Image"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/spiderhexcropped" />
 
                             <TextView
@@ -323,14 +325,14 @@
                                 android:text="@string/spiderP2Counter"
                                 android:textColor="#03A9F4" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/beetleP2Image"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/beetlehexcropped" />
 
                             <TextView
@@ -341,14 +343,14 @@
                                 android:text="@string/beetleP2Counter"
                                 android:textColor="#03A9F4" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/antP2Image"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/anthexcropped" />
 
                             <TextView
@@ -359,18 +361,18 @@
                                 android:text="@string/antP2Counter"
                                 android:textColor="#03A9F4" />
 
-                            <ImageView
+                            <ImageButton
                                 android:id="@+id/grasshopperP2Image"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:cropToPadding="true"
-                                android:scaleX="0.5"
-                                android:scaleY="0.5"
+                                android:layout_weight="1"
+                                android:adjustViewBounds="false"
+                                android:cropToPadding="false"
+                                android:scaleType="fitXY"
                                 app:srcCompat="@drawable/grasshopperhexcropped" />
 
                             <TextView
-                                android:id="@+id/grasshopperP2"
+                                android:id="@+id/grasshopperP2Counter"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"

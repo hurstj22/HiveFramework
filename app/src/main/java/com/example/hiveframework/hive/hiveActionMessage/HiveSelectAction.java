@@ -3,7 +3,7 @@ package com.example.hiveframework.hive.hiveActionMessage;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 
-public class HiveMoveAction extends GameAction {
+public class HiveSelectAction extends GameAction {
 
     //Tag for logging
     private static final String TAG = "HiveMoveAction";
@@ -12,29 +12,45 @@ public class HiveMoveAction extends GameAction {
     // instance variables: the selected row and column
     private float xCoord;
     private float yCoord;
+    private int id;
 
     /**
      * constructor for GameAction
      *
      * @param player the player who created the action
      */
-    public HiveMoveAction(GamePlayer player) {
+    public HiveSelectAction(GamePlayer player) {
         super(player);
+        id = -1;
     }
 
     /**
-     * Constructor for HiveMoveAction
+     * Constructor for HiveSelectAction
      * <p>
      * //@param source the player making the move
      *
      * @param xCoord x coordinate coming in from the onTouch
      * @param yCoord y coordinate coming in from the onTouch
      */
-    public HiveMoveAction(GamePlayer player, float xCoord, float yCoord) {
+    public HiveSelectAction(GamePlayer player, float xCoord, float yCoord) {
         // invoke superclass constructor to set the player
         super(player);
         this.xCoord = xCoord;
         this.yCoord = yCoord;
+        id = -1; //Didn't select from player's hand
+    }
+
+    /**
+     * Constructor for HiveSelectAction
+     * <p>
+     * //@param source the player making the move
+     *
+     * @param id the id number of the button pressed
+     */
+    public HiveSelectAction(GamePlayer player, int id) {
+        // invoke superclass constructor to set the player
+        super(player);
+        this.id = id;
     }
 
     /**
@@ -55,4 +71,12 @@ public class HiveMoveAction extends GameAction {
         return yCoord;
     }
 
+    /**
+     * get the object's id that was selected
+     *
+     * @return the id of a selected image
+     */
+    public int getId() {
+        return id;
+    }
 }
