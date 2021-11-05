@@ -18,6 +18,7 @@ import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.GameFramework.utilities.Logger;
 import com.example.hiveframework.hive.HiveGameState;
 import com.example.hiveframework.hive.HiveSurfaceView;
+import com.example.hiveframework.hive.Tile;
 import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
 
@@ -351,4 +352,21 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     public HiveSurfaceView getSurfaceView() {
         return surfaceView;
     }
+
+    /**
+     *
+     * @param imageId
+     * @param player
+     * @return
+     */
+    public Tile.Bug findBugType(int imageId, HiveHumanPlayer1 player) {
+        ArrayList<ImageButton> imagesArray = player.getImagesArray();
+
+        switch (imageId) {
+            //case player.getActivity().findViewById(R.id.antP1Image).getId():
+            //return Tile.Bug.ANT;
+        }
+        return Tile.Bug.EMPTY; //if returns empty you know it didn't find any match
+    }
+
 }

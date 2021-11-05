@@ -117,7 +117,7 @@ public class HiveLocalGame extends LocalGame {
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
                 HiveSelectAction select = (HiveSelectAction) action;
 
-                if(player.getSelectedImageButton() != null){ //selecting from the player's hand
+                if(player.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
                     //loop through array list of resource id's, if it matches an id then call gameState validMove on it to select
                     //make a new tile using the selectedImageButton's id to figure out what type, the player index to figure out whom's, and set the indices to???
                     if(playerId == getPlayerIdx(players[0])){
@@ -167,24 +167,5 @@ public class HiveLocalGame extends LocalGame {
         if(gameOver.equals(playerNames[0]+" is the winner.")) return 0;
         return 1;
     }
-
-    /**
-     *
-     * @param imageId
-     * @param player
-     * @return
-     */
-    public Tile.Bug findBugType(int imageId, HiveHumanPlayer1 player){
-        ArrayList <ImageButton> imagesArray = player.getImagesArray();
-
-        switch(imageId){
-            //case player.getActivity().findViewById(R.id.antP1Image).getId():
-
-        }
-        //for (ImageButton bug: imagesArray) {
-            //if(bug.)
-        return Tile.Bug.EMPTY; //if returns empty you know it didn't find any match
-    }
-
 
 }
