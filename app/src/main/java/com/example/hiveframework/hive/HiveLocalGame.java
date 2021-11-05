@@ -139,16 +139,10 @@ public class HiveLocalGame extends LocalGame {
                 HiveMoveAction move = (HiveMoveAction) action;
 
                 if(player.getSelectedImageButton() != null){ //moving from hand to board
-                    //access newX/Y for spot moving to
-                    newIndexPt = player.getSurfaceView().mapPixelToSquare(((HiveMoveAction) action).getX(), ((HiveMoveAction) action).getY());
-                    player.setSelectedImageButton(null); //reset the selected image since either nothing is going to happen or the pieces will move
-                    return hiveState.makeMove(currentTile, newIndexPt[0], newIndexPt[1]);
+                    return hiveState.makeMove(currentTile, (int) move.getX(), (int) move.getY());
                 }
                 else{ //moving from board spot to board spot
-                    //access oldX/Y for spot moving from, newX/Y for spot moving to
-                    //map onTouch data to gameBoard indices then make the swap
-                    newIndexPt = player.getSurfaceView().mapPixelToSquare(((HiveMoveAction) action).getX(), ((HiveMoveAction) action).getY());
-                    return hiveState.makeMove(currentTile, newIndexPt[0], newIndexPt[1]);
+                    return hiveState.makeMove(currentTile, (int) move.getX(), (int) move.getY());
                 }
             }
             // return true, indicating the it was a legal move
