@@ -98,7 +98,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     public void onDraw(Canvas canvas){
         int startX = 50;
         int startY = 100;
-        int separation = 2* radius + 5;
+        int separation = 2*radius + 5;
         //draws the gameboard hexes
         if(state != null) {
             for (int i = 0; i < state.getBoardSize(); i++) {
@@ -140,7 +140,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
      * @param y - input y coordinate
      * @return column, row
      */
-    public int[] mapPixelToSquare(int x, int y) {
+    public int[] mapPixelToSquare(float x, float y) {
 
         // Find the row and column of the box that the point falls in.
         int row = (int) (y / gridHeight);
