@@ -46,6 +46,10 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
         return selectedImageButton;
     }
 
+    public void setSelectedImageButton(ImageButton selectedImageButton) {
+        this.selectedImageButton = selectedImageButton;
+    }
+
     public float getNewX() {
         return newX;
     }

@@ -49,6 +49,24 @@ public class Tile {
     }
 
     /**
+     * constructor to be used to create tiles during the select portion of makeMove in localGame
+     * @param x the xIndex in the gameState
+     * @param y the YIndex in the gameState
+     * @param piece who this piece belongs to
+     * @param type what type of Bug this piece is
+     * @param id what imageResource this tile connects to
+     */
+    public Tile(int x, int y, PlayerPiece piece, Bug type, int id) {
+        this.type = type;
+        onTopOf = null;
+        indexX = x; //will be -1 until gets onto the gameBoard
+        indexY = y; //will be -1 ^
+        this.piece = piece;
+        visited = false;
+        this.id = id;
+    }
+
+    /**
      * To be used in move to
      * make a piece have another beneath it.
      * @param bug which type of piece is getting copied
@@ -112,6 +130,12 @@ public class Tile {
     public void setVisited(boolean v){
         visited = v;
     }
+    public void setId(int idx){
+        this.id = idx;
+    }
+    public int getId(){
+        return id;
+    }
 
     /**
      * Method for drawing hexagon.
@@ -145,12 +169,4 @@ public class Tile {
     //public void drawTile(Canvas canvas, float x, float y){
 
     //}
-
-    public void setId(int idx){
-        this.id = idx;
-    }
-
-    public int getId(){
-        return id;
-    }
 }

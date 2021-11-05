@@ -332,6 +332,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     public ImageButton getSelectedImageButton() {
         return selectedImageButton;
     }
+    public void setSelectedImageButton(ImageButton selectedImageButton) {
+        this.selectedImageButton = selectedImageButton;
+    }
 
     public float getNewX() {
         return newX;
@@ -343,5 +346,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     public ArrayList<ImageButton> getImagesArray() {
         return imagesArray;
+    }
+
+    public HiveSurfaceView getSurfaceView() {
+        return surfaceView;
     }
 }

@@ -1146,25 +1146,29 @@ public class HiveGameState extends GameState implements Serializable {
         oldTileCords[1] = moveTile.getIndexY();
 
         //if potentialMoves holds tile at newPosition then swap
-        //if(potentialMoves.contains(gameBoard.get(newXIndex).get(newYIndex))){
+        if(potentialMoves.contains(gameBoard.get(newXIndex).get(newYIndex))) {
 
-        //assign newIndexes to move Tile
-        moveTile.setIndexX(newXIndex);
-        moveTile.setIndexY(newYIndex);
+            //assign newIndexes to move Tile
+            moveTile.setIndexX(newXIndex);
+            moveTile.setIndexY(newYIndex);
 
-            //not on top of something so make new empty till
-        if(moveTile.getOnTopOf() == null){
-            gameBoard.get(newXIndex).set(newYIndex, moveTile);
-            Tile emptyTile = new Tile(oldTileCords[0], oldTileCords[1], Tile.PlayerPiece.EMPTY);
-            gameBoard.get(oldTileCords[0]).set(oldTileCords[1], emptyTile);
-        }
+            //not on top of something so make new empty tile
+            if (moveTile.getOnTopOf() == null) {
+                gameBoard.get(newXIndex).set(newYIndex, moveTile);
+                if(oldTileCords[0] != -1) { //if the tile coming in is not from the player's hand perform swap,
+                                            //otherwise just update the gameBoard with the new tile.
+                    Tile emptyTile = new Tile(oldTileCords[0], oldTileCords[1], Tile.PlayerPiece.EMPTY);
+                    gameBoard.get(oldTileCords[0]).set(oldTileCords[1], emptyTile);
+                }
+            }
 
             //on top of something so don't make new empty tile
-        else{
-            gameBoard.get(newXIndex).set(newYIndex, moveTile);
+            else {
+                gameBoard.get(newXIndex).set(newYIndex, moveTile);
+            }
+            return true;
         }
-        return true;
-       // return false;
+       return false;
     }
 
     /**
