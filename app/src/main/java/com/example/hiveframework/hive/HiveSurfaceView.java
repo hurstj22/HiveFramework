@@ -157,7 +157,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
                         } else { //odd row
                             canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
                                     startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
-                            drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
+                            drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         }
 
                     }
@@ -169,6 +169,21 @@ public class HiveSurfaceView extends FlashSurfaceView {
                         }
                     }
 
+                    //draw potentials in yellow outline from the potentialsArrayList
+                    if(state.getPotentialMoves() != null) { //make sure there's no null pointer exceptions thrown
+                        if (state.getPotentialMoves().get(i) != null) {
+                            Tile potentialTile = state.getPotentialMoves().get(i);
+
+                            if (potentialTile.getIndexX() == i && potentialTile.getIndexY() == j) {
+                                tileColor = yellowPaint;
+                                if (i % 2 == 0) { //even row
+                                    drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
+                                } else { //odd row
+                                    drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
+                                }
+                            }
+                        }
+                    }
                 } //end of for loops
             }
 

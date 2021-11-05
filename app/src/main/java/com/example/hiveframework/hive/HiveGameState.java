@@ -1231,6 +1231,10 @@ public class HiveGameState extends GameState implements Serializable {
         return displayBoard;
     }
 
+    public ArrayList<Tile> getPotentialMoves() {
+        return potentialMoves;
+    }
+
     public int[][] getPiecesRemain(){
         return piecesRemain;
     }
