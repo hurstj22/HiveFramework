@@ -21,6 +21,8 @@ import com.example.hiveframework.hive.HiveSurfaceView;
 import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
 
+import java.util.ArrayList;
+
 import edu.up.cs301.game.R;
 
 public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchListener, View.OnClickListener {
@@ -72,6 +74,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     //the gameState and activity that we are working with when passed in
     private HiveGameState hiveGame;
     private GameMainActivity myActivity = null;
+    private ArrayList<ImageButton> imagesArray;
 
     //human player needs to highlight what button was tapped
     //remember if a tap happened before
@@ -94,6 +97,20 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     public HiveHumanPlayer1(String name, int layoutId) {
         super(name);
         this.layoutId = layoutId;
+        imagesArray = new ArrayList<ImageButton>();
+
+        //add all buttons to the array to be able to iterate through them
+        imagesArray.add(beeP1Image);
+        imagesArray.add(spiderP1Image);
+        imagesArray.add(beetleP1Image);
+        imagesArray.add(antP1Image);
+        imagesArray.add(grasshopperP1Image);
+        imagesArray.add(beeP2Image);
+        imagesArray.add(spiderP2Image);
+        imagesArray.add(beetleP2Image);
+        imagesArray.add(antP2Image);
+        imagesArray.add(grasshopperP2Image);
+
     }
 
     /**
@@ -141,12 +158,19 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             grasshopperP2Counter.setText("" + hiveGame.getPiecesRemain()[1][3]);
             antP2Counter.setText("" + hiveGame.getPiecesRemain()[1][4]);
 
+            for (ImageButton bug: imagesArray) {
+                if (bug != null) {
+                    if (bug.getId() == selectedImageButton.getId()) {
+                        bug.setAlpha(0.0F); //highlight the background color to indicate selected tile
+                    }
+                }
+            }
+
             surfaceView.setState(hiveGame);
             surfaceView.invalidate();
             Logger.log(TAG, "receiving");
         }
     }
-
 
     /**
      * sets the current player as the activity's GUI
@@ -254,6 +278,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
                 oldX = newX;
                 oldY = newY;
+                hasTapped = !hasTapped;
                 game.sendAction(new HiveSelectAction(this, oldX, oldY));
             }
             else if(hasTapped && oldX != -1){ //this is the second time tapping so you've selected a gameboard tile and now another gameboard tile
@@ -292,27 +317,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             game.sendAction(selectAction); //then pass a select action
         }
 
-                /* case R.id.beeP1Image:
-                hiveGame.setCurrentIdSelected(R.id.beeP1Image);
-                game.sendAction(selectAction);
-                break;
-            case R.id.spiderP1Image:
-                hiveGame.setCurrentIdSelected(R.id.spiderP1Image);
-                game.sendAction(selectAction);
-                break;
-            case R.id.beetleP1Image:
-                hiveGame.setCurrentIdSelected(R.id.beetleP1Image);
-                game.sendAction(selectAction);
-                break;
-            case R.id.antP1Image:
-                hiveGame.setCurrentIdSelected(R.id.antP1Image);
-                game.sendAction(selectAction);
-                break;
-            case R.id.grasshopperP1Image:
-                hiveGame.setCurrentIdSelected(R.id.grasshopperP1Image);
-                game.sendAction(selectAction);
-                break; */
-
     }
 
     //setter and getters for instance variables
@@ -326,5 +330,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     public float getNewY() {
         return newY;
+    }
+
+    public ArrayList<ImageButton> getImagesArray() {
+        return imagesArray;
     }
 }

@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.example.hiveframework.GameFramework.GameMainActivity;
 import com.example.hiveframework.GameFramework.utilities.FlashSurfaceView;
+
+import edu.up.cs301.game.R;
+
 /**
  * this is the custom HiveSurface view which holds the display board
  *
@@ -34,6 +37,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private Paint redPaint; //player 1's border
     private Paint yellowPaint; //potential movement's available
     private Activity myActivity;
+    int id; //id number of the resources to draw
 
     // the game's state
     protected HiveGameState state;
@@ -97,21 +101,37 @@ public class HiveSurfaceView extends FlashSurfaceView {
         if(state != null) {
             for (int i = 0; i < state.getBoardSize(); i++) {
                 for (int j = 0; j < state.getBoardSize() * 2; j++) {
-                    if (i % 2 == 0) { //even row
-                        drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
-                    } else { //odd row
-                        drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
+                    //loop through all pieces in their locations and ask piece to draw itself
+                    //use the id to draw the appropriate bitmap
+                    switch (state.getGameBoard().get(i).get(j).getType()) {
+                        case EMPTY:
+                            id = -1;
+                            //drawEmpty(canvas, i, j);
+                            break;
+                        case QUEEN_BEE:
+                            id = R.drawable.bensonbeehexcropped;
+                            //drawBee(canvas, i, j);
+                            break;
+                        case GRASSHOPPER:
+                            id = R.drawable.grasshopperhexcropped;
+                            //drawGrasshopper(i, j);
+                            break;
+                        case SPIDER:
+                            id = R.drawable.spiderhexcropped;
+                            //drawSpider(i, j);
+                            break;
+                        case BEETLE:
+                            id = R.drawable.beetlehexcropped;
+                            //drawBeetle(i, j);
+                            break;
+                        case ANT:
+                            id = R.drawable.anthexcropped;
+                            //drawAnt(i, j);
+                            break;
                     }
-                }
-            }
-
-            //loop through all pieces in their locations and ask piece to draw itself
-            //use the id from Tile to draw the appropriate bitmap
-            for (int i = 0; i < state.getBoardSize(); i++) {
-                for (int j = 0; j < state.getBoardSize() * 2; j++) {
-                    int id = state.getGameBoard().get(i).get(j).getId();
-                    if (id != -1) {
-                        Matrix matrix = new Matrix();
+                    //Now draw all the tiles in the right spot, scaled
+                    Matrix matrix = new Matrix();
+                    if (id != -1) { //draw a special tile
                         Bitmap image = BitmapFactory.decodeResource(myActivity.getResources(), id); //create image using tile's id
 
                         if (i % 2 == 0) { //even row
@@ -123,12 +143,48 @@ public class HiveSurfaceView extends FlashSurfaceView {
                         }
 
                     }
+                    else{
+                        if (i % 2 == 0) { //even row
+                            
+                        } else { //odd row
+
+                    }
                 }
             }
-        }
+
+        } //end of state if statement
+
+        /*
+        for (int i = 0; i < state.getBoardSize(); i++) {
+            for (int j = 0; j < state.getBoardSize() * 2; j++) {
+                state.getGameBoard();
+                switch(state.getGameBoard().get(i).get(j).getType()){
+                    case EMPTY:
+                        drawEmpty(canvas, i,j);
+                        break;
+                    case QUEEN_BEE:
+                        drawBee(canvas, i,j);
+                        break;
+                    case GRASSHOPPER:
+                        drawGrasshopper(i,j);
+                        break;
+                    case SPIDER:
+                        drawSpider(i,j);
+                        break;
+                    case BEETLE:
+                        drawBeetle(i,j);
+                        break;
+                    case ANT:
+                        drawAnt(i,j);
+                        break;
+                }
+            }
+        } */
     }
 
     public void setState(HiveGameState state) {
         this.state = state;
     }
+
+    public void
 }
