@@ -98,19 +98,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         super(name);
         this.layoutId = layoutId;
         imagesArray = new ArrayList<ImageButton>();
-
-        //add all buttons to the array to be able to iterate through them
-        imagesArray.add(beeP1Image);
-        imagesArray.add(spiderP1Image);
-        imagesArray.add(beetleP1Image);
-        imagesArray.add(antP1Image);
-        imagesArray.add(grasshopperP1Image);
-        imagesArray.add(beeP2Image);
-        imagesArray.add(spiderP2Image);
-        imagesArray.add(beetleP2Image);
-        imagesArray.add(antP2Image);
-        imagesArray.add(grasshopperP2Image);
-
     }
 
     /**
@@ -159,9 +146,12 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             antP2Counter.setText("" + hiveGame.getPiecesRemain()[1][4]);
 
             for (ImageButton bug: imagesArray) {
-                if (bug != null) {
+                if (bug != null && selectedImageButton != null) {
                     if (bug.getId() == selectedImageButton.getId()) {
-                        bug.setAlpha(0.0F); //highlight the background color to indicate selected tile
+                        bug.setBackgroundColor(Color.YELLOW); //highlight the background color to indicate selected tile
+                    }
+                    else{
+                        bug.setBackgroundColor(Color.GRAY);
                     }
                 }
             }
@@ -247,6 +237,18 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         beetleP2Image.setOnClickListener(this);
         antP2Image.setOnClickListener(this);
         grasshopperP2Image.setOnClickListener(this);
+
+        //add all buttons to the array to be able to iterate through them
+        imagesArray.add(beeP1Image);
+        imagesArray.add(spiderP1Image);
+        imagesArray.add(beetleP1Image);
+        imagesArray.add(antP1Image);
+        imagesArray.add(grasshopperP1Image);
+        imagesArray.add(beeP2Image);
+        imagesArray.add(spiderP2Image);
+        imagesArray.add(beetleP2Image);
+        imagesArray.add(antP2Image);
+        imagesArray.add(grasshopperP2Image);
 
         playButton.setOnClickListener(this);
         quitButton.setOnClickListener(this);

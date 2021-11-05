@@ -36,6 +36,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private Paint bluePaint; //player 2's border
     private Paint redPaint; //player 1's border
     private Paint yellowPaint; //potential movement's available
+    private Paint tileColor;
     private Activity myActivity;
     int id; //id number of the resources to draw
 
@@ -97,6 +98,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
         int startY = 100;
         int radius = 50;
         int separation = 2* radius + 5;
+
         //draws the gameboard hexes
         if(state != null) {
             for (int i = 0; i < state.getBoardSize(); i++) {
@@ -131,25 +133,33 @@ public class HiveSurfaceView extends FlashSurfaceView {
                     }
                     //Now draw all the tiles in the right spot, scaled
                     Matrix matrix = new Matrix();
+                    //assign the right color to draw the border based on who owns the tile
+                    if(state.getGameBoard().get(i).get(j).getPlayerPiece() == Tile.PlayerPiece.W){
+                        tileColor = redPaint;
+                    }
+                    else if(state.getGameBoard().get(i).get(j).getPlayerPiece() == Tile.PlayerPiece.B){
+                        tileColor = bluePaint;
+                    }
+
                     if (id != -1) { //draw a special tile
                         Bitmap image = BitmapFactory.decodeResource(myActivity.getResources(), id); //create image using tile's id
 
                         if (i % 2 == 0) { //even row
                             canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
                                     2 * startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                            drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         } else { //odd row
                             canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
                                     startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                            drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         }
 
                     }
-                    else{
+                    else{ //draw an empty tile
                         if (i % 2 == 0) { //even row
-                            canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
-                                    2 * startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                            drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
                         } else { //odd row
-                            canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
-                                    startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                            drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
                         }
                     }
 
@@ -157,38 +167,10 @@ public class HiveSurfaceView extends FlashSurfaceView {
             }
 
         } //end of state if statement
-
-        /*
-        for (int i = 0; i < state.getBoardSize(); i++) {
-            for (int j = 0; j < state.getBoardSize() * 2; j++) {
-                state.getGameBoard();
-                switch(state.getGameBoard().get(i).get(j).getType()){
-                    case EMPTY:
-                        drawEmpty(canvas, i,j);
-                        break;
-                    case QUEEN_BEE:
-                        drawBee(canvas, i,j);
-                        break;
-                    case GRASSHOPPER:
-                        drawGrasshopper(i,j);
-                        break;
-                    case SPIDER:
-                        drawSpider(i,j);
-                        break;
-                    case BEETLE:
-                        drawBeetle(i,j);
-                        break;
-                    case ANT:
-                        drawAnt(i,j);
-                        break;
-                }
-            }
-        } */
     }
 
     public void setState(HiveGameState state) {
         this.state = state;
     }
 
-    public void
 }
