@@ -972,6 +972,36 @@ public class HiveGameState extends GameState implements Serializable {
         return true;
     }
 
+    public boolean spiderSearch (Tile tile ) {
+        // The tile the spider is on
+        int m = tile.getIndexX();
+        int n = tile.getIndexY();
+
+        ArrayList<int[]> ValidMoves = new ArrayList<int[]>();
+        for (int s = m - 3; s < m + 3; m++) {
+            for (int j = n - 3; j < n + 3; n++) {
+                int[] Valid = new int[2];
+
+                if (s == m - 3 || s == m + 3 || j == n - 3 || j == n + 3) {
+
+                    Valid[0] = s;
+                    Valid[1] = j;
+                    Tile newTile = new Tile(s, j, tile.getPlayerPiece());
+                    // check if valid move breaks bfs
+
+                    if (breakHive(newTile)){
+                        break;
+                    }
+
+                    potentialMoves.add(newTile);
+
+                }
+
+            }
+        }
+        return true;
+    }
+
     /**
      * Ensures Tile tile is empty and next to an occupied Tile that is not the selected Tile.
      * Helper function for piece search functions
