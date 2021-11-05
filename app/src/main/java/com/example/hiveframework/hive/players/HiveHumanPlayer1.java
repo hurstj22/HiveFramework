@@ -76,6 +76,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     //human player needs to highlight what button was tapped
     //remember if a tap happened before
     private boolean hasTapped = false;
+    private float inX = -1;
+    private float inY = -1;
     private float newX = -1;
     private float newY = -1; //store the coordinates that the player wants to move to, used in the touch event
     private float oldX = -1;
@@ -245,8 +247,13 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            newX = motionEvent.getX();
-            newY = motionEvent.getY();
+            inX = motionEvent.getX();
+            inY = motionEvent.getY();
+
+            //convert coordinates to position in gameBoard
+            int[] gameBoardPosition = surfaceView.mapPixelToSquare(inX, inY);
+            newX = gameBoardPosition[1];
+            newY = gameBoardPosition[0]; 
 
             if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
                 game.sendAction(new HiveMoveAction(this, newX, newY));
