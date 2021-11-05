@@ -531,7 +531,8 @@ public class HiveGameState extends GameState implements Serializable {
                     //utilize the startGrasshopperSearch function to find potential moves.
                     return startGrasshopperSearch(tile);
                 case SPIDER:
-                    //
+                    //utilize the SpiderSearch function to find potential moves.
+                    return spiderSearch(tile);
                 case QUEEN_BEE:
                     //utilize the queenSearch function to find potential moves.
                     return queenSearch(tile);

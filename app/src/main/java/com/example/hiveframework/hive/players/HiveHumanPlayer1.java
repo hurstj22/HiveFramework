@@ -89,6 +89,13 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
 
+    //id numbers to hold the id nums of all images
+    int beeId;
+    int spiderId;
+    int grasshopperId;
+    int beetleId;
+    int antId;
+
     /**
      * constructor
      *
@@ -258,6 +265,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         rulesButton.setOnClickListener(this);
         endTurnButton.setOnClickListener(this);
         undoButton.setOnClickListener(this);
+
     }
 
     /**
@@ -329,6 +337,28 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     }
 
+    /**
+     * perform any initialization that needs to be done after the player
+     * knows what their game-position and opponents' names are.
+     */
+    @Override
+    protected void initAfterReady() {
+        if(hiveGame.getWhoseTurn() == 0) { //player 1's turn, thus selected must be P1's
+            beeId = beeP1Image.getId();
+            beetleId = beetleP1Image.getId();
+            spiderId = spiderP1Image.getId();
+            grasshopperId = grasshopperP1Image.getId();
+            antId = antP1Image.getId();
+        }
+        else { //player 2's turn, thus selected must be P2's
+            beeId = beeP2Image.getId();
+            beetleId = beetleP2Image.getId();
+            spiderId = spiderP2Image.getId();
+            grasshopperId = grasshopperP2Image.getId();
+            antId = antP2Image.getId();
+        }
+    }
+
     //setter and getters for instance variables
     public ImageButton getSelectedImageButton() {
         return selectedImageButton;
@@ -355,18 +385,27 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     /**
      *
-     * @param imageId
-     * @param player
-     * @return
+     * @param imageId the Id of an ImageButton corresponding to a bug type
+     * @return a type of Bug to be used to create a new Tile
      */
-    public Tile.Bug findBugType(int imageId, HiveHumanPlayer1 player) {
-        ArrayList<ImageButton> imagesArray = player.getImagesArray();
+    public Tile.Bug findBugType(int imageId) {
 
-        switch (imageId) {
-            //case player.getActivity().findViewById(R.id.antP1Image).getId():
-            //return Tile.Bug.ANT;
+        if(imageId == beeId){
+            return Tile.Bug.QUEEN_BEE;
         }
-        return Tile.Bug.EMPTY; //if returns empty you know it didn't find any match
+        else if(imageId == spiderId){
+            return Tile.Bug.SPIDER;
+        }
+        else if(imageId == beetleId){
+            return Tile.Bug.BEETLE;
+        }
+        else if(imageId == grasshopperId){
+            return Tile.Bug.GRASSHOPPER;
+        }
+        else if(imageId == antId){
+            return Tile.Bug.ANT;
+        }
+        return Tile.Bug.EMPTY; //if made it here returns empty you know it didn't find any match
     }
 
 }

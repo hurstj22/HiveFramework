@@ -2,6 +2,7 @@ package com.example.hiveframework.hive.hiveActionMessage;
 
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
+import com.example.hiveframework.hive.Tile;
 
 public class HiveSelectAction extends GameAction {
 
@@ -13,6 +14,7 @@ public class HiveSelectAction extends GameAction {
     private float xCoord;
     private float yCoord;
     private int id;
+    private Tile selectedTile; //the tile created because of selection or the tile selected
 
     /**
      * constructor for GameAction
@@ -78,5 +80,13 @@ public class HiveSelectAction extends GameAction {
      */
     public int getId() {
         return id;
+    }
+
+    public Tile getSelectedTile() {
+        return selectedTile;
+    }
+
+    public void setSelectedTile(Tile selectedTile) {
+        this.selectedTile = selectedTile;
     }
 }

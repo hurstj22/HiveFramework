@@ -2,6 +2,7 @@ package com.example.hiveframework.hive.hiveActionMessage;
 
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
+import com.example.hiveframework.hive.Tile;
 
 public class HiveMoveAction extends GameAction {
 
@@ -12,6 +13,7 @@ public class HiveMoveAction extends GameAction {
     // instance variables: the selected row and column
     private float xCoord;
     private float yCoord;
+    private Tile currentTile; //the tile being moved
 
     /**
      * constructor for GameAction
@@ -55,4 +57,11 @@ public class HiveMoveAction extends GameAction {
         return yCoord;
     }
 
+    public Tile getCurrentTile() {
+        return currentTile;
+    }
+
+    public void setCurrentTile(Tile currentTile) {
+        this.currentTile = currentTile;
+    }
 }
