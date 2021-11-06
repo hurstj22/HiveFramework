@@ -48,7 +48,7 @@ public class HiveGameState extends GameState implements Serializable {
         //Initialize gameBoard to be 8 rows of empty tiles
         gameBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
-            gameBoard.add(new ArrayList<Tile>(GBSIZE));
+            gameBoard.add(new ArrayList<Tile>(GBSIZE*2)); //rectangle so make the col's twice the size
         }
         for(int i = 0; i < GBSIZE; i++){
             for(int j = 0; j < GBSIZE*2; j++){ //add twice as many columns as rows to make rect grid
@@ -62,7 +62,7 @@ public class HiveGameState extends GameState implements Serializable {
             displayBoard.add(new ArrayList<Tile>(GBSIZE));
         }
         for(int i = 0; i < GBSIZE; i++){
-            for(int j = 0; j < GBSIZE; j++){
+            for(int j = 0; j < GBSIZE*2; j++){
                 displayBoard.get(i).add(j, gameBoard.get(i).get(j));
             }
         }
@@ -199,17 +199,24 @@ public class HiveGameState extends GameState implements Serializable {
         //perform a DFS on the gameBoard
         //copy the old gameBoard into a new temporary board to perform dfs on
         ArrayList<ArrayList<Tile>> testBoard = new ArrayList<ArrayList<Tile>>();
-        for(int i = 0; i < gameBoard.size(); i++){
-            for(int j = 0; j < gameBoard.get(i).size(); j++){
-                if(i == tile.getIndexX() && j == tile.getIndexY()){
-                    testBoard.get(i).set(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
+        for(int i=0; i < GBSIZE; i++) {
+            testBoard.add(new ArrayList<Tile>(GBSIZE*2));
+        }
+        for(int i = 0; i < gameBoard.size(); i++) {
+            for (int j = 0; j < gameBoard.get(i).size(); j++) {
+                if (tile.getIndexX() != -1) { //if this is a tile that is already on the board then check to take it out
+                    if (i == tile.getIndexX() && j == tile.getIndexY()) {
+                        testBoard.get(i).set(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
+                    } else {
+                        testBoard.get(i).set(j, new Tile(gameBoard.get(i).get(j)));
+                    }
                 }
-                else{
-                    testBoard.get(i).set(j, new Tile (gameBoard.get(i).get(j)));
+                else{ //just copy the gameBoard over to the testBoard instead
+                    testBoard.get(i).set(j, new Tile(gameBoard.get(i).get(j)));
                 }
-                //update the row and col of the first position where the row and col aren't empty
-                //for use in the bfs
-                if(!firstFound && testBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
+                    //update the row and col of the first position where the row and col aren't empty
+                    //for use in the bfs
+                if (!firstFound && testBoard.get(i).get(j).getType() != Tile.Bug.EMPTY) {
                     row = i;
                     col = j;
                     firstFound = true;

@@ -342,15 +342,15 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             selectActionFromHand.setSelectedImageButton(selectedImageButton);
             //create the tile to pass in as selected tile with starting coords as -1 since it belongs in the player's hand
             if(hiveGame.getWhoseTurn() == 0){
-                piece = Tile.PlayerPiece.W;
+                piece = Tile.PlayerPiece.W; //1st player
             }
             else{
-                piece = Tile.PlayerPiece.B;
-            }
+                piece = Tile.PlayerPiece.B; //2nd player
+            } //findBugType is not working right
             currentTile = new Tile(-1,-1, piece, findBugType(selectedImageButton.getId()), selectedImageButton.getId());
 
             selectActionFromHand.setSelectedTile(currentTile); //assign the selected tile in the select action class to be referenced later
-            game.sendAction(selectAction); //then pass a select action
+            game.sendAction(selectActionFromHand); //then pass a select action
         }
 
     }
@@ -361,19 +361,20 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      */
     @Override
     protected void initAfterReady() {
-        if(hiveGame.getWhoseTurn() == 0) { //player 1's turn, thus selected must be P1's
-            beeId = beeP1Image.getId();
-            beetleId = beetleP1Image.getId();
-            spiderId = spiderP1Image.getId();
-            grasshopperId = grasshopperP1Image.getId();
-            antId = antP1Image.getId();
-        }
-        else { //player 2's turn, thus selected must be P2's
-            beeId = beeP2Image.getId();
-            beetleId = beetleP2Image.getId();
-            spiderId = spiderP2Image.getId();
-            grasshopperId = grasshopperP2Image.getId();
-            antId = antP2Image.getId();
+        if(hiveGame != null) {
+            if (hiveGame.getWhoseTurn() == 0) { //player 1's turn, thus selected must be P1's
+                beeId = beeP1Image.getId();
+                beetleId = beetleP1Image.getId();
+                spiderId = spiderP1Image.getId();
+                grasshopperId = grasshopperP1Image.getId();
+                antId = antP1Image.getId();
+            } else { //player 2's turn, thus selected must be P2's
+                beeId = beeP2Image.getId();
+                beetleId = beetleP2Image.getId();
+                spiderId = spiderP2Image.getId();
+                grasshopperId = grasshopperP2Image.getId();
+                antId = antP2Image.getId();
+            }
         }
     }
 
