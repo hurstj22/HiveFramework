@@ -19,6 +19,8 @@ public class HiveLocalGame extends LocalGame {
 
     Tile currentTile;
     int[] newIndexPt = new int[2]; //index pair, (col, row) for going from float to gameBoard index
+    int oldX;
+    int oldY;
     Tile.PlayerPiece piece;
     Tile.Bug type;
 
@@ -32,6 +34,9 @@ public class HiveLocalGame extends LocalGame {
 
         // create a new, unfilled-in HiveGameState object
         super.state = new HiveGameState();
+        //initialize coords to be used later, -1 means nothing is there
+        oldX = -1;
+        oldY = -1;
     }
 
     /**
@@ -41,6 +46,8 @@ public class HiveLocalGame extends LocalGame {
     public HiveLocalGame(HiveGameState hiveGameState){
         super();
         super.state = new HiveGameState(hiveGameState);
+        oldX = -1;
+        oldY = -1;
     }
 
     /**
@@ -106,43 +113,34 @@ public class HiveLocalGame extends LocalGame {
         }
 
         HiveGameState hiveState = (HiveGameState) super.state; //cast new state to reference as a hiveState
-        HiveHumanPlayer1 player;
         // get the 0/1 id of our player
         int playerId = getPlayerIdx(action.getPlayer());
         // get the 0/1 id of the player whose move it is
         int whoseMove = hiveState.getWhoseTurn();
 
         if(canMove(playerId)) {
-            player = (HiveHumanPlayer1) action.getPlayer();
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
                 HiveSelectAction select = (HiveSelectAction) action;
 
-                if(player.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
-                    //loop through array list of resource id's, if it matches an id then call gameState validMove on it to select
-                    //make a new tile using the selectedImageButton's id to figure out what type, the player index to figure out whom's, and set the indices to???
-                    if(playerId == getPlayerIdx(players[0])){
-                        piece = Tile.PlayerPiece.W;
-                    }
-                    else{
-                        piece = Tile.PlayerPiece.B;
-                    }
-                    //pass in the buttonId, the Tile class figures out what type of Bug that is
-                    currentTile = new Tile(-1,-1, piece, type, player.getSelectedImageButton().getId());
+                if(select.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
+                    hiveState.validMove(select.getSelectedTile()); //pass the newly created tile to calculate all possible moves
                 }
                 else{ //selecting from the game board
                     //get newX and newY and determine what tile they correspond to, then call gameState validMove on those
-                    newIndexPt = player.getSurfaceView().mapPixelToSquare(((HiveMoveAction) action).getX(), ((HiveMoveAction) action).getY());
-                    return hiveState.validMove(hiveState.getTile(newIndexPt[0], newIndexPt[1]));
+                    oldX = (int) select.getX();
+                    oldY = (int) select.getY();
+                    return hiveState.validMove(hiveState.getTile((int) select.getX(),(int) select.getY()));
                 }
 
             } else if (action instanceof HiveMoveAction) { //we've been passed a request to move a piece
                 HiveMoveAction move = (HiveMoveAction) action;
 
-                if(player.getSelectedImageButton() != null){ //moving from hand to board
-                    return hiveState.makeMove(currentTile, (int) move.getX(), (int) move.getY());
+                if(move.getSelectedImageButton() != null){ //moving from hand to board
+                    move.setSelectedImageButton(null); //reset the imageButton
+                    return hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY());
                 }
                 else{ //moving from board spot to board spot
-                    return hiveState.makeMove(currentTile, (int) move.getX(), (int) move.getY());
+                    return hiveState.makeMove(hiveState.getTile(oldX, oldY), (int) move.getX(), (int) move.getY());
                 }
             }
             // return true, indicating the it was a legal move

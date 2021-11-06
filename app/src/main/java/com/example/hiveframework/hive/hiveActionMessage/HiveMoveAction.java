@@ -1,5 +1,7 @@
 package com.example.hiveframework.hive.hiveActionMessage;
 
+import android.widget.ImageButton;
+
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.hive.Tile;
@@ -14,6 +16,7 @@ public class HiveMoveAction extends GameAction {
     private float xCoord;
     private float yCoord;
     private Tile currentTile; //the tile being moved
+    private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
 
     /**
      * constructor for GameAction
@@ -63,5 +66,13 @@ public class HiveMoveAction extends GameAction {
 
     public void setCurrentTile(Tile currentTile) {
         this.currentTile = currentTile;
+    }
+
+    public ImageButton getSelectedImageButton() {
+        return selectedImageButton;
+    }
+
+    public void setSelectedImageButton(ImageButton selectedImageButton) {
+        this.selectedImageButton = selectedImageButton;
     }
 }

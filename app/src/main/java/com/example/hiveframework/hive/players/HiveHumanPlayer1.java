@@ -76,6 +76,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     private HiveGameState hiveGame;
     private GameMainActivity myActivity = null;
     private ArrayList<ImageButton> imagesArray;
+    private Tile currentTile = null;
+    private Tile.PlayerPiece piece;
 
     //human player needs to highlight what button was tapped
     //remember if a tap happened before
@@ -291,8 +293,11 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             newY = gameBoardPosition[0]; 
 
             if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
+                HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);
+                moveActionFromHand.setSelectedImageButton(selectedImageButton);
+                //not sure if I can reset it since possibly it's just a pointer that gets assigned in moveAction... not sure about this one
                 setSelectedImageButton(null); //reset the selected image since either nothing is going to happen or the pieces will move
-                game.sendAction(new HiveMoveAction(this, newX, newY));
+                game.sendAction(moveActionFromHand);
             }
             else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
                 oldX = newX;
@@ -333,6 +338,18 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         if(view instanceof ImageButton){
             //one of the player's bug pieces from their hand was selected, thus update the imageButton object
             selectedImageButton = (ImageButton) view; //local game can access the id and perform the appropriate actions
+            HiveSelectAction selectActionFromHand = new HiveSelectAction(this, selectedImageButton.getId()); //set up the action
+            selectActionFromHand.setSelectedImageButton(selectedImageButton);
+            //create the tile to pass in as selected tile with starting coords as -1 since it belongs in the player's hand
+            if(hiveGame.getWhoseTurn() == 0){
+                piece = Tile.PlayerPiece.W;
+            }
+            else{
+                piece = Tile.PlayerPiece.B;
+            }
+            currentTile = new Tile(-1,-1, piece, findBugType(selectedImageButton.getId()), selectedImageButton.getId());
+
+            selectActionFromHand.setSelectedTile(currentTile); //assign the selected tile in the select action class to be referenced later
             game.sendAction(selectAction); //then pass a select action
         }
 
