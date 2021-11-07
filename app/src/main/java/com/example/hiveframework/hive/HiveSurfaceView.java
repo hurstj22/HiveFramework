@@ -152,10 +152,10 @@ public class HiveSurfaceView extends FlashSurfaceView {
 
                         //Now draw all the tiles in the right spot, scaled
                         if (i % 2 == 0) { //even row
-                            canvas.drawBitmap(resizedImage, 2 * startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                            canvas.drawBitmap(resizedImage, 2 * startX + j * separation - radius, startY + i * separation - radius, whitePaint); //draw the image on the surface view in the correct location
                             drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         } else { //odd row
-                            canvas.drawBitmap(resizedImage, startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                            canvas.drawBitmap(resizedImage, startX + j * separation - radius, startY + i * separation - radius, whitePaint); //draw the image on the surface view in the correct location
                             drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         }
 
@@ -186,6 +186,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
             }
 
         } //end of state if statement
+        potentialCounter = 0;
     }
 
     /**

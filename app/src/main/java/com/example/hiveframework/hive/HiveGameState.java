@@ -208,16 +208,15 @@ public class HiveGameState extends GameState implements Serializable {
     public boolean selectFromHand(Tile tile){
         //how many bugs are on the board
         int bugCounter = 0;
-        Tile tileInQuestion;
+        Tile tileInQuestion = new Tile(tile); //default just in case it doesn't get initialized later
 
         for(int i = 0; i < gameBoard.size(); i++) {
             for (int j = 0; j < gameBoard.get(i).size(); j++) {
                 if(gameBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
-                    bugCounter++;
                     if(bugCounter <= 0) {//only update this tile once
                         tileInQuestion = new Tile(gameBoard.get(i).get(j)); //the one tile that's already on the board
                     }
-
+                    bugCounter++;
                 }
             }
         }
@@ -233,11 +232,11 @@ public class HiveGameState extends GameState implements Serializable {
         }
         else if(bugCounter == 1){ //if there is exactly one piece placed down
             //then only add the pieces that are surrounding that piece as potential spots
-            //updatePotentialsForPlacing(tileInQuestion, 0); //this function adds all the pieces to potentialMoves
+            updatePotentialsForPlacing(tileInQuestion, 0); //this function adds all the pieces to potentialMoves
             return true;               // and takes in a mode selector to know which tiles to add
         }
         else if(bugCounter >= 2){ //the first pieces have been put down for each player
-            //updatePotentialsForPlacing(tile, 1); //only add the surrounding tiles that touch only the same color as the current tile
+            updatePotentialsForPlacing(tile, 1); //only add the surrounding tiles that touch only the same color as the current tile
             return true;
         }
 
@@ -1259,14 +1258,19 @@ public class HiveGameState extends GameState implements Serializable {
                     Tile emptyTile = new Tile(oldTileCords[0], oldTileCords[1], Tile.PlayerPiece.EMPTY);
                     gameBoard.get(oldTileCords[0]).set(oldTileCords[1], emptyTile);
                 }
+                else {
+                    removePiecesRemain(moveTile.getType()); //from the player's hand to the board, thus update the player's hand counters
+                }
             }
 
             //on top of something so don't make new empty tile
             else {
                 gameBoard.get(newXIndex).set(newYIndex, moveTile);
             }
+            potentialMoves = new ArrayList<Tile>(); //reset potentialMoves
             return true;
         }
+        potentialMoves = new ArrayList<Tile>(); //reset potentialMoves
        return false;
     }
 
@@ -1413,7 +1417,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @param placedTile
      * @param toggle
      */
-    public void surroundingTiles(Tile placedTile, int toggle){
+    public void surroundingTiles(Tile placedTile, int toggle){ //known bugs, doesn't work if you pass in corner or side pieces due to no bounds checking
         int x = placedTile.getIndexX();
         int y = placedTile.getIndexY();
         Tile.PlayerPiece playerColor = placedTile.getPlayerPiece();
