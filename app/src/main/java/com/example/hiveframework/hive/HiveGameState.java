@@ -96,6 +96,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
         whoseTurn = 0; //initialize the gameboard with Player1 going first
         currentIdSelected = -1;
+        potentialMoves = new ArrayList<Tile>();
     }
 
     /**
@@ -131,7 +132,15 @@ public class HiveGameState extends GameState implements Serializable {
                 this.piecesRemain[i][j] = other.getPiecesRemain()[i][j];
             }
         }
+
         this.whoseTurn = other.whoseTurn;
+        this.currentIdSelected = getCurrentIdSelected();
+
+        this.potentialMoves = new ArrayList<Tile>();
+        for (int i = 0; i < other.getPotentialMoves().size(); i++){
+            Tile copyTile = new Tile((other.getPotentialMoves()).get(i));
+            this.potentialMoves.add(copyTile);
+        }
     }
 
     /**
@@ -199,18 +208,37 @@ public class HiveGameState extends GameState implements Serializable {
     public boolean selectFromHand(Tile tile){
         //how many bugs are on the board
         int bugCounter = 0;
+        Tile tileInQuestion;
 
         for(int i = 0; i < gameBoard.size(); i++) {
             for (int j = 0; j < gameBoard.get(i).size(); j++) {
                 if(gameBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
                     bugCounter++;
+                    if(bugCounter <= 0) {//only update this tile once
+                        tileInQuestion = new Tile(gameBoard.get(i).get(j)); //the one tile that's already on the board
+                    }
+
                 }
             }
         }
 
         //now we check a few things about the board to determine what to highlight as a potential move
         if(bugCounter <= 0){ //there's nothing on the board so you can place it anywhere
-            //potentialMoves = gameBoard;
+            for(int i = 0; i < gameBoard.size(); i++) {
+                for (int j = 0; j < gameBoard.get(i).size(); j++) {
+                    potentialMoves.add(gameBoard.get(i).get(j));
+                }
+            }
+            return true;
+        }
+        else if(bugCounter == 1){ //if there is exactly one piece placed down
+            //then only add the pieces that are surrounding that piece as potential spots
+            //updatePotentialsForPlacing(tileInQuestion, 0); //this function adds all the pieces to potentialMoves
+            return true;               // and takes in a mode selector to know which tiles to add
+        }
+        else if(bugCounter >= 2){ //the first pieces have been put down for each player
+            //updatePotentialsForPlacing(tile, 1); //only add the surrounding tiles that touch only the same color as the current tile
+            return true;
         }
 
         return false;

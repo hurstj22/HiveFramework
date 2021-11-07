@@ -37,7 +37,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private Paint redPaint; //player 1's border
     private Paint yellowPaint; //potential movement's available
     private Paint tileColor;
-    private Activity myActivity;
+    private Activity myActivity; //never being set :(
     int id; //id number of the resources to draw
 
     private int radius = 50;
@@ -49,9 +49,9 @@ public class HiveSurfaceView extends FlashSurfaceView {
 
     // the game's state
     protected HiveGameState state;
-
+    private int potentialCounter;
     /**
-     * Constructor for the TTTSurfaceView class.
+     * Constructor for the HiveSurfaceView class.
      *
      * @param context - a reference to the activity this animation is run under
      */
@@ -106,6 +106,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
         int separation = 2*radius + 5;
         //draws the gameboard hexes
         if(state != null) {
+            potentialCounter = 0;
             for (int i = 0; i < state.getBoardSize(); i++) {
                 for (int j = 0; j < state.getBoardSize() * 2; j++) {
                     //loop through all pieces in their locations and ask piece to draw itself
@@ -116,6 +117,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
                             //drawEmpty(canvas, i, j);
                             break;
                         case QUEEN_BEE:
+                            int testInt = 5;
                             id = R.drawable.bensonbeehexcropped;
                             //drawBee(canvas, i, j);
                             break;
@@ -136,9 +138,6 @@ public class HiveSurfaceView extends FlashSurfaceView {
                             //drawAnt(i, j);
                             break;
                     }
-                    //Now draw all the tiles in the right spot, scaled
-                    Matrix matrix = new Matrix();
-                    matrix.setScale(0.5F, 0.5F);
                     //assign the right color to draw the border based on who owns the tile
                     if(state.getGameBoard().get(i).get(j).getPlayerPiece() == Tile.PlayerPiece.W){
                         tileColor = redPaint;
@@ -148,18 +147,32 @@ public class HiveSurfaceView extends FlashSurfaceView {
                     }
 
                     if (id != -1) { //draw a special tile
-                        Bitmap image = BitmapFactory.decodeResource(myActivity.getResources(), id); //create image using tile's id
+                        Bitmap image = BitmapFactory.decodeResource(getResources(), id); //create image using tile's id
+                        Bitmap resizedImage = Bitmap.createScaledBitmap(image, 90, 90, true); //scales the image down to the right size
 
+                        //Now draw all the tiles in the right spot, scaled
                         if (i % 2 == 0) { //even row
-                            canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
-                                    2 * startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                            canvas.drawBitmap(resizedImage, 2 * startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
                             drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         } else { //odd row
-                            canvas.drawBitmap(Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true),
-                                    startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
+                            canvas.drawBitmap(resizedImage, startX + j * separation, startY + i * separation, whitePaint); //draw the image on the surface view in the correct location
                             drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         }
 
+                    }
+                    //draw potentials in yellow outline from the potentialsArrayList
+                    else if(state.getPotentialMoves() != null && i < state.getPotentialMoves().size()) { //make sure there's no null pointer exceptions thrown
+                            if (state.getPotentialMoves().get(potentialCounter) != null) {
+                                Tile potentialTile = new Tile(state.getPotentialMoves().get(potentialCounter));
+                                if (potentialTile.getIndexX() == i && potentialTile.getIndexY() == j) {
+                                    tileColor = yellowPaint;
+                                    if (i % 2 == 0) { //even row
+                                        drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
+                                    } else { //odd row
+                                        drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
+                                    }
+                                }
+                            }
                     }
                     else{ //draw an empty tile
                         if (i % 2 == 0) { //even row
@@ -168,22 +181,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
                             drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
                         }
                     }
-
-                    //draw potentials in yellow outline from the potentialsArrayList
-                    if(state.getPotentialMoves() != null) { //make sure there's no null pointer exceptions thrown
-                        if (state.getPotentialMoves().get(i) != null) {
-                            Tile potentialTile = state.getPotentialMoves().get(i);
-
-                            if (potentialTile.getIndexX() == i && potentialTile.getIndexY() == j) {
-                                tileColor = yellowPaint;
-                                if (i % 2 == 0) { //even row
-                                    drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
-                                } else { //odd row
-                                    drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
-                                }
-                            }
-                        }
-                    }
+                    potentialCounter++; //every iteration iterate counter that keeps track of where we are in the potentialArray
                 } //end of for loops
             }
 
@@ -236,8 +234,8 @@ public class HiveSurfaceView extends FlashSurfaceView {
         }
 
         int returnArray[] = new int[2];
-        returnArray[0] = column;
-        returnArray[1] = row;
+        returnArray[0] = row;
+        returnArray[1] = column;
         return returnArray;
     }
 

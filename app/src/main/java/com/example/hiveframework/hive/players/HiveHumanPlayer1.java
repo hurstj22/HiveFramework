@@ -167,8 +167,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                     }
                 }
             }
-
-            surfaceView.setState(hiveGame);
+            surfaceView.setState(hiveGame); //update the surfaceView
             surfaceView.invalidate();
             Logger.log(TAG, "receiving");
         }
@@ -297,6 +296,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 moveActionFromHand.setSelectedImageButton(selectedImageButton);
                 //not sure if I can reset it since possibly it's just a pointer that gets assigned in moveAction... not sure about this one
                 setSelectedImageButton(null); //reset the selected image since either nothing is going to happen or the pieces will move
+                moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
                 game.sendAction(moveActionFromHand);
             }
             else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
@@ -409,8 +409,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      * @return a type of Bug to be used to create a new Tile
      */
     public Tile.Bug findBugType(int imageId) {
-        int check = 0;
-        if(imageId == beeId){
+        int check = 0; //break spot for debugging
+        if(imageId == beeId) {
             return Tile.Bug.QUEEN_BEE;
         }
         else if(imageId == spiderId){
