@@ -170,6 +170,10 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if can move there, false if not
      */
     public boolean validMove(Tile tile){
+        if(tile.getIndexX() == -1) { //tile coming in from the players hand to be placed
+            return selectFromHand(tile);
+        }
+
         if(!breakHive(tile)){//as long as the move doesn't break the hive
             //and the type isn't grasshopper or beetle since they
             //don't obey the freedom of movement rule
@@ -182,6 +186,33 @@ public class HiveGameState extends GameState implements Serializable {
                 return true;
             }
         } //move breaks the hive :(
+        return false;
+    }
+
+    /**
+     * Helper method for the validMove method, takes in a tile and determines if it is
+     * able to be placed on the board somewhere. If it is, then this method
+     * populates the potentialMoves arrayList.
+     * @param tile the tile that was selected and wants to be placed on the board
+     * @return true if the tile is able to be placed, false if it is not permitted to be selected/placed
+     */
+    public boolean selectFromHand(Tile tile){
+        //how many bugs are on the board
+        int bugCounter = 0;
+
+        for(int i = 0; i < gameBoard.size(); i++) {
+            for (int j = 0; j < gameBoard.get(i).size(); j++) {
+                if(gameBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
+                    bugCounter++;
+                }
+            }
+        }
+
+        //now we check a few things about the board to determine what to highlight as a potential move
+        if(bugCounter <= 0){ //there's nothing on the board so you can place it anywhere
+            //potentialMoves = gameBoard;
+        }
+
         return false;
     }
 
@@ -244,7 +275,7 @@ public class HiveGameState extends GameState implements Serializable {
     }
 
     /**
-     * Performs an iterative breadth first search, found this code on stackOverFlow
+     * Performs a mix of iterative and recursive breadth first search, found this code on stackOverFlow
      * https://stackoverflow.com/questions/2969033/recursive-breadth-first-travel-function-in-java-or-c
      * @param row the starting x position
      * @param col the starting y position

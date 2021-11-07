@@ -361,21 +361,22 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      */
     @Override
     protected void initAfterReady() {
-        if(hiveGame != null) {
-            if (hiveGame.getWhoseTurn() == 0) { //player 1's turn, thus selected must be P1's
+        //if(hiveGame != null) {
+            //if (hiveGame.getWhoseTurn() == 0) { //player 1's turn, thus selected must be P1's
                 beeId = beeP1Image.getId();
                 beetleId = beetleP1Image.getId();
                 spiderId = spiderP1Image.getId();
                 grasshopperId = grasshopperP1Image.getId();
                 antId = antP1Image.getId();
-            } else { //player 2's turn, thus selected must be P2's
+            /* } else { //player 2's turn, thus selected must be P2's, actually maybe do this in the computer player instead.... idk cuz at the start of the game,
+                                                                        //the gameState is null
                 beeId = beeP2Image.getId();
                 beetleId = beetleP2Image.getId();
                 spiderId = spiderP2Image.getId();
                 grasshopperId = grasshopperP2Image.getId();
                 antId = antP2Image.getId();
-            }
-        }
+        //    } */
+        //}
     }
 
     //setter and getters for instance variables
@@ -408,7 +409,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      * @return a type of Bug to be used to create a new Tile
      */
     public Tile.Bug findBugType(int imageId) {
-
+        int check = 0;
         if(imageId == beeId){
             return Tile.Bug.QUEEN_BEE;
         }
