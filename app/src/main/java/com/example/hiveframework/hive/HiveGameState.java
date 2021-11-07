@@ -1157,6 +1157,8 @@ public class HiveGameState extends GameState implements Serializable {
 
     }
 
+
+
     /**
      * Method to print out gameState in readable format.
      * @return
@@ -1315,6 +1317,190 @@ public class HiveGameState extends GameState implements Serializable {
         }
     }
 
+    /**
+     * Ensures Tile tile is empty and next to an occupied Tile that is not the selected Tile.
+     * Helper function for piece search functions
+     *
+     * @param x - position in gameBoard corresponding to potential space tile could be placed
+     * @param y - position in gameBoard corresponding to potential space tile could be placed
+     * @return true if not touching other players color, false if touching other players color
+     */
+    public boolean touchingOtherColor(int x, int y, Tile.PlayerPiece other){
+        if (x % 2 == 0) {
+            // For even rows
+            if(gameBoard.get(x-1).get(y).getPlayerPiece() == other){
+                //Check tile above left of tile
+                return false;
+            }
+            else if(gameBoard.get(x-1).get(y+1).getPlayerPiece() == other){
+                //Check tile above right of tile
+                return false;
+            }
+            else if(gameBoard.get(x).get(y-1).getPlayerPiece() == other){
+                //Check tile to the left of tile
+                return false;
+            }
+            else if(gameBoard.get(x).get(y+1).getPlayerPiece() == other){
+                //Check tile to the right of tile
+                return false;
+            }
+            else if(gameBoard.get(x+1).get(y).getPlayerPiece() == other){
+                //Check tile below left of tile
+                return false;
+            }
+            else if(gameBoard.get(x+1).get(y+1).getPlayerPiece() == other){
+                //Check tile below right of tile
+                return false;
+            }
+        }
+        else {
+            // For odd rows
+            if(gameBoard.get(x-1).get(y-1).getPlayerPiece() == other){
+                //Check tile above left of tile
+                return false;
+            }
+            else if(gameBoard.get(x-1).get(y).getPlayerPiece() == other){
+                //Check tile above right of tile
+                return false;
+            }
+            else if(gameBoard.get(x).get(y-1).getPlayerPiece() == other){
+                //Check tile to the left of tile
+                return false;
+            }
+            else if(gameBoard.get(x).get(y+1).getPlayerPiece() == other){
+                //Check tile to the right of tile
+                return false;
+            }
+            else if(gameBoard.get(x+1).get(y-1).getPlayerPiece() == other){
+                //Check tile below left of tile
+                return false;
+            }
+            else if(gameBoard.get(x+1).get(y).getPlayerPiece() == other){
+                //Check tile below right of tile
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Updates potentialMoves based on tile selected by player to be placed
+     * @param inTile
+     * for condition 0 it is the only tile on the gameboard
+     * for condition 1 it is the tile selected from the players hand
+     * @param toggle
+     * 0 - only one tile on game board, so potentials all positions surrounding tile
+     * 1 - multiple tiles, so potentials empty spaces around tiles with same selected color
+     *     that are not touching other players color
+     */
+    public void updatePotentialsForPlacing(Tile inTile, int toggle){
+        if(toggle == 0){
+            surroundingTiles(inTile, toggle);
+        }
+        else{
+            for (int i = 0; i < GBSIZE; i++) {
+                for (int j = 0; j < GBSIZE * 2; j++) {
+                    if (gameBoard.get(i).get(j).getPlayerPiece() == inTile.getPlayerPiece()){
+                        surroundingTiles(gameBoard.get(i).get(j), toggle);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * updates potentialMoves based on tile on board
+     * @param placedTile
+     * @param toggle
+     */
+    public void surroundingTiles(Tile placedTile, int toggle){
+        int x = placedTile.getIndexX();
+        int y = placedTile.getIndexY();
+        Tile.PlayerPiece playerColor = placedTile.getPlayerPiece();
+        Tile.PlayerPiece otherColor;
+        if(playerColor == Tile.PlayerPiece.B){
+            otherColor = Tile.PlayerPiece.W;
+        }
+        else{
+            otherColor = Tile.PlayerPiece.B;
+        }
+        switch (toggle) {
+            case 0:
+                if (x % 2 == 0){ //even row
+                    potentialMoves.add(gameBoard.get(x-1).get(y)); //tile above left of tile
+                    potentialMoves.add(gameBoard.get(x-1).get(y+1)); //tile above right of tile
+                    potentialMoves.add(gameBoard.get(x).get(y-1)); //tile to the left of tile
+                    potentialMoves.add(gameBoard.get(x).get(y+1)); //tile to the right of tile
+                    potentialMoves.add(gameBoard.get(x+1).get(y)); //tile below left of tile
+                    potentialMoves.add(gameBoard.get(x+1).get(y+1)); //tile below right of tile
+                }
+                else{
+                    potentialMoves.add(gameBoard.get(x-1).get(y-1)); //tile above left of tile
+                    potentialMoves.add(gameBoard.get(x-1).get(y)); //tile above right of tile
+                    potentialMoves.add(gameBoard.get(x).get(y-1)); //tile to the left of tile
+                    potentialMoves.add(gameBoard.get(x).get(y+1)); //tile to the right of tile
+                    potentialMoves.add(gameBoard.get(x+1).get(y-1)); //tile below left of tile
+                    potentialMoves.add(gameBoard.get(x+1).get(y)); //tile below right of tile
+                }
+                break;
+            case 1:
+                if (x % 2 == 0) {
+                    // For even rows
+                    if(gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x-1, y, otherColor)){
+                        potentialMoves.add(gameBoard.get(x-1).get(y-1)); //tile above left of tile
+                    }
+                    else if(gameBoard.get(x-1).get(y+1).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x-1, y+1, otherColor)){
+                        potentialMoves.add(gameBoard.get(x-1).get(y+1)); //tile above right of tile
+                    }
+                    else if(gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x, y-1, otherColor)){
+                        potentialMoves.add(gameBoard.get(x).get(y-1)); //tile to the left of tile
+                    }
+                    else if(gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x, y+1, otherColor)){
+                        potentialMoves.add(gameBoard.get(x).get(y+1)); //tile to the right of tile
+                    }
+                    else if(gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x+1, y, otherColor)){
+                        potentialMoves.add(gameBoard.get(x+1).get(y)); //tile below left of tile
+                    }
+                    else if(gameBoard.get(x+1).get(y+1).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x-1, y+1, otherColor)){
+                        potentialMoves.add(gameBoard.get(x-1).get(y+1)); //tile below right of tile
+                    }
+                }
+                else {
+                    // For odd rows
+                    if(gameBoard.get(x-1).get(y-1).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x-1, y-1, otherColor)){
+                        potentialMoves.add(gameBoard.get(x-1).get(y-1)); //tile above left of tile
+                    }
+                    else if(gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x-1, y, otherColor)){
+                        potentialMoves.add(gameBoard.get(x-1).get(y)); //tile above right of tile
+                    }
+                    else if(gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x, y-1, otherColor)){
+                        potentialMoves.add(gameBoard.get(x).get(y-1)); //tile to the left of tile
+                    }
+                    else if(gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x, y+1, otherColor)){
+                        potentialMoves.add(gameBoard.get(x).get(y+1)); //tile to the right of tile
+                    }
+                    else if(gameBoard.get(x+1).get(y-1).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x+1, y-1, otherColor)){
+                        potentialMoves.add(gameBoard.get(x+1).get(y-1)); //tile below left of tile
+                    }
+                    else if(gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY &&
+                            touchingOtherColor(x-1, y, otherColor)){
+                        potentialMoves.add(gameBoard.get(x+1).get(y-1)); //tile below right of tile
+                    }
+                }
+                break;
+        }
+    }
 
     //testing class for playing Oracle
     public void addTile(Tile newTile){
