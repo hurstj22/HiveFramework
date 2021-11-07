@@ -161,10 +161,11 @@ public class HiveSurfaceView extends FlashSurfaceView {
 
                     }
                     //draw potentials in yellow outline from the potentialsArrayList
-                    else if(state.getPotentialMoves() != null && i < state.getPotentialMoves().size()) { //make sure there's no null pointer exceptions thrown
+                    else if((state.getPotentialMoves() != null) && (potentialCounter < state.getPotentialMoves().size())) { //make sure there's no null pointer exceptions thrown
                             if (state.getPotentialMoves().get(potentialCounter) != null) {
                                 Tile potentialTile = new Tile(state.getPotentialMoves().get(potentialCounter));
                                 if (potentialTile.getIndexX() == i && potentialTile.getIndexY() == j) {
+                                    potentialCounter++; //every iteration iterate counter that keeps track of where we are in the potentialArray
                                     tileColor = yellowPaint;
                                     if (i % 2 == 0) { //even row
                                         drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
@@ -181,7 +182,6 @@ public class HiveSurfaceView extends FlashSurfaceView {
                             drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
                         }
                     }
-                    potentialCounter++; //every iteration iterate counter that keeps track of where we are in the potentialArray
                 } //end of for loops
             }
 

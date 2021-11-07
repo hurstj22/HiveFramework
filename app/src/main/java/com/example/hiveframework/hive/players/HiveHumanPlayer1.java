@@ -126,6 +126,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         if (info instanceof IllegalMoveInfo || info instanceof NotYourTurnInfo) {
             // if the move was out of turn or otherwise illegal, flash the screen
             surfaceView.flash(Color.RED, 50);
+            selectedImageButton = null; //reset the selected image pointer if an illegal move was passed
         }
         else if (!(info instanceof HiveGameState))
             // if we do not have a HiveGameState, ignore
@@ -295,20 +296,22 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);
                 moveActionFromHand.setSelectedImageButton(selectedImageButton);
                 //not sure if I can reset it since possibly it's just a pointer that gets assigned in moveAction... not sure about this one
-                setSelectedImageButton(null); //reset the selected image since either nothing is going to happen or the pieces will move
                 moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
                 game.sendAction(moveActionFromHand);
+                selectedImageButton = null; //reset the selected image since either nothing is going to happen or the pieces will move
+                return true;
             }
             else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
                 oldX = newX;
                 oldY = newY;
                 hasTapped = !hasTapped;
                 game.sendAction(new HiveSelectAction(this, oldX, oldY));
+                return true;
             }
             else if(hasTapped && oldX != -1){ //this is the second time tapping so you've selected a gameboard tile and now another gameboard tile
                 game.sendAction(new HiveMoveAction(this, newX, newY));
+                return true;
             }
-            return true;
         }
         return false;
     }

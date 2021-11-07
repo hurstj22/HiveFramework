@@ -21,6 +21,8 @@ public class HiveLocalGame extends LocalGame {
     int[] newIndexPt = new int[2]; //index pair, (col, row) for going from float to gameBoard index
     int oldX;
     int oldY;
+    int newX;
+    int newY;
     Tile.PlayerPiece piece;
     Tile.Bug type;
 
@@ -119,28 +121,37 @@ public class HiveLocalGame extends LocalGame {
         int whoseMove = hiveState.getWhoseTurn();
 
         if(canMove(playerId)) {
+            HiveSelectAction select = null; //start out as null
+            HiveMoveAction move = null;
+
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
-                HiveSelectAction select = (HiveSelectAction) action;
+                select = (HiveSelectAction) action;
 
                 if(select.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
-                    hiveState.validMove(select.getSelectedTile()); //pass the newly created tile to calculate all possible moves
+                    return hiveState.validMove(select.getSelectedTile()); //pass the newly created tile to calculate all possible moves
                 }
                 else{ //selecting from the game board
-                    //get newX and newY and determine what tile they correspond to, then call gameState validMove on those
+                    //get oldX and oldY and determine what tile they correspond to, then call gameState validMove on those
                     oldX = (int) select.getX();
                     oldY = (int) select.getY();
-                    return hiveState.validMove(hiveState.getTile((int) select.getX(),(int) select.getY()));
+                    return hiveState.validMove(hiveState.getTile(oldX, oldY));
                 }
 
             } else if (action instanceof HiveMoveAction) { //we've been passed a request to move a piece
-                HiveMoveAction move = (HiveMoveAction) action;
+                move = (HiveMoveAction) action;
 
                 if(move.getSelectedImageButton() != null){ //moving from hand to board
                     move.setSelectedImageButton(null); //reset the imageButton
+                    //select.setSelectedImageButton(null); //reset the imagebutton
                     return hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY());
                 }
                 else{ //moving from board spot to board spot
-                    return hiveState.makeMove(hiveState.getTile(oldX, oldY), (int) move.getX(), (int) move.getY());
+                    newX = (int) move.getX();
+                    newY = (int) move.getY();
+                    //now reset the move and select
+                    //move.setCurrentTile(null);
+                    //select.setSelectedTile(null);
+                    return hiveState.makeMove(hiveState.getTile(oldX, oldY), newX, newY); //pass in the tile to move
                 }
             }
             // return true, indicating the it was a legal move
