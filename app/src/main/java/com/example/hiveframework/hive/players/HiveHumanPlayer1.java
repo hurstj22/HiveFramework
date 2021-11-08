@@ -28,6 +28,15 @@ import java.util.ArrayList;
 
 import edu.up.cs301.game.R;
 
+/**
+ * This class holds all information for a human player
+ * HiveHumanPlayer1 also displays the GUI and controls click/touch events
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ */
 public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchListener, View.OnClickListener {
 
     //Tag for logging

@@ -13,7 +13,15 @@ import com.example.hiveframework.hive.players.HiveHumanPlayer1;
 import java.util.ArrayList;
 
 import edu.up.cs301.game.R;
-
+/**
+ * HiveLocalGame holds all information pertaining to a specific instance of the game
+ * the game as it runs for a turn or move locally on the device before being sent over the framework
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ */
 public class HiveLocalGame extends LocalGame {
     //Tag for logging
     private static final String TAG = "HiveLocalGame";

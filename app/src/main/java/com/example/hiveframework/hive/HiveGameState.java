@@ -39,7 +39,7 @@ public class HiveGameState extends GameState implements Serializable {
     private int currentIdSelected;
 
     private static final int tileSize = 300;
-    private final int GBSIZE = 8; //size of the gameboard
+    private final int GBSIZE = 7; //size of the gameboard
     private ArrayList<Tile> potentialMoves;
     /**
      * Default constructor.
@@ -1155,8 +1155,6 @@ public class HiveGameState extends GameState implements Serializable {
         return false;
 
     }
-
-
 
     /**
      * Method to print out gameState in readable format.
