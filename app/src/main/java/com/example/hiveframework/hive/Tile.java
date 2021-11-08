@@ -3,7 +3,15 @@ package com.example.hiveframework.hive;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-
+/**
+ * The tile class holds all information about a specific tile,
+ * this is the base data structure for the entire game
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ */
 public class Tile {
 
     public enum Bug {

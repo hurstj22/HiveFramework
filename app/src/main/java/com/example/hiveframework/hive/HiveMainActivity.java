@@ -23,7 +23,7 @@ import edu.up.cs301.game.R;
  * @author Kelly Ngyuen
  * @author Ali Sheehan
  * @author James Hurst
- * @version October 2021
+ * @version November 2021
  */
 public class HiveMainActivity extends GameMainActivity {
     //Tag for logging

@@ -8,7 +8,9 @@ import com.example.hiveframework.hive.HiveGameState;
 import java.util.Random;
 
 /**
- * Less dumb ai class
+ * HiveComputerPlayer2 serves as our less dumb computer player class
+ * it randomly picks a move to carry out that would bring it
+ * closer to the other player's queen bee and tries to do it
  */
 public class HiveComputerPlayer2 extends GameComputerPlayer {
     private HiveGameState hiveGame;

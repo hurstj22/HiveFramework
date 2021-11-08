@@ -40,7 +40,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private Activity myActivity; //never being set :(
     int id; //id number of the resources to draw
 
-    private int radius = 50;
+    private int radius = 65;
     private double halfWidth = Math.sqrt((radius*radius) - ((radius/2)*(radius/2)));
     private double gridWidth = halfWidth*2;
     private double c = Math.sqrt((radius*radius) - (halfWidth*halfWidth));
@@ -65,22 +65,22 @@ public class HiveSurfaceView extends FlashSurfaceView {
         whitePaint = new Paint();
         whitePaint.setColor(Color.WHITE);
         whitePaint.setStyle(Paint.Style.STROKE);
-        whitePaint.setStrokeWidth(10);
+        whitePaint.setStrokeWidth(5);
 
         bluePaint = new Paint();
         bluePaint.setColor(Color.BLUE);
         bluePaint.setStyle(Paint.Style.STROKE);
-        bluePaint.setStrokeWidth(10);
+        bluePaint.setStrokeWidth(5);
 
         redPaint = new Paint();
         redPaint.setColor(Color.RED);
         redPaint.setStyle(Paint.Style.STROKE);
-        redPaint.setStrokeWidth(10);
+        redPaint.setStrokeWidth(5);
 
         yellowPaint = new Paint();
         yellowPaint.setColor(Color.YELLOW);
         yellowPaint.setStyle(Paint.Style.STROKE);
-        yellowPaint.setStrokeWidth(10);
+        yellowPaint.setStrokeWidth(5);
     }
 
     private void drawPolygon(Canvas mCanvas, float x, float y, float radius, float sides, float startAngle, boolean anticlockwise, Paint paint) {
@@ -101,9 +101,10 @@ public class HiveSurfaceView extends FlashSurfaceView {
     }
 
     public void onDraw(Canvas canvas){
-        int startX = 50;
-        int startY = 100;
-        int separation = 2*radius + 5;
+        int startX = (int) halfWidth;
+        int startY = 2*(int) c;
+        int separation = (int) (2*halfWidth);
+        int separationY = radius + (int) c;
         //draws the gameboard hexes
         if(state != null) {
             potentialCounter = 0;
@@ -145,6 +146,9 @@ public class HiveSurfaceView extends FlashSurfaceView {
                     else if(state.getGameBoard().get(i).get(j).getPlayerPiece() == Tile.PlayerPiece.B){
                         tileColor = bluePaint;
                     }
+                    else{
+                        tileColor = whitePaint;
+                    }
 
                     if (id != -1) { //draw a special tile
                         Bitmap image = BitmapFactory.decodeResource(getResources(), id); //create image using tile's id
@@ -152,11 +156,11 @@ public class HiveSurfaceView extends FlashSurfaceView {
 
                         //Now draw all the tiles in the right spot, scaled
                         if (i % 2 == 0) { //even row
-                            canvas.drawBitmap(resizedImage, 2 * startX + j * separation - radius, startY + i * separation - radius, whitePaint); //draw the image on the surface view in the correct location
-                            drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
+                            canvas.drawBitmap(resizedImage, 2 * startX + j * separation - 2*radius/3, startY + i * separationY - 2*radius/3, whitePaint); //draw the image on the surface view in the correct location
+                            drawPolygon(canvas, 2*(int) halfWidth + j * separation, startY + i * separationY, radius, 6, 90, false, tileColor);
                         } else { //odd row
-                            canvas.drawBitmap(resizedImage, startX + j * separation - radius, startY + i * separation - radius, whitePaint); //draw the image on the surface view in the correct location
-                            drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
+                            canvas.drawBitmap(resizedImage, startX + j * separation - 2*radius/3, startY + i * separationY - 2*radius/3, tileColor); //draw the image on the surface view in the correct location
+                            drawPolygon(canvas, startX + j * separation, startY + i * separationY, radius, 6, 90, false, tileColor);
                         }
 
                     }
@@ -164,29 +168,23 @@ public class HiveSurfaceView extends FlashSurfaceView {
                     else if((state.getPotentialMoves() != null) && (potentialCounter < state.getPotentialMoves().size())) { //make sure there's no null pointer exceptions thrown
                             if (state.getPotentialMoves().get(potentialCounter) != null) {
                                 Tile potentialTile = new Tile(state.getPotentialMoves().get(potentialCounter));
-                                if (potentialTile.getIndexX() == i && potentialTile.getIndexY() == j) {
+                                if (potentialTile.getIndexX() == i && potentialTile.getIndexY() == j) { //if the potential tile is contained within potentials
                                     potentialCounter++; //every iteration iterate counter that keeps track of where we are in the potentialArray
                                     tileColor = yellowPaint;
-                                    if (i % 2 == 0) { //even row
-                                        drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
-                                    } else { //odd row
-                                        drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
-                                    }
                                 }
-                                else{ //draw a regular white tile
-                                    if (i % 2 == 0) { //even row
-                                        drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
-                                    } else { //odd row
-                                        drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
-                                    }
+                                if (i % 2 == 0) { //even row
+                                    drawPolygon(canvas, 2*(int) halfWidth + j * separation, startY + i * separationY, radius, 6, 90, false, tileColor);
+                                } else { //odd row
+                                    drawPolygon(canvas, startX + j * separation, startY + i * separationY, radius, 6, 90, false, tileColor);
                                 }
                             }
                     }
                     else{ //draw an empty tile
                         if (i % 2 == 0) { //even row
-                            drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
-                        } else { //odd row
-                            drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
+                            drawPolygon(canvas, 2*(int) halfWidth + j * separation, startY + i * separationY, radius, 6, 90, false, whitePaint);
+                        }
+                        else { //odd row
+                            drawPolygon(canvas, startX + j * separation, startY + i * separationY, radius, 6, 90, false, whitePaint);
                         }
                     }
                 } //end of for loops

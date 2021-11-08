@@ -28,6 +28,15 @@ import java.util.ArrayList;
 
 import edu.up.cs301.game.R;
 
+/**
+ * This class holds all information for a human player
+ * HiveHumanPlayer1 also displays the GUI and controls click/touch events
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ */
 public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchListener, View.OnClickListener {
 
     //Tag for logging
@@ -270,7 +279,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         rulesButton.setOnClickListener(this);
         endTurnButton.setOnClickListener(this);
         undoButton.setOnClickListener(this);
-
     }
 
     /**
@@ -292,8 +300,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
             //convert coordinates to position in gameBoard
             int[] gameBoardPosition = surfaceView.mapPixelToSquare(inX, inY);
-            newX = gameBoardPosition[1];
-            newY = gameBoardPosition[0]; 
+            newX = gameBoardPosition[0];
+            newY = gameBoardPosition[1];
 
             if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
                 HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);

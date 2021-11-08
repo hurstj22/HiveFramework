@@ -39,7 +39,7 @@ public class HiveGameState extends GameState implements Serializable {
     private int currentIdSelected;
 
     private static final int tileSize = 300;
-    private final int GBSIZE = 8; //size of the gameboard
+    private final int GBSIZE = 7; //size of the gameboard
     private ArrayList<Tile> potentialMoves;
     /**
      * Default constructor.
@@ -1156,8 +1156,6 @@ public class HiveGameState extends GameState implements Serializable {
 
     }
 
-
-
     /**
      * Method to print out gameState in readable format.
      * @return
@@ -1321,6 +1319,27 @@ public class HiveGameState extends GameState implements Serializable {
                 piecesRemain[player][4]--;
                 break;
         }
+    }
+
+    /**
+     * Returns how many pieces left of bug type in player hand
+     * @param bug the bug piece to decrement in the "hand"
+     */
+    public int getPiecesRemain(Tile.Bug bug){
+        int player = getWhoseTurn();
+        switch(bug){
+            case QUEEN_BEE: // 1 Queen Bee
+                return piecesRemain[player][0];
+            case SPIDER: //4 Spiders
+                return piecesRemain[player][1];
+            case BEETLE: //4 Beetles
+                return piecesRemain[player][2];
+            case GRASSHOPPER: //6 Grasshoppers
+                return piecesRemain[player][3];
+            case ANT: //6 Soldier Ants
+                return piecesRemain[player][4];
+        }
+        return 0;
     }
 
     /**

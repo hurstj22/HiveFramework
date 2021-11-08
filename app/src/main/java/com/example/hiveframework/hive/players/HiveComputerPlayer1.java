@@ -19,7 +19,15 @@ import java.util.Collections;
 import java.util.Random;
 
 /**
- * Dumb ai class
+ * HiveComputerPlayer1 serves as our dumb computer player class
+ * it randomly picks a move to carry out and tries to do it
+ *
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ *
  */
 public class HiveComputerPlayer1 extends GameComputerPlayer {
     private HiveGameState hiveGame;
@@ -35,16 +43,28 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private Tile currentTile = null;
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
-    private ArrayList<Tile> potentialMoves; //this comes from the gameState
+    private ArrayList<Tile> potentialMoves = null; //this comes from the gameState
 
     private HiveMoveAction moveAction;
     private HiveSelectAction selectAction;
+    private EndTurnAction endTurn;
+    private Tile.Bug[] bugArray; //holds the type of all the bugs possible to play for the computer to select from
+
+    //private static final List<Tile.Bug> VALUES =
+    //        Collections.unmodifiableList(Arrays.asList(values()));
+    //private static final int SIZE = VALUES.size();
+    private static final Random RANDOM = new Random();
+
+    //public static Tile.Bug randomLetter()  {
+    //    return VALUES.get(RANDOM.nextInt(SIZE));
+    //}
 
     /**
      * constructor does nothing extra
      */
     public HiveComputerPlayer1(String name) {
         super(name);
+        bugArray = new Tile.Bug[] {Tile.Bug.QUEEN_BEE, Tile.Bug.SPIDER, Tile.Bug.BEETLE, Tile.Bug.ANT, Tile.Bug.GRASSHOPPER};
     }
 
     @Override
@@ -52,7 +72,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
         Log.d(TAG, "receiveInfo: receivng for computer");
 
         if(info == null){
-            Log.d(TAG, "receiveInfo: info is null and returing ");
+            Log.d(TAG, "receiveInfo: info is null and returning ");
             return;
         }
 
@@ -63,19 +83,31 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             Log.d(TAG, "receiveInfo: line 64 turn is " + hiveGame.getWhoseTurn());
             Log.d(TAG, "pm: "+ potentialMoves);
             if (this.playerNum != hiveGame.getWhoseTurn()) {
-                Log.d(TAG, "receiveInfo: NOT YOUR TURN");
+                Log.i(TAG, "receiveInfo: NOT YOUR TURN");
+                Log.i(TAG, "receiveInfo: this.playerNum:"+ this.playerNum);
+                Log.i(TAG, "receiveInfo: hiveGame.whoseTurn:" + hiveGame.getWhoseTurn());
                 return; //not you're turn
             }
 
             potentialMoves = hiveGame.getPotentialMoves();
-            if(potentialMoves == null) {
+            Log.i(TAG, "receiveInfo: this.playerNum:"+ this.playerNum);
+            Log.i(TAG, "receiveInfo: hiveGame.whoseTurn:" + hiveGame.getWhoseTurn());
+            if(potentialMoves == null || potentialMoves.size() <= 0) {
+                Log.i(TAG, "receiveInfo: potentials was empty:");
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                game.sendAction(endTurn); //ends the turn if there's nothing valid to do
                 return; //there's nothing in the potentials list
             }
-
-            if (this.playerNum == hiveGame.getWhoseTurn()) {
                 Log.d(TAG, "receiveInfo: it is comps turn ");
-                //need to create a random tile, then call isValid by sending a game.sendAction(select) on the tile as long as it's a validTile to create
-                //then you can get the potentials
+                //need to create a random tile, then call isValid on the tile, as long as it's a validTile to create
+                // ie there's still that type of bug left in the playersHand array
+                //then you can get the potentials from the hiveGame.getPotentialMoves(). Then add the tile you created to the move.setCurrentTile(randTile) AND
+                //add the x and y's of the first potential spot to the move thus simulating onTouch commands by using the constructor.
+                // Then call move.setComputerMove to true to let the game know the computer is trying to move. Then call game.sendAction(move)
 
                 potentialMoves = hiveGame.getPotentialMoves();
                 currentTile = potentialMoves.get(0); //gets current tile from PM
@@ -94,19 +126,9 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
                     Log.d(TAG, "receiveInfo: sendMOVEEE");
                     game.sendAction(moveActionFromHand);
-
                 }
-                /*else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
-                    oldX = newX;
-                    oldY = newY;
-                    hasTapped = !hasTapped;
-                    game.sendAction(new HiveSelectAction(this, oldX, oldY));
-                }
-                else if(hasTapped && oldX != -1){ //this is the second time tapping so you've selected a gameboard tile and now another gameboard tile
-                    game.sendAction(new HiveMoveAction(this, newX, newY));
-                }*/
 
-            }
+                game.sendAction(endTurn); //ends the turn if there's nothing valid to do
         }
     }
 

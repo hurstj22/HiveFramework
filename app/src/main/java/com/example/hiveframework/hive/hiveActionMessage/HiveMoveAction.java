@@ -5,7 +5,14 @@ import android.widget.ImageButton;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.hive.Tile;
-
+/**
+ * This class is sent when the player or computer wants to move a piece
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ */
 public class HiveMoveAction extends GameAction {
 
     //Tag for logging
@@ -17,6 +24,7 @@ public class HiveMoveAction extends GameAction {
     private float yCoord;
     private Tile currentTile; //the tile being moved
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
+    private boolean computerMove;
 
     /**
      * constructor for GameAction
@@ -40,6 +48,7 @@ public class HiveMoveAction extends GameAction {
         super(player);
         this.xCoord = xCoord;
         this.yCoord = yCoord;
+        computerMove = false;
     }
 
     /**
@@ -74,5 +83,13 @@ public class HiveMoveAction extends GameAction {
 
     public void setSelectedImageButton(ImageButton selectedImageButton) {
         this.selectedImageButton = selectedImageButton;
+    }
+
+    public boolean isComputerMove() {
+        return computerMove;
+    }
+
+    public void setComputerMove(boolean computerMove){
+        this.computerMove = computerMove;
     }
 }
