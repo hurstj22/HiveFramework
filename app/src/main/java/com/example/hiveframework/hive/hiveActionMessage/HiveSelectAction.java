@@ -16,7 +16,7 @@ public class HiveSelectAction extends GameAction {
     private float xCoord;
     private float yCoord;
     private int id;
-    private Tile selectedTile; //the tile created because of selection or the tile selected
+    private Tile selectedTile = null; //the tile created because of selection or the tile selected
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
 
     /**

@@ -35,7 +35,10 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private Tile currentTile = null;
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
-    private ArrayList<Tile> potentialMoves;
+    private ArrayList<Tile> potentialMoves; //this comes from the gameState
+
+    private HiveMoveAction moveAction;
+    private HiveSelectAction selectAction;
 
     /**
      * constructor does nothing extra
@@ -52,12 +55,9 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             Log.d(TAG, "receiveInfo: info is null and returing ");
             return;
         }
+
         if(info instanceof HiveGameState) {
             hiveGame =  new HiveGameState((HiveGameState) info);
-
-            hiveGame.selectFromHand(currentTile);
-            potentialMoves = hiveGame.getPotentialMoves();
-            currentTile = potentialMoves.get(0); //gets current tile from PM
 
             Log.d(TAG, "receiveInfo: player is " + this.playerNum);
             Log.d(TAG, "receiveInfo: line 64 turn is " + hiveGame.getWhoseTurn());
@@ -65,12 +65,21 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             if (this.playerNum != hiveGame.getWhoseTurn()) {
                 Log.d(TAG, "receiveInfo: NOT YOUR TURN");
                 return; //not you're turn
-
             }
+
+            potentialMoves = hiveGame.getPotentialMoves();
+            if(potentialMoves == null) {
+                return; //there's nothing in the potentials list
+            }
+
             if (this.playerNum == hiveGame.getWhoseTurn()) {
                 Log.d(TAG, "receiveInfo: it is comps turn ");
+                //need to create a random tile, then call isValid by sending a game.sendAction(select) on the tile as long as it's a validTile to create
+                //then you can get the potentials
+
                 potentialMoves = hiveGame.getPotentialMoves();
                 currentTile = potentialMoves.get(0); //gets current tile from PM
+                //then you can call game.sendAction(move) on the currentTile
                 Log.d(TAG, "current tile" + currentTile);
                 if(currentTile.getType() != null){ //the player has selected one of the pieces to "place" on the board
                     newX = currentTile.getIndexX(); //gets new move from current tile
