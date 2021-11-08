@@ -71,7 +71,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     protected void receiveInfo(GameInfo info) {
         Log.d(TAG, "receiveInfo: receivng for computer");
         if(info == null){
-            Log.d(TAG, "receiveInfo: info is null and returing ");
+            Log.d(TAG, "receiveInfo: info is null and returning ");
             return;
         }
 
