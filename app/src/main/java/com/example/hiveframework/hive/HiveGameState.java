@@ -133,7 +133,7 @@ public class HiveGameState extends GameState implements Serializable {
             }
         }
 
-        this.whoseTurn = other.whoseTurn;
+        this.whoseTurn = other.getWhoseTurn();
         this.currentIdSelected = getCurrentIdSelected();
 
         this.potentialMoves = new ArrayList<Tile>();

@@ -37,7 +37,8 @@ import com.example.hiveframework.GameFramework.utilities.Tickable;
  * @version July 2013
  *
  */
-public abstract class GameHumanPlayer implements GamePlayer, Tickable {
+public abstract class
+GameHumanPlayer implements GamePlayer, Tickable {
     //Tag for logging
     private static final String TAG = "GameHumanPlayer";
     /**
