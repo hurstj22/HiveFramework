@@ -139,7 +139,9 @@ public class HiveLocalGame extends LocalGame {
 
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
                 select = (HiveSelectAction) action;
-
+                if(hiveState.getPiecesRemain(select.getSelectedTile().getType()) <= 0){ //makes sure player has at least one of piece remaining
+                    return false;
+                }
                 if(select.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
                     //if(hiveState.getTypeCount(select.getSelectedTile().getType()) <= 0){ //not any of that bug left to select
                     //    return false
