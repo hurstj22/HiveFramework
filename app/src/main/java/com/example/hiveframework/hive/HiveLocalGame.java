@@ -134,7 +134,13 @@ public class HiveLocalGame extends LocalGame {
                     //get oldX and oldY and determine what tile they correspond to, then call gameState validMove on those
                     oldX = (int) select.getX();
                     oldY = (int) select.getY();
-                    return hiveState.validMove(hiveState.getTile(oldX, oldY));
+                    if(hiveState.getTile(oldX, oldY) == null){
+                        return false; //request is out of bounds
+                    }
+                    if(hiveState.getTile(oldX, oldY).getType() != Tile.Bug.EMPTY){
+                        return hiveState.validMove(hiveState.getTile(oldX, oldY));
+                    }
+                    return false; //selected an empty spot, there's no bug there to ask to move
                 }
 
             } else if (action instanceof HiveMoveAction) { //we've been passed a request to move a piece
@@ -143,7 +149,9 @@ public class HiveLocalGame extends LocalGame {
                 if(move.getSelectedImageButton() != null){ //moving from hand to board
                     move.setSelectedImageButton(null); //reset the imageButton
                     //select.setSelectedImageButton(null); //reset the imagebutton
-                    return hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY());
+                    if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
+                        return true; //able to make the move
+                    }
                 }
                 else{ //moving from board spot to board spot
                     newX = (int) move.getX();
@@ -151,11 +159,14 @@ public class HiveLocalGame extends LocalGame {
                     //now reset the move and select
                     //move.setCurrentTile(null);
                     //select.setSelectedTile(null);
-                    return hiveState.makeMove(hiveState.getTile(oldX, oldY), newX, newY); //pass in the tile to move
+
+                    if(hiveState.makeMove(hiveState.getTile(oldX, oldY), newX, newY)) { //pass in the tile to move
+                        return true; //able to make the move
+                    }
                 }
             }
-            // return true, indicating the it was a legal move
-            return true;
+            // return false, indicating there wasn't any legal move
+            return false;
         }
         return false;
     }

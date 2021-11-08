@@ -1242,7 +1242,9 @@ public class HiveGameState extends GameState implements Serializable {
         int[] oldTileCords = new int[2];
         oldTileCords[0] = moveTile.getIndexX();
         oldTileCords[1] = moveTile.getIndexY();
-
+        if(newXIndex >= gameBoard.size() || newYIndex >= gameBoard.size() * 2){
+            return false; //out of bounds!
+        }
         //if potentialMoves holds tile at newPosition then swap
         if(potentialMoves.contains(gameBoard.get(newXIndex).get(newYIndex))) {
 
@@ -1511,7 +1513,16 @@ public class HiveGameState extends GameState implements Serializable {
         gameBoard.get(newTile.getIndexX()).set(newTile.getIndexY(), newTile);
     }
 
+    /**
+     *  returns null if the get request is out of bounds
+     * @param x
+     * @param y
+     * @return
+     */
     public Tile getTile(int x, int y){
+        if(x >= gameBoard.size() || y >= gameBoard.size() * 2){
+            return null;
+        }
         return gameBoard.get(x).get(y);
     }
 

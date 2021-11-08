@@ -173,6 +173,13 @@ public class HiveSurfaceView extends FlashSurfaceView {
                                         drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                                     }
                                 }
+                                else{ //draw a regular white tile
+                                    if (i % 2 == 0) { //even row
+                                        drawPolygon(canvas, 2 * startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
+                                    } else { //odd row
+                                        drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, whitePaint);
+                                    }
+                                }
                             }
                     }
                     else{ //draw an empty tile
