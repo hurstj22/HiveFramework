@@ -40,7 +40,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private Activity myActivity; //never being set :(
     int id; //id number of the resources to draw
 
-    private int radius = 65;
+    private int radius = 70;
     private double halfWidth = Math.sqrt((radius*radius) - ((radius/2)*(radius/2)));
     private double gridWidth = halfWidth*2;
     private double c = Math.sqrt((radius*radius) - (halfWidth*halfWidth));

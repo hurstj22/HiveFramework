@@ -108,7 +108,6 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                 //add the x and y's of the first potential spot to the move thus simulating onTouch commands by using the constructor.
                 // Then call move.setComputerMove to true to let the game know the computer is trying to move. Then call game.sendAction(move)
 
-                potentialMoves = hiveGame.getPotentialMoves();
                 currentTile = potentialMoves.get(0); //gets current tile from PM
                 //then you can call game.sendAction(move) on the currentTile
                 Log.d(TAG, "current tile" + currentTile);
@@ -124,6 +123,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     //setSelectedImageButton(null); //reset the selected image since either nothing is going to happen or the pieces will move
                     moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
                     Log.d(TAG, "receiveInfo: sendMOVEEE");
+                    moveActionFromHand.setComputerMove(true); //computer is trying to make a move
                     game.sendAction(moveActionFromHand);
                 }
 
