@@ -292,8 +292,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
             //convert coordinates to position in gameBoard
             int[] gameBoardPosition = surfaceView.mapPixelToSquare(inX, inY);
-            newX = gameBoardPosition[1];
-            newY = gameBoardPosition[0]; 
+            newX = gameBoardPosition[0];
+            newY = gameBoardPosition[1];
 
             if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
                 HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);
