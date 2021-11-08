@@ -39,6 +39,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
 
     private HiveMoveAction moveAction;
     private HiveSelectAction selectAction;
+    private EndTurnAction endTurn;
 
     /**
      * constructor does nothing extra
@@ -73,8 +74,11 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
 
             if (this.playerNum == hiveGame.getWhoseTurn()) {
                 Log.d(TAG, "receiveInfo: it is comps turn ");
-                //need to create a random tile, then call isValid by sending a game.sendAction(select) on the tile as long as it's a validTile to create
-                //then you can get the potentials
+                //need to create a random tile, then call isValid on the tile, as long as it's a validTile to create
+                // ie there's still that type of bug left in the playersHand array
+                //then you can get the potentials from the hiveGame.getPotentialMoves(). Then add the tile you created to the move.setCurrentTile(randTile) AND
+                //add the x and y's of the first potential spot to the move thus simulating onTouch commands by using the constructor.
+                // Then call move.setComputerMove to true to let the game know the computer is trying to move. Then call game.sendAction(move)
 
                 potentialMoves = hiveGame.getPotentialMoves();
                 currentTile = potentialMoves.get(0); //gets current tile from PM
@@ -93,18 +97,9 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
                     Log.d(TAG, "receiveInfo: sendMOVEEE");
                     game.sendAction(moveActionFromHand);
-
                 }
-                /*else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
-                    oldX = newX;
-                    oldY = newY;
-                    hasTapped = !hasTapped;
-                    game.sendAction(new HiveSelectAction(this, oldX, oldY));
-                }
-                else if(hasTapped && oldX != -1){ //this is the second time tapping so you've selected a gameboard tile and now another gameboard tile
-                    game.sendAction(new HiveMoveAction(this, newX, newY));
-                }*/
 
+                game.sendAction(endTurn); //ends the turn if there's nothing valid to do
             }
         }
     }

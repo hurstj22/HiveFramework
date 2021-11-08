@@ -17,6 +17,7 @@ public class HiveMoveAction extends GameAction {
     private float yCoord;
     private Tile currentTile; //the tile being moved
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
+    private boolean computerMove;
 
     /**
      * constructor for GameAction
@@ -40,6 +41,7 @@ public class HiveMoveAction extends GameAction {
         super(player);
         this.xCoord = xCoord;
         this.yCoord = yCoord;
+        computerMove = false;
     }
 
     /**
@@ -74,5 +76,13 @@ public class HiveMoveAction extends GameAction {
 
     public void setSelectedImageButton(ImageButton selectedImageButton) {
         this.selectedImageButton = selectedImageButton;
+    }
+
+    public boolean isComputerMove() {
+        return computerMove;
+    }
+
+    public void setComputerMove(boolean computerMove){
+        this.computerMove = computerMove;
     }
 }
