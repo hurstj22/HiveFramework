@@ -338,7 +338,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 break;
             case R.id.endTurnButton: //switches the current player's turn
                 Log.d(TAG, "turn is" + hiveGame.getWhoseTurn());
-                hiveGame.setWhoseTurn(1 - hiveGame.getWhoseTurn());
+                //hiveGame.setWhoseTurn(1 - hiveGame.getWhoseTurn());
                 Log.d(TAG, "turn is" + hiveGame.getWhoseTurn());
                 game.sendAction(endTurnAction);
                 Log.d(TAG, "onClick: end turn action");
