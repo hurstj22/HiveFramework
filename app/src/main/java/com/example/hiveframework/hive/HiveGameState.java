@@ -1324,6 +1324,27 @@ public class HiveGameState extends GameState implements Serializable {
     }
 
     /**
+     * Returns how many pieces left of bug type in player hand
+     * @param bug the bug piece to decrement in the "hand"
+     */
+    public int getPiecesRemain(Tile.Bug bug){
+        int player = getWhoseTurn();
+        switch(bug){
+            case QUEEN_BEE: // 1 Queen Bee
+                return piecesRemain[player][0];
+            case SPIDER: //4 Spiders
+                return piecesRemain[player][1];
+            case BEETLE: //4 Beetles
+                return piecesRemain[player][2];
+            case GRASSHOPPER: //6 Grasshoppers
+                return piecesRemain[player][3];
+            case ANT: //6 Soldier Ants
+                return piecesRemain[player][4];
+        }
+        return 0;
+    }
+
+    /**
      * Ensures Tile tile is empty and next to an occupied Tile that is not the selected Tile.
      * Helper function for piece search functions
      *
