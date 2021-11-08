@@ -92,6 +92,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             Log.i(TAG, "receiveInfo: this.playerNum:"+ this.playerNum);
             Log.i(TAG, "receiveInfo: hiveGame.whoseTurn:" + hiveGame.getWhoseTurn());
             if(potentialMoves == null || potentialMoves.size() <= 0) {
+                Log.i(TAG, "receiveInfo: potentials was empty:");
                 try {
                     Thread.sleep(1500);
                 } catch (InterruptedException e) {

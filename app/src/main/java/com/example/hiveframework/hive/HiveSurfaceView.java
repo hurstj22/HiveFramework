@@ -168,7 +168,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
                     else if((state.getPotentialMoves() != null) && (potentialCounter < state.getPotentialMoves().size())) { //make sure there's no null pointer exceptions thrown
                             if (state.getPotentialMoves().get(potentialCounter) != null) {
                                 Tile potentialTile = new Tile(state.getPotentialMoves().get(potentialCounter));
-                                if (potentialTile.getIndexX() == i && potentialTile.getIndexY() == j) {
+                                if (potentialTile.getIndexX() == i && potentialTile.getIndexY() == j) { //if the potential tile is contained within potentials
                                     potentialCounter++; //every iteration iterate counter that keeps track of where we are in the potentialArray
                                     tileColor = yellowPaint;
                                 }
