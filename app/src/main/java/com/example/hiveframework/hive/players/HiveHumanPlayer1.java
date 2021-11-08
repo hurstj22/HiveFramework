@@ -139,13 +139,13 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             hiveGame = new HiveGameState((HiveGameState) info);
 
             //change the color of the turn banner to the player's color then change the text
-            if(this.playerNum == 0){ //first player
+            if(hiveGame.getWhoseTurn() == 0){ //first player
                 currentTurnTextView.setTextColor(Color.RED);
             }
             else{
                 currentTurnTextView.setTextColor(Color.BLUE);
             }
-            currentTurnTextView.setText("" + this.allPlayerNames[playerNum] + "'s Turn");
+            currentTurnTextView.setText("" + this.allPlayerNames[hiveGame.getWhoseTurn()] + "'s Turn");
 
             //update player 1's piece counters
             beeP1Counter.setText("" + hiveGame.getPiecesRemain()[0][0]);
