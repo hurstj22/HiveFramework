@@ -47,12 +47,13 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     @Override
     protected void receiveInfo(GameInfo info) {
         Log.d(TAG, "receiveInfo: receivng for computer");
+
         if(info == null){
             Log.d(TAG, "receiveInfo: info is null and returing ");
             return;
         }
         if(info instanceof HiveGameState) {
-            hiveGame = new HiveGameState((HiveGameState) info);
+            hiveGame =  new HiveGameState((HiveGameState) info);
 
             hiveGame.selectFromHand(currentTile);
             potentialMoves = hiveGame.getPotentialMoves();

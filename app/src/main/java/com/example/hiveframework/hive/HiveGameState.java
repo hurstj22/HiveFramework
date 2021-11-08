@@ -1532,7 +1532,7 @@ public class HiveGameState extends GameState implements Serializable {
     }
 
     public void setWhoseTurn(int turn){
-        whoseTurn = turn;
+       this.whoseTurn = turn;
     }
 
     public int getWhoseTurn(){

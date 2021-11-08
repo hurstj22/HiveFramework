@@ -357,7 +357,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             else{
                 piece = Tile.PlayerPiece.B; //2nd player
             } //findBugType is not working right
-            currentTile = new Tile(-1,-1, piece, findBugType(selectedImageButton.getId()), selectedImageButton.getId());
+
 
             selectActionFromHand.setSelectedTile(currentTile); //assign the selected tile in the select action class to be referenced later
             game.sendAction(selectActionFromHand); //then pass a select action
