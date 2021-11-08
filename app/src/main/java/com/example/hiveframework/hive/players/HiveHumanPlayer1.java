@@ -1,6 +1,7 @@
 package com.example.hiveframework.hive.players;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hiveframework.GameFramework.GameMainActivity;
+import com.example.hiveframework.GameFramework.actionMessage.EndTurnAction;
 import com.example.hiveframework.GameFramework.infoMessage.GameInfo;
 import com.example.hiveframework.GameFramework.infoMessage.IllegalMoveInfo;
 import com.example.hiveframework.GameFramework.infoMessage.NotYourTurnInfo;
@@ -317,13 +319,18 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     public void onClick(View view) {
         //HiveMoveAction moveAction = new HiveMoveAction(this);
         HiveSelectAction selectAction = new HiveSelectAction(this);
+        EndTurnAction endTurnAction = new EndTurnAction(this);
 
         switch(view.getId()) {
             case R.id.playButton: //restarts the game with the same selected options
                 myActivity.restartGame();
                 break;
             case R.id.endTurnButton: //switches the current player's turn
+                Log.d(TAG, "turn is" + hiveGame.getWhoseTurn());
                 hiveGame.setWhoseTurn(1 - hiveGame.getWhoseTurn());
+                Log.d(TAG, "turn is" + hiveGame.getWhoseTurn());
+                game.sendAction(endTurnAction);
+                Log.d(TAG, "onClick: end turn action");
                 break;
             case R.id.quitButton: //exits the game
                 myActivity.finishAffinity();

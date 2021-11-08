@@ -1,6 +1,7 @@
 package com.example.hiveframework.hive;
 import android.widget.ImageButton;
 
+import com.example.hiveframework.GameFramework.actionMessage.EndTurnAction;
 import com.example.hiveframework.GameFramework.infoMessage.GameState;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.GameFramework.LocalGame;
@@ -117,6 +118,9 @@ public class HiveLocalGame extends LocalGame {
         int playerId = getPlayerIdx(action.getPlayer());
         // get the 0/1 id of the player whose move it is
         int whoseMove = hiveState.getWhoseTurn();
+        if(action instanceof EndTurnAction){
+            hiveState.setWhoseTurn(1 - whoseMove);
+        }
 
         if(canMove(playerId)) {
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
