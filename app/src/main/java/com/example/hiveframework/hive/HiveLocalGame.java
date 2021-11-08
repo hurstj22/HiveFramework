@@ -134,6 +134,7 @@ public class HiveLocalGame extends LocalGame {
                 if(select.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
                     return hiveState.validMove(select.getSelectedTile()); //pass the newly created tile to calculate all possible moves
                 }
+
                 else{ //selecting from the game board
                     //get oldX and oldY and determine what tile they correspond to, then call gameState validMove on those
                     oldX = (int) select.getX();
@@ -155,6 +156,12 @@ public class HiveLocalGame extends LocalGame {
                     //select.setSelectedImageButton(null); //reset the imagebutton
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
                         return true; //able to make the move
+                    }
+                }
+                else if (move.isComputerMove()){ //the computer is trying to make a move
+                    move.setComputerMove(false); //reset the computer since it tried to make a move
+                    if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
+                        return true; //computer is able to make the move
                     }
                 }
                 else{ //moving from board spot to board spot
