@@ -5,7 +5,15 @@ import android.widget.ImageButton;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.hive.Tile;
-
+/**
+ * This class is sent when the player wants to select a piece
+ * either from the gameboard or the player's hand
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ */
 public class HiveSelectAction extends GameAction {
 
     //Tag for logging

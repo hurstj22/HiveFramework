@@ -19,7 +19,15 @@ import java.util.Collections;
 import java.util.Random;
 
 /**
- * Dumb ai class
+ * HiveComputerPlayer1 serves as our dumb computer player class
+ * it randomly picks a move to carry out and tries to do it
+ *
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ *
  */
 public class HiveComputerPlayer1 extends GameComputerPlayer {
     private HiveGameState hiveGame;
@@ -35,17 +43,28 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private Tile currentTile = null;
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
-    private ArrayList<Tile> potentialMoves; //this comes from the gameState
+    private ArrayList<Tile> potentialMoves = null; //this comes from the gameState
 
     private HiveMoveAction moveAction;
     private HiveSelectAction selectAction;
     private EndTurnAction endTurn;
+    private Tile.Bug[] bugArray; //holds the type of all the bugs possible to play for the computer to select from
+
+    //private static final List<Tile.Bug> VALUES =
+    //        Collections.unmodifiableList(Arrays.asList(values()));
+    //private static final int SIZE = VALUES.size();
+    private static final Random RANDOM = new Random();
+
+    //public static Tile.Bug randomLetter()  {
+    //    return VALUES.get(RANDOM.nextInt(SIZE));
+    //}
 
     /**
      * constructor does nothing extra
      */
     public HiveComputerPlayer1(String name) {
         super(name);
+        bugArray = new Tile.Bug[] {Tile.Bug.QUEEN_BEE, Tile.Bug.SPIDER, Tile.Bug.BEETLE, Tile.Bug.ANT, Tile.Bug.GRASSHOPPER};
     }
 
     @Override

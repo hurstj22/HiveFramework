@@ -5,7 +5,14 @@ import android.widget.ImageButton;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.hive.Tile;
-
+/**
+ * This class is sent when the player or computer wants to move a piece
+ *  @author Isaac Reinhard
+ *  @author Kelly Ngyuen
+ *  @author Ali Sheehan
+ *  @author James Hurst
+ *  @version November 2021
+ */
 public class HiveMoveAction extends GameAction {
 
     //Tag for logging

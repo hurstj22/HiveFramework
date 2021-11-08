@@ -40,7 +40,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private Activity myActivity; //never being set :(
     int id; //id number of the resources to draw
 
-    private int radius = 50;
+    private int radius = 65;
     private double halfWidth = Math.sqrt((radius*radius) - ((radius/2)*(radius/2)));
     private double gridWidth = halfWidth*2;
     private double c = Math.sqrt((radius*radius) - (halfWidth*halfWidth));
@@ -152,10 +152,10 @@ public class HiveSurfaceView extends FlashSurfaceView {
 
                         //Now draw all the tiles in the right spot, scaled
                         if (i % 2 == 0) { //even row
-                            canvas.drawBitmap(resizedImage, 2 * startX + j * separation - radius, startY + i * separation - radius, whitePaint); //draw the image on the surface view in the correct location
+                            canvas.drawBitmap(resizedImage, 2 * startX + j * separation - radius/2, startY + i * separation - radius/2, whitePaint); //draw the image on the surface view in the correct location
                             drawPolygon(canvas, 2*(int) halfWidth + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         } else { //odd row
-                            canvas.drawBitmap(resizedImage, startX + j * separation - radius, startY + i * separation - radius, whitePaint); //draw the image on the surface view in the correct location
+                            canvas.drawBitmap(resizedImage, startX + j * separation - radius/2, startY + i * separation - radius/2, whitePaint); //draw the image on the surface view in the correct location
                             drawPolygon(canvas, startX + j * separation, startY + i * separation, radius, 6, 90, false, tileColor);
                         }
 
