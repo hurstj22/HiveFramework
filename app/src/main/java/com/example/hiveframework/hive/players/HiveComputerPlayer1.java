@@ -82,16 +82,24 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             Log.d(TAG, "receiveInfo: line 64 turn is " + hiveGame.getWhoseTurn());
             Log.d(TAG, "pm: "+ potentialMoves);
             if (this.playerNum != hiveGame.getWhoseTurn()) {
-                Log.d(TAG, "receiveInfo: NOT YOUR TURN");
+                Log.i(TAG, "receiveInfo: NOT YOUR TURN");
+                Log.i(TAG, "receiveInfo: this.playerNum:"+ this.playerNum);
+                Log.i(TAG, "receiveInfo: hiveGame.whoseTurn:" + hiveGame.getWhoseTurn());
                 return; //not you're turn
             }
 
             potentialMoves = hiveGame.getPotentialMoves();
-            if(potentialMoves == null) {
+            Log.i(TAG, "receiveInfo: this.playerNum:"+ this.playerNum);
+            Log.i(TAG, "receiveInfo: hiveGame.whoseTurn:" + hiveGame.getWhoseTurn());
+            if(potentialMoves == null || potentialMoves.size() <= 0) {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                game.sendAction(endTurn); //ends the turn if there's nothing valid to do
                 return; //there's nothing in the potentials list
             }
-
-            if (this.playerNum == hiveGame.getWhoseTurn()) {
                 Log.d(TAG, "receiveInfo: it is comps turn ");
                 //need to create a random tile, then call isValid on the tile, as long as it's a validTile to create
                 // ie there's still that type of bug left in the playersHand array
@@ -119,7 +127,6 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                 }
 
                 game.sendAction(endTurn); //ends the turn if there's nothing valid to do
-            }
         }
     }
 

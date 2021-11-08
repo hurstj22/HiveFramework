@@ -279,7 +279,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         rulesButton.setOnClickListener(this);
         endTurnButton.setOnClickListener(this);
         undoButton.setOnClickListener(this);
-
     }
 
     /**

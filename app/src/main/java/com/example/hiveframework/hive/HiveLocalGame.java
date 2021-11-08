@@ -130,6 +130,7 @@ public class HiveLocalGame extends LocalGame {
         int whoseMove = hiveState.getWhoseTurn();
         if(action instanceof EndTurnAction){
             hiveState.setWhoseTurn(1 - whoseMove);
+            return true; //successfully changed turns
         }
 
         if(canMove(playerId)) {
@@ -140,6 +141,9 @@ public class HiveLocalGame extends LocalGame {
                 select = (HiveSelectAction) action;
 
                 if(select.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
+                    //if(hiveState.getTypeCount(select.getSelectedTile().getType()) <= 0){ //not any of that bug left to select
+                    //    return false
+                    //}
                     return hiveState.validMove(select.getSelectedTile()); //pass the newly created tile to calculate all possible moves
                 }
 
