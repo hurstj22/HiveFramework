@@ -41,6 +41,7 @@ public class HiveGameState extends GameState implements Serializable {
     private static final int tileSize = 300;
     private final int GBSIZE = 7; //size of the gameboard
     private ArrayList<Tile> potentialMoves;
+    private ArrayList<Tile> computerPlayersTiles;
     /**
      * Default constructor.
      */
@@ -97,6 +98,7 @@ public class HiveGameState extends GameState implements Serializable {
         whoseTurn = 0; //initialize the gameboard with Player1 going first
         currentIdSelected = -1;
         potentialMoves = new ArrayList<Tile>();
+        computerPlayersTiles = new ArrayList<Tile>();
     }
 
     /**
@@ -140,6 +142,12 @@ public class HiveGameState extends GameState implements Serializable {
         for (int i = 0; i < other.getPotentialMoves().size(); i++){
             Tile copyTile = new Tile((other.getPotentialMoves()).get(i));
             this.potentialMoves.add(copyTile);
+        }
+
+        this.computerPlayersTiles = new ArrayList<Tile>();
+        for (int i = 0; i < other.getComputerPlayersTiles().size(); i++){
+            Tile copyTile = new Tile((other.getComputerPlayersTiles()).get(i));
+            this.computerPlayersTiles.add(copyTile);
         }
     }
 
@@ -1244,7 +1252,7 @@ public class HiveGameState extends GameState implements Serializable {
             return false; //out of bounds!
         }
         //if potentialMoves holds tile at newPosition then swap
-        if(potentialMoves.contains(gameBoard.get(newXIndex).get(newYIndex))) {
+        if(containsTile(potentialMoves, gameBoard.get(newXIndex).get(newYIndex))) {
 
             //assign newIndexes to move Tile
             moveTile.setIndexX(newXIndex);
@@ -1545,6 +1553,22 @@ public class HiveGameState extends GameState implements Serializable {
         return gameBoard.get(x).get(y);
     }
 
+    /**
+     *
+     * @param potentialArr
+     * @param gamePiece
+     * @return
+     */
+    public boolean containsTile(ArrayList<Tile> potentialArr, Tile gamePiece){
+        for(int i = 0; i < potentialArr.size(); i++){
+            if(potentialArr.get(i).getIndexX() == gamePiece.getIndexX()
+                    && potentialArr.get(i).getIndexY() == gamePiece.getIndexY()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList<ArrayList<Tile>> getGameBoard(){
         return gameBoard;
     }
@@ -1580,4 +1604,22 @@ public class HiveGameState extends GameState implements Serializable {
         currentIdSelected = id;
     }
 
+    public ArrayList<Tile> getComputerPlayersTiles() {
+        return computerPlayersTiles;
+    }
+
+    public void setComputerPlayersTiles(ArrayList<Tile> computerPlayersTiles) {
+        this.computerPlayersTiles = computerPlayersTiles;
+    }
+
+    public void addComputerPlayersTiles(Tile tileToBeAdded){
+        this.computerPlayersTiles.add(tileToBeAdded);
+    }
+
+    public void setPotentialMoves(ArrayList<Tile> potentialMoves) {
+        this.potentialMoves = new ArrayList<Tile>();
+        for(int i = 0; i < potentialMoves.size(); i++){
+            this.potentialMoves.add(potentialMoves.get(i)); //removes from the incoming array and adds it to the new one held here
+        }
+    }
 }
