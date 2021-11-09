@@ -374,7 +374,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             }
             else{
                 piece = Tile.PlayerPiece.B; //2nd player
-            } //findBugType is not working right
+            }
             currentTile = new Tile(-1,-1, piece, findBugType(hiveGame.getCurrentIdSelected()), hiveGame.getCurrentIdSelected()); //input -1's to know tile coming from board,
                                                                                                                                         // type is determined by function, and id is set from imageButton
             selectActionFromHand.setSelectedTile(currentTile); //assign the selected tile in the select action class to be referenced later
