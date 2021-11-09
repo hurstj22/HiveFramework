@@ -14,8 +14,10 @@ import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -50,14 +52,16 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private EndTurnAction endTurn;
     private Tile.Bug[] bugArray; //holds the type of all the bugs possible to play for the computer to select from
 
-    //private static final List<Tile.Bug> VALUES =
-    //        Collections.unmodifiableList(Arrays.asList(values()));
-    //private static final int SIZE = VALUES.size();
+    //private static final List<Tile> VALUES =
+         //   Collections.unmodifiableList(Arrays.asList());
+
+    //private static final int SIZE = .size();
     private static final Random RANDOM = new Random();
 
-    //public static Tile.Bug randomLetter()  {
-    //    return VALUES.get(RANDOM.nextInt(SIZE));
-    //}
+    private Tile randomTile() {
+        int pick = new Random().nextInt(6);
+        return potentialMoves.get(pick);
+    }
 
     /**
      * constructor does nothing extra
@@ -104,15 +108,26 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             }
                 Log.d(TAG, "receiveInfo: it is comps turn ");
                 //need to create a random tile, then call isValid on the tile, as long as it's a validTile to create
+                Tile random = randomTile();
+                if(hiveGame.validMove(random)){
+                    potentialMoves = hiveGame.getPotentialMoves();
+                    moveAction.setCurrentTile(random);
+                    currentTile = potentialMoves.get(0); //gets current tile from PM
+                    currentTile.setIndexX(random.getIndexX());
+                    currentTile.setIndexY(random.getIndexY());
+                    moveAction.setComputerMove(true);
+                    game.sendAction(moveAction);
+
+                }
+
                 // ie there's still that type of bug left in the playersHand array
                 //then you can get the potentials from the hiveGame.getPotentialMoves(). Then add the tile you created to the move.setCurrentTile(randTile) AND
                 //add the x and y's of the first potential spot to the move thus simulating onTouch commands by using the constructor.
                 // Then call move.setComputerMove to true to let the game know the computer is trying to move. Then call game.sendAction(move)
 
-                potentialMoves = hiveGame.getPotentialMoves();
-                currentTile = potentialMoves.get(0); //gets current tile from PM
+
+
                 //then you can call game.sendAction(move) on the currentTile
-                Log.d(TAG, "current tile" + currentTile);
                 if(currentTile.getType() != null){ //the player has selected one of the pieces to "place" on the board
                     newX = currentTile.getIndexX(); //gets new move from current tile
                     Log.d(TAG, "receiveInfo: newX" + newX);
