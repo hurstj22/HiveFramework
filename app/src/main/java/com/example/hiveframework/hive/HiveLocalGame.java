@@ -168,7 +168,7 @@ public class HiveLocalGame extends LocalGame {
             } else if (action instanceof HiveMoveAction) { //we've been passed a request to move a piece
                 move = (HiveMoveAction) action;
 
-                if(move.getSelectedImageButton() != null){ //moving from hand to board
+                if(move.getSelectedImageButton() != null){ //moving from hand to board (only for human tho)
                     move.setSelectedImageButton(null); //reset the imageButton
                     //select.setSelectedImageButton(null); //reset the imagebutton
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
@@ -177,8 +177,12 @@ public class HiveLocalGame extends LocalGame {
                 }
                 else if (move.isComputerMove()){ //the computer is trying to make a move
                     move.setComputerMove(false); //reset the computer since it tried to make a move
+                    hiveState.setPotentialMoves(move.getComputerPotentialMoves()); //update the gameStates potentials to be compared against in the makeMove
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
-                        return true; //computer is able to make the move
+                        move.getCurrentTile().setIndexX((int) move.getX()); //update the x and y indices
+                        move.getCurrentTile().setIndexY((int) move.getY());
+                        hiveState.addComputerPlayersTiles(move.getCurrentTile()); //now add it to the arrayList kept in the gameState of all computer tiles
+                        return true; //computer was able to make the move
                     }
                 }
                 else if(hiveState.getTile(oldX, oldY).getType() != Tile.Bug.EMPTY){ //moving from board spot to board spot

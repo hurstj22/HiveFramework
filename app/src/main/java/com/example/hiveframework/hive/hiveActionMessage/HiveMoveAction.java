@@ -5,6 +5,9 @@ import android.widget.ImageButton;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.hive.Tile;
+
+import java.util.ArrayList;
+
 /**
  * This class is sent when the player or computer wants to move a piece
  *  @author Isaac Reinhard
@@ -25,6 +28,7 @@ public class HiveMoveAction extends GameAction {
     private Tile currentTile; //the tile being moved
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     private boolean computerMove;
+    private ArrayList<Tile> computerPotentialMoves;
 
     /**
      * constructor for GameAction
@@ -91,5 +95,16 @@ public class HiveMoveAction extends GameAction {
 
     public void setComputerMove(boolean computerMove){
         this.computerMove = computerMove;
+    }
+
+    public ArrayList<Tile> getComputerPotentialMoves() {
+        return computerPotentialMoves;
+    }
+
+    public void setComputerPotentialMoves(ArrayList<Tile> computerPotentialMoves) {
+        this.computerPotentialMoves = new ArrayList<Tile>();
+        for(int i = 0; i < computerPotentialMoves.size(); i++){
+            this.computerPotentialMoves.add(computerPotentialMoves.get(i)); //removes from the incoming array and adds it to the new one held here
+        }
     }
 }
