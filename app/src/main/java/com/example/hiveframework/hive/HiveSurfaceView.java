@@ -210,9 +210,10 @@ public class HiveSurfaceView extends FlashSurfaceView {
 
         // Is the row an odd number?
         if (rowIsOdd) { // Yes: Offset x to match the indent of the row
-            column = (int) ((x - halfWidth) / gridWidth);
-        } else { // No: Calculate normally
             column = (int) (x / gridWidth);
+        }
+        else { // No: Calculate normally
+            column = (int) ((x - halfWidth) / gridWidth);
         }
 
         // Work out the position of the point relative to the box it is in
