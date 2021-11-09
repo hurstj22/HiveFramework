@@ -62,7 +62,10 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
         int pick = new Random().nextInt(6);
         return potentialMoves.get(pick);
     }
-
+    /**
+    https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum
+    */
+    
     /**
      * constructor does nothing extra
      */
