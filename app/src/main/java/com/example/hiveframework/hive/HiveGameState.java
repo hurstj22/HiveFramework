@@ -1480,22 +1480,29 @@ public class HiveGameState extends GameState implements Serializable {
                 case 1: //make all the statements separate ifs and boundCheck each statement first
                     if (x % 2 == 0) {
                         // For even rows
+                        //if(boundsCheck(x - 1, y)){
                         if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x - 1, y, otherColor)) {
                             potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
-                        } else if (gameBoard.get(x - 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                        //}
+                        }
+                        if (gameBoard.get(x - 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x - 1, y + 1, otherColor)) {
                             potentialMoves.add(gameBoard.get(x - 1).get(y + 1)); //tile above right of tile
-                        } else if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x, y - 1, otherColor)) {
                             potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
-                        } else if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x, y + 1, otherColor)) {
                             potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
-                        } else if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x + 1, y, otherColor)) {
                             potentialMoves.add(gameBoard.get(x + 1).get(y)); //tile below left of tile
-                        } else if (gameBoard.get(x + 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x + 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x - 1, y + 1, otherColor)) {
                             potentialMoves.add(gameBoard.get(x - 1).get(y + 1)); //tile below right of tile
                         }
@@ -1504,24 +1511,30 @@ public class HiveGameState extends GameState implements Serializable {
                         if (gameBoard.get(x - 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x - 1, y - 1, otherColor)) {
                             potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
-                        } else if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x - 1, y, otherColor)) {
                             potentialMoves.add(gameBoard.get(x - 1).get(y)); //tile above right of tile
-                        } else if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x, y - 1, otherColor)) {
                             potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
-                        } else if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x, y + 1, otherColor)) {
                             potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
-                        } else if (gameBoard.get(x + 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x + 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x + 1, y - 1, otherColor)) {
                             potentialMoves.add(gameBoard.get(x + 1).get(y - 1)); //tile below left of tile
-                        } else if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
+                        }
+                        if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
                                 touchingOtherColor(x - 1, y, otherColor)) {
                             potentialMoves.add(gameBoard.get(x + 1).get(y - 1)); //tile below right of tile
                         }
                     }
                     break;
+
             }
         }
     }
