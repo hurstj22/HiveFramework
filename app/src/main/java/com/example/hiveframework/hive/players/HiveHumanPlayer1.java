@@ -326,8 +326,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 return true;
             }
             else if(hasTapped && oldX != -1){ //this is the second time tapping so you've selected a gameboard tile and now another gameboard tile
-                game.sendAction(new HiveMoveAction(this, newX, newY));
                 hasTapped = !hasTapped; //reset hasTapped
+                game.sendAction(new HiveMoveAction(this, newX, newY));
                 return true;
             }
         }

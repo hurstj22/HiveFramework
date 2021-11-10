@@ -210,6 +210,8 @@ public class HiveGameState extends GameState implements Serializable {
      * Helper method for the validMove method, takes in a tile and determines if it is
      * able to be placed on the board somewhere. If it is, then this method
      * populates the potentialMoves arrayList.
+     * ONLY ALLOWS A TILE TO BE PLACED ON A NON EDGE LOCATION
+     * Intential: in hive there are no edges, and it would be unfair to take advantage of edges when placing
      * @param tile the tile that was selected and wants to be placed on the board
      * @return true if the tile is able to be placed, false if it is not permitted to be selected/placed
      */
@@ -233,7 +235,9 @@ public class HiveGameState extends GameState implements Serializable {
         if(bugCounter <= 0){ //there's nothing on the board so you can place it anywhere
             for(int i = 0; i < gameBoard.size(); i++) {
                 for (int j = 0; j < gameBoard.get(i).size(); j++) {
-                    potentialMoves.add(gameBoard.get(i).get(j));
+                    if(boundsCheck(i, j)){//if we're not on the edge, only allows placing on non edges
+                        potentialMoves.add(gameBoard.get(i).get(j));
+                    }
                 }
             }
             return true;
@@ -241,14 +245,15 @@ public class HiveGameState extends GameState implements Serializable {
         else if(bugCounter == 1){ //if there is exactly one piece placed down
             //then only add the pieces that are surrounding that piece as potential spots
             updatePotentialsForPlacing(tileInQuestion, 0); //this function adds all the pieces to potentialMoves
-            return true;               // and takes in a mode selector to know which tiles to add
+                                                                // and takes in a mode selector to know which tiles to add
         }
         else if(bugCounter >= 2){ //the first pieces have been put down for each player
             updatePotentialsForPlacing(tile, 1); //only add the surrounding tiles that touch only the same color as the current tile
-            return true;
         }
-
-        return false;
+        if(potentialMoves.size() == 0){ //the tile was on the edge or there was no spot for it
+            return false;
+        }
+        return true; //potentials has been populated, hooray!
     }
 
     /**
@@ -1361,58 +1366,50 @@ public class HiveGameState extends GameState implements Serializable {
     public boolean touchingOtherColor(int x, int y, Tile.PlayerPiece other){
         if (x % 2 == 0) {
             // For even rows
-            if(gameBoard.get(x-1).get(y).getPlayerPiece() == other){
-                //Check tile above left of tile
-                return false;
+            //if (boundsCheck(x, y)) {//only check this if we're not on the edge, not sure if we need this extra one
+
+                if (gameBoard.get(x - 1).get(y).getPlayerPiece() == other) {
+                    //Check tile above left of tile
+                    return false;
+                } else if (gameBoard.get(x - 1).get(y + 1).getPlayerPiece() == other) {
+                    //Check tile above right of tile
+                    return false;
+                } else if (gameBoard.get(x).get(y - 1).getPlayerPiece() == other) {
+                    //Check tile to the left of tile
+                    return false;
+                } else if (gameBoard.get(x).get(y + 1).getPlayerPiece() == other) {
+                    //Check tile to the right of tile
+                    return false;
+                } else if (gameBoard.get(x + 1).get(y).getPlayerPiece() == other) {
+                    //Check tile below left of tile
+                    return false;
+                } else if (gameBoard.get(x + 1).get(y + 1).getPlayerPiece() == other) {
+                    //Check tile below right of tile
+                    return false;
+                }
+            } else {
+                // For odd rows
+                if (gameBoard.get(x - 1).get(y - 1).getPlayerPiece() == other) {
+                    //Check tile above left of tile
+                    return false;
+                } else if (gameBoard.get(x - 1).get(y).getPlayerPiece() == other) {
+                    //Check tile above right of tile
+                    return false;
+                } else if (gameBoard.get(x).get(y - 1).getPlayerPiece() == other) {
+                    //Check tile to the left of tile
+                    return false;
+                } else if (gameBoard.get(x).get(y + 1).getPlayerPiece() == other) {
+                    //Check tile to the right of tile
+                    return false;
+                } else if (gameBoard.get(x + 1).get(y - 1).getPlayerPiece() == other) {
+                    //Check tile below left of tile
+                    return false;
+                } else if (gameBoard.get(x + 1).get(y).getPlayerPiece() == other) {
+                    //Check tile below right of tile
+                    return false;
+                }
             }
-            else if(gameBoard.get(x-1).get(y+1).getPlayerPiece() == other){
-                //Check tile above right of tile
-                return false;
-            }
-            else if(gameBoard.get(x).get(y-1).getPlayerPiece() == other){
-                //Check tile to the left of tile
-                return false;
-            }
-            else if(gameBoard.get(x).get(y+1).getPlayerPiece() == other){
-                //Check tile to the right of tile
-                return false;
-            }
-            else if(gameBoard.get(x+1).get(y).getPlayerPiece() == other){
-                //Check tile below left of tile
-                return false;
-            }
-            else if(gameBoard.get(x+1).get(y+1).getPlayerPiece() == other){
-                //Check tile below right of tile
-                return false;
-            }
-        }
-        else {
-            // For odd rows
-            if(gameBoard.get(x-1).get(y-1).getPlayerPiece() == other){
-                //Check tile above left of tile
-                return false;
-            }
-            else if(gameBoard.get(x-1).get(y).getPlayerPiece() == other){
-                //Check tile above right of tile
-                return false;
-            }
-            else if(gameBoard.get(x).get(y-1).getPlayerPiece() == other){
-                //Check tile to the left of tile
-                return false;
-            }
-            else if(gameBoard.get(x).get(y+1).getPlayerPiece() == other){
-                //Check tile to the right of tile
-                return false;
-            }
-            else if(gameBoard.get(x+1).get(y-1).getPlayerPiece() == other){
-                //Check tile below left of tile
-                return false;
-            }
-            else if(gameBoard.get(x+1).get(y).getPlayerPiece() == other){
-                //Check tile below right of tile
-                return false;
-            }
-        }
+        //}
         return true;
     }
 
@@ -1434,7 +1431,9 @@ public class HiveGameState extends GameState implements Serializable {
             for (int i = 0; i < GBSIZE; i++) {
                 for (int j = 0; j < GBSIZE * 2; j++) {
                     if (gameBoard.get(i).get(j).getPlayerPiece() == inTile.getPlayerPiece()){
-                        surroundingTiles(gameBoard.get(i).get(j), toggle);
+                        //if(boundsCheck(i, j)) {
+                            surroundingTiles(gameBoard.get(i).get(j), toggle);
+                        //}
                     }
                 }
             }
@@ -1457,81 +1456,86 @@ public class HiveGameState extends GameState implements Serializable {
         else{
             otherColor = Tile.PlayerPiece.B;
         }
-        switch (toggle) {
-            case 0:
-                if (x % 2 == 0){ //even row
-                    potentialMoves.add(gameBoard.get(x-1).get(y)); //tile above left of tile
-                    potentialMoves.add(gameBoard.get(x-1).get(y+1)); //tile above right of tile
-                    potentialMoves.add(gameBoard.get(x).get(y-1)); //tile to the left of tile
-                    potentialMoves.add(gameBoard.get(x).get(y+1)); //tile to the right of tile
-                    potentialMoves.add(gameBoard.get(x+1).get(y)); //tile below left of tile
-                    potentialMoves.add(gameBoard.get(x+1).get(y+1)); //tile below right of tile
-                }
-                else{
-                    potentialMoves.add(gameBoard.get(x-1).get(y-1)); //tile above left of tile
-                    potentialMoves.add(gameBoard.get(x-1).get(y)); //tile above right of tile
-                    potentialMoves.add(gameBoard.get(x).get(y-1)); //tile to the left of tile
-                    potentialMoves.add(gameBoard.get(x).get(y+1)); //tile to the right of tile
-                    potentialMoves.add(gameBoard.get(x+1).get(y-1)); //tile below left of tile
-                    potentialMoves.add(gameBoard.get(x+1).get(y)); //tile below right of tile
-                }
-                break;
-            case 1:
-                if (x % 2 == 0) {
-                    // For even rows
-                    if(gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x-1, y, otherColor)){
-                        potentialMoves.add(gameBoard.get(x-1).get(y-1)); //tile above left of tile
+        //we're not allowing players to place things on the edge as there is no edge in Hive
+        //Not a bug it's a FeAtURe
+        if (boundsCheck(x, y)) {//only check this if we're not on the edge
+            switch (toggle) {
+                case 0:
+                    if (x % 2 == 0) { //even row
+                        potentialMoves.add(gameBoard.get(x - 1).get(y)); //tile above left of tile
+                        potentialMoves.add(gameBoard.get(x - 1).get(y + 1)); //tile above right of tile
+                        potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+                        potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+                        potentialMoves.add(gameBoard.get(x + 1).get(y)); //tile below left of tile
+                        potentialMoves.add(gameBoard.get(x + 1).get(y + 1)); //tile below right of tile
+                    } else {
+                        potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
+                        potentialMoves.add(gameBoard.get(x - 1).get(y)); //tile above right of tile
+                        potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+                        potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+                        potentialMoves.add(gameBoard.get(x + 1).get(y - 1)); //tile below left of tile
+                        potentialMoves.add(gameBoard.get(x + 1).get(y)); //tile below right of tile
                     }
-                    else if(gameBoard.get(x-1).get(y+1).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x-1, y+1, otherColor)){
-                        potentialMoves.add(gameBoard.get(x-1).get(y+1)); //tile above right of tile
+                    break;
+                case 1: //make all the statements separate ifs and boundCheck each statement first
+                    if (x % 2 == 0) {
+                        // For even rows
+                        //if(boundsCheck(x - 1, y)){
+                        if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x - 1, y, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
+                        //}
+                        }
+                        if (gameBoard.get(x - 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x - 1, y + 1, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y + 1)); //tile above right of tile
+                        }
+                        if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x, y - 1, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+                        }
+                        if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x, y + 1, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+                        }
+                        if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x + 1, y, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x + 1).get(y)); //tile below left of tile
+                        }
+                        if (gameBoard.get(x + 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x - 1, y + 1, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y + 1)); //tile below right of tile
+                        }
+                    } else {
+                        // For odd rows
+                        if (gameBoard.get(x - 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x - 1, y - 1, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
+                        }
+                        if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x - 1, y, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y)); //tile above right of tile
+                        }
+                        if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x, y - 1, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+                        }
+                        if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x, y + 1, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+                        }
+                        if (gameBoard.get(x + 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x + 1, y - 1, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x + 1).get(y - 1)); //tile below left of tile
+                        }
+                        if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
+                                touchingOtherColor(x - 1, y, otherColor)) {
+                            potentialMoves.add(gameBoard.get(x + 1).get(y - 1)); //tile below right of tile
+                        }
                     }
-                    else if(gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x, y-1, otherColor)){
-                        potentialMoves.add(gameBoard.get(x).get(y-1)); //tile to the left of tile
-                    }
-                    else if(gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x, y+1, otherColor)){
-                        potentialMoves.add(gameBoard.get(x).get(y+1)); //tile to the right of tile
-                    }
-                    else if(gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x+1, y, otherColor)){
-                        potentialMoves.add(gameBoard.get(x+1).get(y)); //tile below left of tile
-                    }
-                    else if(gameBoard.get(x+1).get(y+1).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x-1, y+1, otherColor)){
-                        potentialMoves.add(gameBoard.get(x-1).get(y+1)); //tile below right of tile
-                    }
-                }
-                else {
-                    // For odd rows
-                    if(gameBoard.get(x-1).get(y-1).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x-1, y-1, otherColor)){
-                        potentialMoves.add(gameBoard.get(x-1).get(y-1)); //tile above left of tile
-                    }
-                    else if(gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x-1, y, otherColor)){
-                        potentialMoves.add(gameBoard.get(x-1).get(y)); //tile above right of tile
-                    }
-                    else if(gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x, y-1, otherColor)){
-                        potentialMoves.add(gameBoard.get(x).get(y-1)); //tile to the left of tile
-                    }
-                    else if(gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x, y+1, otherColor)){
-                        potentialMoves.add(gameBoard.get(x).get(y+1)); //tile to the right of tile
-                    }
-                    else if(gameBoard.get(x+1).get(y-1).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x+1, y-1, otherColor)){
-                        potentialMoves.add(gameBoard.get(x+1).get(y-1)); //tile below left of tile
-                    }
-                    else if(gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY &&
-                            touchingOtherColor(x-1, y, otherColor)){
-                        potentialMoves.add(gameBoard.get(x+1).get(y-1)); //tile below right of tile
-                    }
-                }
-                break;
+                    break;
+
+            }
         }
     }
 
@@ -1621,5 +1625,19 @@ public class HiveGameState extends GameState implements Serializable {
         for(int i = 0; i < potentialMoves.size(); i++){
             this.potentialMoves.add(potentialMoves.get(i)); //removes from the incoming array and adds it to the new one held here
         }
+    }
+
+    /**
+     * Basic bounds checking for the gameBoard
+     *
+     * @param row the row that's being checked
+     * @param col the col that's being checked
+     * @return true if within the gameboard and NOT on an edge
+     */
+    public boolean boundsCheck(int row, int col){
+        if (row > 0 && row < (gameBoard.size() - 1)  && col > 0 && col < (gameBoard.size() * 2) - 1) {
+            return true;
+        }
+        return false;
     }
 }
