@@ -1552,7 +1552,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return
      */
     public Tile getTile(int x, int y){
-        if(x >= gameBoard.size() || y >= gameBoard.size() * 2){
+        if(x > gameBoard.size() || y > gameBoard.size() * 2){
             return null;
         }
         return gameBoard.get(x).get(y);
