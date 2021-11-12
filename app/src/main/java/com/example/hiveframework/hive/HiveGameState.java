@@ -42,6 +42,7 @@ public class HiveGameState extends GameState implements Serializable {
     private final int GBSIZE = 7; //size of the gameboard
     private ArrayList<Tile> potentialMoves;
     private ArrayList<Tile> computerPlayersTiles;
+    //boolean for placed piece
     /**
      * Default constructor.
      */
