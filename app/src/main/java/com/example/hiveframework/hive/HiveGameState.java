@@ -1442,6 +1442,7 @@ public class HiveGameState extends GameState implements Serializable {
 
     /**
      * updates potentialMoves based on tile on board
+     * used when placing a tile on the board from the hand of a player
      * @param placedTile
      * @param toggle
      */
