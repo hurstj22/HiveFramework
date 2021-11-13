@@ -49,8 +49,48 @@ public class HiveGameStateTest {
     public void isValidBFS() {
     }
 
+    /**
+     * This is a test to see if the freedom method functions properly
+     * This method should return false if the Tile in question
+     * is trapped by other tiles. Written by James Hurst.
+     */
     @Test
     public void freedom() {
+        HiveGameState gameState = new HiveGameState();
+        assertEquals(0, gameState.getComputerPlayersTiles().size()); //list is currently empty
+
+        Tile ant = new Tile(2, 1, Tile.PlayerPiece.B, Tile.Bug.ANT, -1); //create a mundane test bug
+        Tile beetle = new Tile(2, 2, Tile.PlayerPiece.B, Tile.Bug.BEETLE, -1); //create a mundane test bug
+        Tile grasshopper = new Tile(3, 1, Tile.PlayerPiece.B, Tile.Bug.GRASSHOPPER, -1); //create a mundane test bug
+        Tile bee = new Tile(3, 2, Tile.PlayerPiece.B, Tile.Bug.QUEEN_BEE, -1); //create a mundane test bug
+        Tile spider = new Tile(3, 3, Tile.PlayerPiece.B, Tile.Bug.SPIDER, -1); //create a mundane test bug
+        Tile ant2 = new Tile(4, 1, Tile.PlayerPiece.B, Tile.Bug.ANT, -1); //create a mundane test bug
+        Tile grasshopper2 = new Tile(4, 2, Tile.PlayerPiece.B, Tile.Bug.GRASSHOPPER, -1); //create a mundane test bug
+
+        Tile[] testArray1 = new Tile[] {ant, bee, grasshopper, beetle, spider, ant2, grasshopper2}; //all the bugs
+        Tile[] testArray2 = new Tile[] {bee, grasshopper, beetle, spider, ant2, grasshopper2}; //testing only surrounded by 5
+        Tile[] testArray3 = new Tile[] {bee, grasshopper, spider, ant2, grasshopper2}; //testing only surrounded by 4 and should be able to move
+
+        for(Tile bug: testArray1){
+            gameState.addTile(bug); //add all the tiles to the board
+        }
+        boolean test = gameState.freedom(bee);
+        assertEquals(false, test); //the piece shouldn't be able to move
+
+        HiveGameState gameState2 = new HiveGameState();
+        for(Tile bug: testArray2){
+            gameState2.addTile(bug); //add all the tiles to the board
+        }
+        test = gameState2.freedom(bee);
+        assertEquals(false, test); //the piece shouldn't be able to move
+
+        HiveGameState gameState3 = new HiveGameState();
+        for(Tile bug: testArray3){
+            gameState3.addTile(bug); //add all the tiles to the board
+        }
+        test = gameState3.freedom(bee);
+        assertEquals(true, test); //the piece should now be able to move since it is only surround on 4 sides next to each other
+
     }
 
     @Test
@@ -186,8 +226,25 @@ public class HiveGameStateTest {
     public void setComputerPlayersTiles() {
     }
 
+    /**
+     * This is a test to see if the tiles add properly to the
+     * computer player's pieces. Written by James Hurst.
+     */
     @Test
     public void addComputerPlayersTiles() {
+        HiveGameState gameState = new HiveGameState();
+        assertEquals(0, gameState.getComputerPlayersTiles().size()); //list is currently empty
+
+        Tile ant = new Tile(5, 7, Tile.PlayerPiece.B, Tile.Bug.ANT, -1); //create a mundane test bug
+        Tile beetle = new Tile(2, 0, Tile.PlayerPiece.B, Tile.Bug.BEETLE, -1); //create a mundane test bug
+        Tile grasshopper = new Tile(9, 2, Tile.PlayerPiece.B, Tile.Bug.GRASSHOPPER, -1); //create a mundane test bug
+        Tile bee = new Tile(3, 4, Tile.PlayerPiece.B, Tile.Bug.QUEEN_BEE, -1); //create a mundane test bug
+        Tile[] testArray = new Tile[] {ant, bee, grasshopper, beetle};
+
+        for(Tile bug: testArray){
+            gameState.addComputerPlayersTiles(bug);
+        }
+        assertEquals(testArray.length, gameState.getComputerPlayersTiles().size());
     }
 
     @Test

@@ -42,6 +42,7 @@ public class HiveGameState extends GameState implements Serializable {
     private final int GBSIZE = 7; //size of the gameboard
     private ArrayList<Tile> potentialMoves;
     private ArrayList<Tile> computerPlayersTiles;
+    //boolean for placed piece
     /**
      * Default constructor.
      */
@@ -191,7 +192,7 @@ public class HiveGameState extends GameState implements Serializable {
             return selectFromHand(tile);
         }
 
-        if(!breakHive(tile)){//as long as the move doesn't break the hive
+        if(!breakHive(tile, false)){//as long as the move doesn't break the hive
             //and the type isn't grasshopper or beetle since they
             //don't obey the freedom of movement rule
             if(tile.getType() != Tile.Bug.GRASSHOPPER || tile.getType() != Tile.Bug.BEETLE){
@@ -260,12 +261,19 @@ public class HiveGameState extends GameState implements Serializable {
      * Checks the hive (ie gameboard) to see if the entire board is connected and if
      * without the Tile in the spot it currently is the board would STILL be connected
      * @param tile the piece being checked against breaking the hive
+     * @param searchFunction, set to true if calling this method to search for a move
+     *                        set to false if just checking as part of a regular validMove
      * @return false if move would NOT break the hive, true if move would break hive
      */
-    public boolean breakHive(Tile tile){
+    public boolean breakHive(Tile tile, boolean searchFunction){
         int row = -1;
         int col = -1;
         boolean firstFound = false;
+        int totalPieces = 21; //default to max minus 1
+
+        if(searchFunction){ //if we're searching for a move function don't remove it
+            totalPieces = 22;
+        }
 
         //perform a DFS on the gameBoard
         //copy the old gameBoard into a new temporary board to perform dfs on
@@ -276,7 +284,7 @@ public class HiveGameState extends GameState implements Serializable {
         for(int i = 0; i < gameBoard.size(); i++) {
             for (int j = 0; j < gameBoard.get(i).size(); j++) {
                 if (tile.getIndexX() != -1) { //if this is a tile that is already on the board then check to take it out
-                    if (i == tile.getIndexX() && j == tile.getIndexY()) {
+                    if (i == tile.getIndexX() && j == tile.getIndexY() && !searchFunction) { //only remove piece if not looking as part of a move
                         testBoard.get(i).set(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
                     } else {
                         testBoard.get(i).set(j, new Tile(gameBoard.get(i).get(j)));
@@ -305,7 +313,7 @@ public class HiveGameState extends GameState implements Serializable {
                     handPieces += piece;
                 }
             }
-            if(countVisited == 21 - handPieces) { //there are 22 total pieces, 21 counting the piece taken out
+            if(countVisited == totalPieces - handPieces) { //there are 22 total pieces, 21 counting the piece taken out
                 return false; //if the board can be traversed with bfs and all
                             //tiles on the boardhave been denoted as visited then
                             //return false the hive has NOT been broken
@@ -1079,7 +1087,7 @@ public class HiveGameState extends GameState implements Serializable {
                     Tile newTile = new Tile(s, j, tile.getPlayerPiece());
                     // check if valid move breaks bfs
 
-                    if (breakHive(newTile)){
+                    if (breakHive(newTile, false)){
                         break;
                     }
 
@@ -1552,7 +1560,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return
      */
     public Tile getTile(int x, int y){
-        if(x >= gameBoard.size() || y >= gameBoard.size() * 2){
+        if(x > gameBoard.size() || y > gameBoard.size() * 2){
             return null;
         }
         return gameBoard.get(x).get(y);

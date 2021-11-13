@@ -146,6 +146,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         else {
             //make a copy of the passed in gameState to pull data from
             hiveGame = new HiveGameState((HiveGameState) info);
+            //hiveGame.setCopyforUndo(hiveGame)
 
             //change the color of the turn banner to the player's color then change the text
             if(hiveGame.getWhoseTurn() == 0){ //first player

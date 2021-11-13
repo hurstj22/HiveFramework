@@ -48,6 +48,8 @@ public class HiveLocalGame extends LocalGame {
         //initialize coords to be used later, -1 means nothing is there
         oldX = -1;
         oldY = -1;
+
+
     }
 
     /**
@@ -172,6 +174,7 @@ public class HiveLocalGame extends LocalGame {
                     move.setSelectedImageButton(null); //reset the imageButton
                     //select.setSelectedImageButton(null); //reset the imagebutton
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
+                        //set the move boolean in hiveState to true
                         return true; //able to make the move
                     }
                 }
