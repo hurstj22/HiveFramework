@@ -1374,50 +1374,82 @@ public class HiveGameState extends GameState implements Serializable {
     public boolean touchingOtherColor(int x, int y, Tile.PlayerPiece other){
         if (x % 2 == 0) {
             // For even rows
-            //if (boundsCheck(x, y)) {//only check this if we're not on the edge, not sure if we need this extra one
-
-                if (gameBoard.get(x - 1).get(y).getPlayerPiece() == other) {
+                if (boundsCheck(x-1, y)){
+                    if (gameBoard.get(x - 1).get(y).getPlayerPiece() == other) {
                     //Check tile above left of tile
                     return false;
-                } else if (gameBoard.get(x - 1).get(y + 1).getPlayerPiece() == other) {
-                    //Check tile above right of tile
-                    return false;
-                } else if (gameBoard.get(x).get(y - 1).getPlayerPiece() == other) {
-                    //Check tile to the left of tile
-                    return false;
-                } else if (gameBoard.get(x).get(y + 1).getPlayerPiece() == other) {
-                    //Check tile to the right of tile
-                    return false;
-                } else if (gameBoard.get(x + 1).get(y).getPlayerPiece() == other) {
-                    //Check tile below left of tile
-                    return false;
-                } else if (gameBoard.get(x + 1).get(y + 1).getPlayerPiece() == other) {
-                    //Check tile below right of tile
-                    return false;
+                    }
                 }
-            } else {
-                // For odd rows
-                if (gameBoard.get(x - 1).get(y - 1).getPlayerPiece() == other) {
-                    //Check tile above left of tile
-                    return false;
-                } else if (gameBoard.get(x - 1).get(y).getPlayerPiece() == other) {
-                    //Check tile above right of tile
-                    return false;
-                } else if (gameBoard.get(x).get(y - 1).getPlayerPiece() == other) {
-                    //Check tile to the left of tile
-                    return false;
-                } else if (gameBoard.get(x).get(y + 1).getPlayerPiece() == other) {
-                    //Check tile to the right of tile
-                    return false;
-                } else if (gameBoard.get(x + 1).get(y - 1).getPlayerPiece() == other) {
-                    //Check tile below left of tile
-                    return false;
-                } else if (gameBoard.get(x + 1).get(y).getPlayerPiece() == other) {
-                    //Check tile below right of tile
-                    return false;
+                if (boundsCheck(x-1 ,y+1)) {
+                    if (gameBoard.get(x - 1).get(y + 1).getPlayerPiece() == other) {
+                        //Check tile above right of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x, y-1)) {
+                    if (gameBoard.get(x).get(y - 1).getPlayerPiece() == other) {
+                        //Check tile to the left of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x, y+1)) {
+                    if (gameBoard.get(x).get(y + 1).getPlayerPiece() == other) {
+                        //Check tile to the right of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x+1, y)) {
+                    if (gameBoard.get(x + 1).get(y).getPlayerPiece() == other) {
+                        //Check tile below left of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x+1, y+1)) {
+                    if (gameBoard.get(x + 1).get(y + 1).getPlayerPiece() == other) {
+                        //Check tile below right of tile
+                        return false;
+                    }
                 }
             }
-        //}
+            else {
+                // For odd rows
+                if (boundsCheck(x-1, y-1)) {
+                    if (gameBoard.get(x - 1).get(y - 1).getPlayerPiece() == other) {
+                        //Check tile above left of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x-1, y)) {
+                    if (gameBoard.get(x - 1).get(y).getPlayerPiece() == other) {
+                        //Check tile above right of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x, y-1)) {
+                    if (gameBoard.get(x).get(y - 1).getPlayerPiece() == other) {
+                        //Check tile to the left of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x, y+1)) {
+                    if (gameBoard.get(x).get(y + 1).getPlayerPiece() == other) {
+                        //Check tile to the right of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x+1, y-1)) {
+                    if (gameBoard.get(x + 1).get(y - 1).getPlayerPiece() == other) {
+                        //Check tile below left of tile
+                        return false;
+                    }
+                }
+                if (boundsCheck(x+1, y)) {
+                    if (gameBoard.get(x + 1).get(y).getPlayerPiece() == other) {
+                        //Check tile below right of tile
+                        return false;
+                    }
+                }
+            }
         return true;
     }
 
@@ -1489,61 +1521,83 @@ public class HiveGameState extends GameState implements Serializable {
                 case 1: //make all the statements separate ifs and boundCheck each statement first
                     if (x % 2 == 0) {
                         // For even rows
-                        //if(boundsCheck(x - 1, y)){
-                        if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x - 1, y, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
-                        //}
+                        if(boundsCheck(x - 1, y)) {
+                            if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x - 1, y, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
+                            }
                         }
-                        if (gameBoard.get(x - 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x - 1, y + 1, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x - 1).get(y + 1)); //tile above right of tile
+                        if (boundsCheck(x-1, y+1)) {
+                            if (gameBoard.get(x - 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x - 1, y + 1, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x - 1).get(y + 1)); //tile above right of tile
+                            }
                         }
-                        if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x, y - 1, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+                        if (boundsCheck(x, y-1)) {
+                            if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x, y - 1, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+                            }
                         }
-                        if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x, y + 1, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+                        if (boundsCheck(x, y+1)) {
+                            if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x, y + 1, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+                            }
                         }
-                        if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x + 1, y, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x + 1).get(y)); //tile below left of tile
+                        if (boundsCheck(x+1, y)) {
+                            if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x + 1, y, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x + 1).get(y)); //tile below left of tile
+                            }
                         }
-                        if (gameBoard.get(x + 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x - 1, y + 1, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x - 1).get(y + 1)); //tile below right of tile
+                        if (boundsCheck(x+1, y+1)) {
+                            if (gameBoard.get(x + 1).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x + 1, y + 1, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x + 1).get(y + 1)); //tile below right of tile
+                            }
                         }
-                    } else {
+                    }
+                    else {
                         // For odd rows
-                        if (gameBoard.get(x - 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x - 1, y - 1, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
+                        if (boundsCheck(x-1, y-1)) {
+                            if (gameBoard.get(x - 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x - 1, y - 1, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
+                            }
                         }
-                        if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x - 1, y, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x - 1).get(y)); //tile above right of tile
+                        if (boundsCheck(x-1, y)) {
+                            if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x - 1, y, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x - 1).get(y)); //tile above right of tile
+                            }
                         }
-                        if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x, y - 1, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+                        if (boundsCheck(x, y-1)) {
+                            if (gameBoard.get(x).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x, y - 1, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+                            }
                         }
-                        if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x, y + 1, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+                        if (boundsCheck(x, y+1)) {
+                            if (gameBoard.get(x).get(y + 1).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x, y + 1, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+                            }
                         }
-                        if (gameBoard.get(x + 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x + 1, y - 1, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x + 1).get(y - 1)); //tile below left of tile
+                        if (boundsCheck(x+1, y-1)) {
+                            if (gameBoard.get(x + 1).get(y - 1).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x + 1, y - 1, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x + 1).get(y - 1)); //tile below left of tile
+                            }
                         }
-                        if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
-                                touchingOtherColor(x - 1, y, otherColor)) {
-                            potentialMoves.add(gameBoard.get(x + 1).get(y - 1)); //tile below right of tile
+                        if (boundsCheck(x+1, y)) {
+                            if (gameBoard.get(x + 1).get(y).getType() == Tile.Bug.EMPTY &&
+                                    touchingOtherColor(x + 1, y, otherColor)) {
+                                potentialMoves.add(gameBoard.get(x + 1).get(y)); //tile below right of tile
+                            }
                         }
                     }
                     break;
-
             }
         }
     }
@@ -1648,5 +1702,154 @@ public class HiveGameState extends GameState implements Serializable {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns true if game won or false if game not won
+     * @return
+     */
+    public int winOrNah(){
+        Tile.PlayerPiece player;
+        int player1Surr = 0; //black
+        int player2Surr = 0; //white
+        for (int x = 0; x < gameBoard.size(); x++){
+            for (int y = 0; y < gameBoard.get(x).size(); y++){
+                if (gameBoard.get(x).get(y).getType() == Tile.Bug.QUEEN_BEE){
+                    player = gameBoard.get(x).get(y).getPlayerPiece();
+                    if (x % 2 == 0) { //even row
+                        if (boundsCheck(x-1, y)){
+                            if (gameBoard.get(x - 1).get(y).getType() != Tile.Bug.EMPTY){ //tile above left of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x-1, y+1)) {
+                            if (gameBoard.get(x - 1).get(y + 1).getType() != Tile.Bug.EMPTY) { //tile above right of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x, y-1)) {
+                            if (gameBoard.get(x).get(y - 1).getType() != Tile.Bug.EMPTY) { //tile to the left of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x, y+1)) {
+                            if (gameBoard.get(x).get(y + 1).getType() != Tile.Bug.EMPTY) { //tile to the right of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x+1, y)) {
+                            if (gameBoard.get(x + 1).get(y).getType() != Tile.Bug.EMPTY) { //tile below left of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x+1, y+1)) {
+                            if (gameBoard.get(x + 1).get(y + 1).getType() != Tile.Bug.EMPTY) { //tile below right of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        if (boundsCheck(x-1, y-1)) {
+                            if (gameBoard.get(x - 1).get(y - 1).getType() != Tile.Bug.EMPTY) { //tile above left of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x-1, y)) {
+                            if (gameBoard.get(x - 1).get(y).getType() != Tile.Bug.EMPTY) { //tile above right of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x, y-1)) {
+                            if (gameBoard.get(x).get(y - 1).getType() != Tile.Bug.EMPTY) { //tile to the left of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x, y+1)) {
+                            if (gameBoard.get(x).get(y + 1).getType() != Tile.Bug.EMPTY) { //tile to the right of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x+1, y-1)) {
+                            if (gameBoard.get(x + 1).get(y - 1).getType() != Tile.Bug.EMPTY) { //tile below left of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                        if (boundsCheck(x+1, y)) {
+                            if (gameBoard.get(x + 1).get(y).getType() != Tile.Bug.EMPTY) { //tile below right of tile
+                                if (player == Tile.PlayerPiece.B){
+                                    player1Surr++;
+                                }
+                                else{
+                                    player2Surr++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int whoWon = 0; // 0 = no one, 1 = player1 (black), 2 = player2 (white)
+        if (player1Surr == 6){
+            whoWon++;
+        }
+        if (player2Surr == 6){
+            whoWon++;
+        }
+        return whoWon;
     }
 }
