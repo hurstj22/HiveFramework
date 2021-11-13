@@ -111,6 +111,7 @@ public class HiveGameStateTest {
 
     @Test
     public void updatePotentialsForPlacing() {
+
     }
 
     @Test
