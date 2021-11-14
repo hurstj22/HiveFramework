@@ -48,8 +48,6 @@ public class HiveLocalGame extends LocalGame {
         //initialize coords to be used later, -1 means nothing is there
         oldX = -1;
         oldY = -1;
-
-
     }
 
     /**
@@ -141,22 +139,8 @@ public class HiveLocalGame extends LocalGame {
 
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
                 select = (HiveSelectAction) action;
-                if(select.getSelectedTile() == null){
-                    return false; //no image was selected
-                }
-                if(hiveState.getPiecesRemain(select.getSelectedTile().getType()) <= 0){ //makes sure player has at least one of piece remaining
-                    return false;
-                }
-                if(select.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
-                    hiveState.setSelectFlag(true);
-                    hiveState.setCurrentIdSelected(select.getSelectedImageButton().getId());
-                    //if(hiveState.getTypeCount(select.getSelectedTile().getType()) <= 0){ //not any of that bug left to select
-                    //    return false
-                    //}
-                    return hiveState.validMove(select.getSelectedTile()); //pass the newly created tile to calculate all possible moves
-                }
 
-                else{ //selecting from the game board
+                if(select.getX() > -1){ //selecting from the game board
                     //get oldX and oldY and determine what tile they correspond to, then call gameState validMove on those
                     oldX = (int) select.getX();
                     oldY = (int) select.getY();
@@ -169,10 +153,24 @@ public class HiveLocalGame extends LocalGame {
                     return false; //selected an empty spot, there's no bug there to ask to move
                 }
 
+                if(select.getSelectedImageButton() != null){ //selecting from the player's hand
+                    if(select.getSelectedTile() == null){
+                        return false; //no image was selected
+                    }
+                    else if(hiveState.getPiecesRemain(select.getSelectedTile().getType()) <= 0) { //makes sure player has at least one of piece remaining
+                        return false;
+                    }
+                    hiveState.setSelectFlag(true);
+                    hiveState.setCurrentIdSelected(select.getSelectedImageButton().getId());
+
+                    return hiveState.validMove(select.getSelectedTile()); //pass the newly created tile to calculate all possible moves
+                }
+
             } else if (action instanceof HiveMoveAction) { //we've been passed a request to move a piece
                 move = (HiveMoveAction) action;
 
                 if(move.getSelectedImageButton() != null){ //moving from hand to board (only for human tho)
+                    move.setSelectedImageButton(null); //reset the imageButton
                     hiveState.setCurrentIdSelected(-1); //reset the imageButton
                     //select.setSelectedImageButton(null); //reset the imagebutton
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
@@ -193,9 +191,6 @@ public class HiveLocalGame extends LocalGame {
                 else if(hiveState.getTile(oldX, oldY).getType() != Tile.Bug.EMPTY){ //moving from board spot to board spot
                     newX = (int) move.getX();
                     newY = (int) move.getY();
-                    //now reset the move and select
-                    //move.setCurrentTile(null);
-                    //select.setSelectedTile(null);
 
                     if(hiveState.makeMove(hiveState.getTile(oldX, oldY), newX, newY)) { //pass in the tile to move
                         return true; //able to make the move

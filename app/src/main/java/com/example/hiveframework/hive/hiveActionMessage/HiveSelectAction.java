@@ -64,6 +64,8 @@ public class HiveSelectAction extends GameAction {
         // invoke superclass constructor to set the player
         super(player);
         this.id = id;
+        this.xCoord = -1; //inintialize to -1 to show coming from the hand
+        this.yCoord = -1;
     }
 
     /**

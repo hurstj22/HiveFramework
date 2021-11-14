@@ -279,8 +279,8 @@ public class HiveGameState extends GameState implements Serializable {
             totalPieces = 22;
         }
 
-        //perform a DFS on the gameBoard
-        //copy the old gameBoard into a new temporary board to perform dfs on
+        //perform a BFS on the gameBoard
+        //copy the old gameBoard into a new temporary board to perform Bfs on
         ArrayList<ArrayList<Tile>> testBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
             if(testBoard != null){

@@ -167,7 +167,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         }Log.i(TAG, "this was not a valid move");
                    }
                     break;
-                case 2: //picking a tile from the tiles already placed on the board:
+                case 5: //picking a tile from the tiles already placed on the board:
                     Log.i(TAG,"I'm trying to play from the board");
                     ArrayList<ArrayList<Tile>> gameBoard = new ArrayList<ArrayList<Tile>>();
                     gameBoard = hiveGame.getGameBoard();
