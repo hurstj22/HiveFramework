@@ -127,7 +127,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             }
 
 
-            switch(whatAmIDoingToday.nextInt(3)) { //I believe this picks 0 - 2 since it's not inclusive of 3.
+            switch(whatAmIDoingToday.nextInt(2)) { //I believe this picks 0 - 2 since it's not inclusive of 3.
                 //This switch statement is the brains of the operation: chooses between placing on the board, moving from one spot to another, and skipping turn
 
                 case 0: //picking a tile from the computer's hand and placing it on the board
@@ -163,7 +163,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         }
                     }
                     break;
-                case 1: //picking a tile from the tiles already placed on the board:
+                case 2: //picking a tile from the tiles already placed on the board:
                     Log.i(TAG,"I'm trying to play from the board");
                     Tile random = randomTileFromBoard();
                     if(random != null) {//there was nothing belonging to the ai on the board :(
@@ -182,8 +182,13 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         }
                     }
                         break;
-                case 2: //The computer player decides to skip their turn
+                case 1: //The computer player decides to skip their turn
                     Log.i(TAG,"Today I will skip my turn");
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     game.sendAction(endTurn);
                     return;
             }
