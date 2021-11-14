@@ -173,7 +173,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
             for (ImageButton bug: imagesArray) {
                 if (bug != null && selectedImageButton != null && selectActionFromHand != null) {
-                    if (bug.getId() == selectedImageButton.getId()) {
+                    if (bug.getId() == selectedImageButton.getId() && hiveGame.getCurrentIdSelected() != -1) {
                         bug.setBackgroundColor(Color.YELLOW); //highlight the background color to indicate selected tile
                     }
                     else{
@@ -307,6 +307,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
                 HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);
                 moveActionFromHand.setSelectedImageButton(selectedImageButton);
+                selectedImageButton = null;
                 //not sure if I can reset it since possibly it's just a pointer that gets assigned in moveAction... not sure about this one
                 moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
                 game.sendAction(moveActionFromHand);
@@ -315,11 +316,10 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 hiveGame.setCurrentIdSelected(-1); //reset selected image button
                 selectActionFromHand.setSelectedImageButton(null);
                 selectActionFromHand.setSelectedTile(null);
-                selectedImageButton = null;
                 selectActionFromHand = null;
                 return true;
             }
-            else if(!hasTapped){ //selecting from the board so pass a selectAction with the x and y coords
+            else if(!hasTapped && selectedImageButton == null){ //selecting from the board so pass a selectAction with the x and y coords
                 oldX = newX;
                 oldY = newY;
                 hasTapped = !hasTapped;
@@ -347,8 +347,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 break;
             case R.id.endTurnButton: //switches the current player's turn
                 Log.d(TAG, "turn is" + hiveGame.getWhoseTurn());
-                //hiveGame.setWhoseTurn(1 - hiveGame.getWhoseTurn());
-                Log.d(TAG, "turn is" + hiveGame.getWhoseTurn());
                 game.sendAction(endTurnAction);
                 Log.d(TAG, "onClick: end turn action");
                 break;
@@ -365,8 +363,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         if(view instanceof ImageButton){
             //one of the player's bug pieces from their hand was selected, thus update the imageButton object
             selectedImageButton = (ImageButton) view; //local game can access the id and perform the appropriate actions
-            hiveGame.setCurrentIdSelected(selectedImageButton.getId());
-            selectActionFromHand = new HiveSelectAction(this, hiveGame.getCurrentIdSelected()); //set up the action
+            selectActionFromHand = new HiveSelectAction(this, selectedImageButton.getId()); //set up the action
             selectActionFromHand.setSelectedImageButton(selectedImageButton);
 
             //create the tile to pass in as selected tile with starting coords as -1 since it belongs in the player's hand
@@ -379,6 +376,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             currentTile = new Tile(-1,-1, piece, findBugType(hiveGame.getCurrentIdSelected()), hiveGame.getCurrentIdSelected()); //input -1's to know tile coming from board,
                                                                                                                                         // type is determined by function, and id is set from imageButton
             selectActionFromHand.setSelectedTile(currentTile); //assign the selected tile in the select action class to be referenced later
+            //hiveGame.setSelectFlag(true); //for highlighting the background yellow SETTING THINGS IN THE hiveGame here DOESN'T WORK
             game.sendAction(selectActionFromHand); //then pass a select action
         }
 
@@ -397,15 +395,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 spiderId = spiderP1Image.getId();
                 grasshopperId = grasshopperP1Image.getId();
                 antId = antP1Image.getId();
-            /* } else { //player 2's turn, thus selected must be P2's, actually maybe do this in the computer player instead.... idk cuz at the start of the game,
-                                                                        //the gameState is null
-                beeId = beeP2Image.getId();
-                beetleId = beetleP2Image.getId();
-                spiderId = spiderP2Image.getId();
-                grasshopperId = grasshopperP2Image.getId();
-                antId = antP2Image.getId();
-        //    } */
-        //}
     }
 
     //setter and getters for instance variables

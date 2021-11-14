@@ -148,6 +148,8 @@ public class HiveLocalGame extends LocalGame {
                     return false;
                 }
                 if(select.getSelectedImageButton() != null){ //selecting from the player's hand //put this in the HiveHumanPlayer
+                    hiveState.setSelectFlag(true);
+                    hiveState.setCurrentIdSelected(select.getSelectedImageButton().getId());
                     //if(hiveState.getTypeCount(select.getSelectedTile().getType()) <= 0){ //not any of that bug left to select
                     //    return false
                     //}
@@ -171,7 +173,7 @@ public class HiveLocalGame extends LocalGame {
                 move = (HiveMoveAction) action;
 
                 if(move.getSelectedImageButton() != null){ //moving from hand to board (only for human tho)
-                    move.setSelectedImageButton(null); //reset the imageButton
+                    hiveState.setCurrentIdSelected(-1); //reset the imageButton
                     //select.setSelectedImageButton(null); //reset the imagebutton
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
                         //set the move boolean in hiveState to true

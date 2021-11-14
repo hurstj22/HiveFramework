@@ -37,6 +37,7 @@ public class HiveGameState extends GameState implements Serializable {
     private int whoseTurn;
     private int countVisited;
     private int currentIdSelected;
+    private boolean selectFlag;
 
     private static final int tileSize = 300;
     private final int GBSIZE = 7; //size of the gameboard
@@ -100,6 +101,7 @@ public class HiveGameState extends GameState implements Serializable {
         currentIdSelected = -1;
         potentialMoves = new ArrayList<Tile>();
         computerPlayersTiles = new ArrayList<Tile>();
+        selectFlag = false; //default hasn't selected an image
     }
 
     /**
@@ -150,6 +152,8 @@ public class HiveGameState extends GameState implements Serializable {
             Tile copyTile = new Tile((other.getComputerPlayersTiles()).get(i));
             this.computerPlayersTiles.add(copyTile);
         }
+
+        this.selectFlag = other.getSelectFlag();
     }
 
     /**
@@ -1692,6 +1696,14 @@ public class HiveGameState extends GameState implements Serializable {
         for(int i = 0; i < potentialMoves.size(); i++){
             this.potentialMoves.add(potentialMoves.get(i)); //removes from the incoming array and adds it to the new one held here
         }
+    }
+
+     public boolean getSelectFlag(){
+        return this.selectFlag;
+     }
+
+    public void setSelectFlag(boolean selectFlag) {
+        this.selectFlag = selectFlag;
     }
 
     /**
