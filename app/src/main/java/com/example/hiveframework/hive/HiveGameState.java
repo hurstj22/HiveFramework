@@ -279,7 +279,9 @@ public class HiveGameState extends GameState implements Serializable {
         //copy the old gameBoard into a new temporary board to perform dfs on
         ArrayList<ArrayList<Tile>> testBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
-            testBoard.add(new ArrayList<Tile>(GBSIZE*2));
+            if(testBoard != null){
+                testBoard.add(new ArrayList<Tile>(GBSIZE*2));
+            }
         }
         for(int i = 0; i < gameBoard.size(); i++) {
             for (int j = 0; j < gameBoard.get(i).size(); j++) {
@@ -287,7 +289,9 @@ public class HiveGameState extends GameState implements Serializable {
                     if (i == tile.getIndexX() && j == tile.getIndexY() && !searchFunction) { //only remove piece if not looking as part of a move
                         testBoard.get(i).set(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
                     } else {
-                        testBoard.get(i).set(j, new Tile(gameBoard.get(i).get(j)));
+                            if(testBoard.get(i) != null){
+                                testBoard.get(i).set(j, new Tile(gameBoard.get(i).get(j)));
+                         }
                     }
                 }
                 else{ //just copy the gameBoard over to the testBoard instead
