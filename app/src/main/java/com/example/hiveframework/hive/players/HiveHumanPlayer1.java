@@ -173,8 +173,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
             for (ImageButton bug: imagesArray) {
                 if (bug != null && selectedImageButton != null && selectActionFromHand != null) {
-                    if (bug.getId() == selectedImageButton.getId() && hiveGame.getCurrentIdSelected() != -1) {
-                        bug.setBackgroundColor(Color.YELLOW); //highlight the background color to indicate selected tile
+                    if (bug.getId() == selectedImageButton.getId() && hiveGame.getCurrentIdSelected() > 0 && hiveGame.getSelectFlag()) {
+                        bug.setBackgroundColor(Color.GREEN); //highlight the background color to indicate selected tile
                     }
                     else{
                         bug.setBackgroundColor(Color.GRAY);
@@ -373,7 +373,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             else{
                 piece = Tile.PlayerPiece.B; //2nd player
             }
-            currentTile = new Tile(-1,-1, piece, findBugType(hiveGame.getCurrentIdSelected()), hiveGame.getCurrentIdSelected()); //input -1's to know tile coming from board,
+            currentTile = new Tile(-1,-1, piece, findBugType(selectedImageButton.getId()), selectedImageButton.getId()); //input -1's to know tile coming from board,
                                                                                                                                         // type is determined by function, and id is set from imageButton
             selectActionFromHand.setSelectedTile(currentTile); //assign the selected tile in the select action class to be referenced later
             //hiveGame.setSelectFlag(true); //for highlighting the background yellow SETTING THINGS IN THE hiveGame here DOESN'T WORK

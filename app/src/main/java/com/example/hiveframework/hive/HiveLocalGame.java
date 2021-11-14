@@ -172,7 +172,7 @@ public class HiveLocalGame extends LocalGame {
                 if(move.getSelectedImageButton() != null){ //moving from hand to board (only for human tho)
                     move.setSelectedImageButton(null); //reset the imageButton
                     hiveState.setCurrentIdSelected(-1); //reset the imageButton
-                    //select.setSelectedImageButton(null); //reset the imagebutton
+                    hiveState.setSelectFlag(false);
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
                         //set the move boolean in hiveState to true
                         return true; //able to make the move
