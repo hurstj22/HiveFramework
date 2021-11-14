@@ -75,6 +75,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
      * @return a randomly picked tile from the list of potential spots that are acceptable to move
      */
     private Tile randomTileFromPotentials() {
+        //need to create a random tile, then call isValid on the tile
         if(potentialMoves != null){
             int pick = randPick.nextInt(potentialMoves.size());
             return potentialMoves.get(pick);
@@ -113,32 +114,25 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
 
     @Override
     protected void receiveInfo(GameInfo info) {
-        Log.d(TAG, "receiveInfo: receivng for computer");
 
         if(info == null){
-            Log.d(TAG, "receiveInfo: info is null and returning ");
+
             return;
         }
 
         if(info instanceof HiveGameState) {
             hiveGame =  new HiveGameState((HiveGameState) info);
-
-            Log.d(TAG, "receiveInfo: player is " + this.playerNum);
-            Log.d(TAG, "receiveInfo: line 64 turn is " + hiveGame.getWhoseTurn());
-            Log.d(TAG, "pm: "+ potentialMoves);
             if (this.playerNum != hiveGame.getWhoseTurn()) {
-                Log.i(TAG, "receiveInfo: NOT YOUR TURN");
-                Log.i(TAG, "receiveInfo: this.playerNum:"+ this.playerNum);
-                Log.i(TAG, "receiveInfo: hiveGame.whoseTurn:" + hiveGame.getWhoseTurn());
                 return; //not you're turn
             }
 
-            Log.d(TAG, "receiveInfo: it is comps turn ");
-            //need to create a random tile, then call isValid on the tile
 
-            switch(whatAmIDoingToday.nextInt(2)) { //I believe this picks 0 - 2 since it's not inclusive of 3.
+            switch(whatAmIDoingToday.nextInt(6)) {//I believe this picks 0 - 2 since it's not inclusive of 3.
                 //This switch statement is the brains of the operation: chooses between placing on the board, moving from one spot to another, and skipping turn
 
+                case 3:
+                case 4:
+                case 5:
                 case 0: //picking a tile from the computer's hand and placing it on the board
                     Log.i(TAG,"I'm trying to play from my hand");
                     Tile randomTileFromHand = randomTileFromHand();
@@ -146,6 +140,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     if (hiveGame.getPiecesRemain(randomTileFromHand.getType()) > 0) { //makes sure player has at least one of that piece remaining
                         Log.i(TAG,"I have : "+ hiveGame.getPiecesRemain(randomTileFromHand.getType()) + " " + randomTileFromHand.getType() + "'s left");
                         if (hiveGame.validMove(randomTileFromHand)) { //if there's validMoves to be made populate the local potentialMoves
+                            Log.i(TAG, "this was a valid move!");
                             potentialMoves = hiveGame.getPotentialMoves();
                             if (potentialMoves == null || potentialMoves.size() <= 0) { //if for some reason there was nothing to do with that Tile then end your turn :(
                                 Log.i(TAG, "receiveInfo: potentials was empty:");
@@ -169,11 +164,31 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 moveAction.setComputerMove(true);
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
                             }
-                        }
-                    }
+                        }Log.i(TAG, "this was not a valid move");
+                   }
                     break;
                 case 2: //picking a tile from the tiles already placed on the board:
                     Log.i(TAG,"I'm trying to play from the board");
+                    ArrayList<ArrayList<Tile>> gameBoard = new ArrayList<ArrayList<Tile>>();
+                    gameBoard = hiveGame.getGameBoard();
+                    int i =0;
+                    int goalX = -1;
+                    int goalY = -1;
+                    boolean queenFound = false;
+                    for (ArrayList<Tile> t : gameBoard) //iterate game board to see if queen is there
+                        //if queen is found set new goal X and Y
+                        //may not be able to move there
+                    {
+                        if(t != null) {
+                            if (t.get(i).getType() == Tile.Bug.QUEEN_BEE) {
+                                 queenFound = true;
+                                 goalX = t.get(i).getIndexX();
+                                 goalY = t.get(i).getIndexY();
+                            }
+                        }
+                        i++;
+                    }
+
                     Tile random = randomTileFromBoard();
                     if(random != null) {//there was nothing belonging to the ai on the board :(
                         //then calls validMove on it to see about populating those gosh darn potentialMoves
@@ -182,9 +197,14 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         if (hiveGame.validMove(random)) {
                             potentialMoves = hiveGame.getPotentialMoves();
                             currentTile = randomTileFromPotentials(); //gets a random viable moving location
-                            currentTile.setIndexX(random.getIndexX()); //I don't think you want to set these in this case, if you're pulling from potentials,
-                            //the x and y's are already set. What you want to do is update the x and y of the moveAction
-                            currentTile.setIndexY(random.getIndexY());
+                            if (queenFound){
+                                currentTile.setIndexX(goalX);
+                                currentTile.setIndexY(goalY);
+                            }else {
+                                currentTile.setIndexX(random.getIndexX()); //I don't think you want to set these in this case, if you're pulling from potentials,
+                                //the x and y's are already set. What you want to do is update the x and y of the moveAction
+                                currentTile.setIndexY(random.getIndexY());
+                            }
                             moveAction.setCurrentTile(random);
                             moveAction.setComputerMove(true);
                             game.sendAction(moveAction);
@@ -193,37 +213,21 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         break;
                 case 1: //The computer player decides to skip their turn
                     Log.i(TAG,"Today I will skip my turn");
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if( hiveGame.getPotentialMoves() != null)
+                    {
+                        if (hiveGame.getPotentialMoves().size()  < 1)
+                        {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                     game.sendAction(endTurn);
                     return;
             }
-            //I don't think we need this down here anymore? I think it's old code?
 
-            // ie there's still that type of bug left in the playersHand array
-            //then you can get the potentials from the hiveGame.getPotentialMoves(). Then add the tile you created to the move.setCurrentTile(randTile) AND
-            //add the x and y's of the first potential spot to the move thus simulating onTouch commands by using the constructor.
-            // Then call move.setComputerMove to true to let the game know the computer is trying to move. Then call game.sendAction(move)
-
-
-            //then you can call game.sendAction(move) on the currentTile
-            /*if (currentTile.getType() != null) { //the player has selected one of the pieces to "place" on the board
-                newX = currentTile.getIndexX(); //gets new move from current tile
-                Log.d(TAG, "receiveInfo: newX" + newX);
-                newY = currentTile.getIndexY();
-                Log.d(TAG, "receiveInfo: newY" + newY);
-                HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);
-                Log.d(TAG, "receiveInfo: move action for computer");
-                //moveActionFromHand.setSelectedImageButton(selectedImageButton);
-                //not sure if I can reset it since possibly it's just a pointer that gets assigned in moveAction... not sure about this one
-                //setSelectedImageButton(null); //reset the selected image since either nothing is going to happen or the pieces will move
-                moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
-                Log.d(TAG, "receiveInfo: sendMOVEEE");
-                game.sendAction(moveActionFromHand);
-            } */
             game.sendAction(endTurn); //ends the turn if there's nothing valid to do
             return;
         }
