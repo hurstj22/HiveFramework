@@ -5,6 +5,7 @@ import com.example.hiveframework.GameFramework.infoMessage.GameState;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Queue;
 /**
  * this is the game state which holds all info/actions related to a state of the Hive game
@@ -43,6 +44,7 @@ public class HiveGameState extends GameState implements Serializable {
     private final int GBSIZE = 7; //size of the gameboard
     private ArrayList<Tile> potentialMoves;
     private ArrayList<Tile> computerPlayersTiles;
+    Queue<Tile> tileQueue;
     //boolean for placed piece
     /**
      * Default constructor.
@@ -102,6 +104,7 @@ public class HiveGameState extends GameState implements Serializable {
         potentialMoves = new ArrayList<Tile>();
         computerPlayersTiles = new ArrayList<Tile>();
         selectFlag = false; //default hasn't selected an image
+        tileQueue = new LinkedList<Tile>();
     }
 
     /**
@@ -152,7 +155,6 @@ public class HiveGameState extends GameState implements Serializable {
             Tile copyTile = new Tile((other.getComputerPlayersTiles()).get(i));
             this.computerPlayersTiles.add(copyTile);
         }
-
         this.selectFlag = other.getSelectFlag();
     }
 
@@ -273,10 +275,10 @@ public class HiveGameState extends GameState implements Serializable {
         int row = -1;
         int col = -1;
         boolean firstFound = false;
-        int totalPieces = 21; //default to max minus 1
+        int totalPieces = 41; //default to max minus 1
 
         if(searchFunction){ //if we're searching for a move function don't remove it
-            totalPieces = 22;
+            totalPieces = 42;
         }
 
         //perform a BFS on the gameBoard
@@ -288,18 +290,18 @@ public class HiveGameState extends GameState implements Serializable {
             }
         }
         for(int i = 0; i < gameBoard.size(); i++) {
-            for (int j = 0; j < gameBoard.get(i).size(); j++) {
+            for (int j = 0; j < gameBoard.size()*2; j++) {
                 if (tile.getIndexX() != -1) { //if this is a tile that is already on the board then check to take it out
                     if (i == tile.getIndexX() && j == tile.getIndexY() && !searchFunction) { //only remove piece if not looking as part of a move
-                        testBoard.get(i).set(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
+                        testBoard.get(i).add(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
                     } else {
                             if(testBoard.get(i) != null){
-                                testBoard.get(i).set(j, new Tile(gameBoard.get(i).get(j)));
+                                testBoard.get(i).add(j, new Tile(gameBoard.get(i).get(j)));
                          }
                     }
                 }
                 else{ //just copy the gameBoard over to the testBoard instead
-                    testBoard.get(i).set(j, new Tile(gameBoard.get(i).get(j)));
+                    testBoard.get(i).add(j, new Tile(gameBoard.get(i).get(j)));
                 }
                     //update the row and col of the first position where the row and col aren't empty
                     //for use in the bfs
@@ -338,7 +340,6 @@ public class HiveGameState extends GameState implements Serializable {
      * @param board the testBoard to run bfs on
      */
     public int bfs(int row, int col, ArrayList<ArrayList<Tile>> board){
-        Queue<Tile> tileQueue = (Queue<Tile>) new ArrayList<Tile>();
         tileQueue.offer(board.get(row).get(col)); //pass in the starting x and y position as the root
 
         while(!tileQueue.isEmpty()){
@@ -354,35 +355,35 @@ public class HiveGameState extends GameState implements Serializable {
                 //RU: (row--, col++), RM: (row, col++), RD: (row++, col++)
 
                 //Queue all possible valid neighbors
-                if (isValidBFS(board.get(x - 1).get(y))) {
+                if (isValidBFS(board.get(x - 1).get(y))) { //LU
                     //Check tile above left of tile
                     tileQueue.offer(board.get(x - 1).get(y));
-                    bfs(x - 1, y, board); //call bbfs on neighbor
+                    bfs(x - 1, y, board); //call bfs on neighbor
                 }
-                if (isValidBFS(board.get(x - 1).get(y + 1))) {
+                if (isValidBFS(board.get(x - 1).get(y + 1))) { //RU
                     //Check tile above right of tile
                     tileQueue.offer(board.get(x - 1).get(y + 1));
-                    bfs(x - 1, y+1, board); //call bbfs on neighbor
+                    bfs(x - 1, y+1, board); //call bfs on neighbor
                 }
-                if(isValidBFS(board.get(x).get(y-1))){
+                if(isValidBFS(board.get(x).get(y-1))){ //LM
                     //Check tile to the left of tile
                     tileQueue.offer(board.get(x).get(y-1));
-                    bfs(x, y-1, board); //call bbfs on neighbor
+                    bfs(x, y-1, board); //call bfs on neighbor
                 }
-                if(isValidBFS(board.get(x).get(y+1))){
+                if(isValidBFS(board.get(x).get(y+1))){ //RM
                     //Check tile to the right of tile
                     tileQueue.offer(board.get(x).get(y+1));
-                    bfs(x, y+1, board); //call bbfs on neighbor
+                    bfs(x, y+1, board); //call bfs on neighbor
                 }
-                if(isValidBFS(board.get(x+1).get(y))){
+                if(isValidBFS(board.get(x+1).get(y))){ //LD
                     //Check tile to the lower left of tile
                     tileQueue.offer(board.get(x+1).get(y));
-                    bfs(x + 1, y, board); //call bbfs on neighbor
+                    bfs(x + 1, y, board); //call bfs on neighbor
                 }
-                if(isValidBFS(board.get(x+1).get(y+1))){
+                if(isValidBFS(board.get(x+1).get(y+1))){ //RD
                     //Check tile to the lower right of tile
                     tileQueue.offer(board.get(x+1).get(y + 1));
-                    bfs(x + 1, y+1, board); //call bbfs on neighbor
+                    bfs(x + 1, y+1, board); //call bfs on neighbor
                 }
             }
             else{
@@ -391,32 +392,32 @@ public class HiveGameState extends GameState implements Serializable {
                 //RU: (row--, col), RM: (row, col++), RD: (row++, col)
 
                 //Queue all possible valid neighbors
-                if (isValidBFS(board.get(x - 1).get(y - 1))) {
+                if (isValidBFS(board.get(x - 1).get(y - 1))) { //LU
                     //Check tile above left of tile
                     tileQueue.offer(board.get(x - 1).get(y - 1));
                     bfs(x - 1, y-1, board); //call bbfs on neighbor
                 }
-                if (isValidBFS(board.get(x - 1).get(y))) {
+                if (isValidBFS(board.get(x - 1).get(y))) { //RU
                     //Check tile above right of tile
                     tileQueue.offer(board.get(x - 1).get(y));
                     bfs(x - 1, y, board); //call bbfs on neighbor
                 }
-                if(isValidBFS(board.get(x).get(y-1))){
+                if(isValidBFS(board.get(x).get(y-1))){ //LM
                     //Check tile to the left of tile
                     tileQueue.offer(board.get(x).get(y-1));
                     bfs(x, y-1, board); //call bbfs on neighbor
                 }
-                if(isValidBFS(board.get(x).get(y+1))){
+                if(isValidBFS(board.get(x).get(y+1))){ //RM
                     //Check tile to the right of tile
                     tileQueue.offer(board.get(x).get(y+1));
                     bfs(x, y+1, board); //call bbfs on neighbor
                 }
-                if(isValidBFS(board.get(x+1).get(y-1))){
+                if(isValidBFS(board.get(x+1).get(y-1))){ //LD
                     //Check tile to the lower left of tile
                     tileQueue.offer(board.get(x+1).get(y-1));
                     bfs(x + 1, y-1, board); //call bbfs on neighbor
                 }
-                if(isValidBFS(board.get(x+1).get(y))){
+                if(isValidBFS(board.get(x+1).get(y))){ //RD
                     //Check tile to the lower right of tile
                     tileQueue.offer(board.get(x+1).get(y));
                     bfs(x + 1, y, board); //call bbfs on neighbor
@@ -434,13 +435,13 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public boolean isValidBFS(Tile tile){
 
-        if(tile.getType() == Tile.Bug.EMPTY){
-            return false; //empty spaces aren't part of the graph
+        if(tile.getIndexX() < 0 || tile.getIndexY() < 0 ||
+                tile.getIndexX() >= gameBoard.size() || tile.getIndexY() >= gameBoard.size() * 2){
+            return false; //out of bounds
         }
 
-        if(tile.getIndexX() < 0 || tile.getIndexY() < 0 ||
-           tile.getIndexX() >= gameBoard.size()*2 || tile.getIndexY() >= gameBoard.size()){
-            return false; //out of bounds
+        if(tile.getType() == Tile.Bug.EMPTY){
+            return false; //empty spaces aren't part of the graph
         }
 
         //already visited
