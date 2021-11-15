@@ -203,7 +203,7 @@ public class HiveGameState extends GameState implements Serializable {
             //don't obey the freedom of movement rule
             if(tile.getType() != Tile.Bug.GRASSHOPPER || tile.getType() != Tile.Bug.BEETLE){
                 if(freedom(tile)){//obeys freedom of movement (not surrounded)
-                    return selectTile(tile); //pass in the tile to be selected and the corresponding search to run
+                    return true; //pass in the tile to be selected and the corresponding search to run
                 }
             }
             else{ //type IS grasshopper or beetle and the move doesn't break the hive

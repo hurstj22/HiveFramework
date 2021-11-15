@@ -148,7 +148,7 @@ public class HiveLocalGame extends LocalGame {
                         return false; //request is out of bounds
                     }
                     if(hiveState.getTile(oldX, oldY).getType() != Tile.Bug.EMPTY){
-                        return hiveState.validMove(hiveState.getTile(oldX, oldY));
+                        return hiveState.selectTile(hiveState.getTile(oldX, oldY));
                     }
                     return false; //selected an empty spot, there's no bug there to ask to move
                 }
