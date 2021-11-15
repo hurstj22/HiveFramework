@@ -203,7 +203,7 @@ public class HiveGameState extends GameState implements Serializable {
             //don't obey the freedom of movement rule
             if(tile.getType() != Tile.Bug.GRASSHOPPER || tile.getType() != Tile.Bug.BEETLE){
                 if(freedom(tile)){//obeys freedom of movement (not surrounded)
-                    return true;
+                    return selectTile(tile); //pass in the tile to be selected and the corresponding search to run
                 }
             }
             else{ //type IS grasshopper or beetle and the move doesn't break the hive
@@ -341,13 +341,13 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public int bfs(int row, int col, ArrayList<ArrayList<Tile>> board){
         tileQueue.offer(board.get(row).get(col)); //pass in the starting x and y position as the root
+        countVisited++; //update the count to reflect a visited tile
 
         while(!tileQueue.isEmpty()){
             int x = row;
             int y = col;
 
             tileQueue.poll().setVisited(true); //visits the tile at front of queue
-            countVisited++; //update the count to reflect a visited tile
 
             if (x % 2 == 0) {
                 // For even rows
