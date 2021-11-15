@@ -1532,7 +1532,7 @@ public class HiveGameState extends GameState implements Serializable {
                         if(boundsCheck(x - 1, y)) {
                             if (gameBoard.get(x - 1).get(y).getType() == Tile.Bug.EMPTY &&
                                     touchingOtherColor(x - 1, y, otherColor)) {
-                                potentialMoves.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
+                                potentialMoves.add(gameBoard.get(x - 1).get(y)); //tile above left of tile
                             }
                         }
                         if (boundsCheck(x-1, y+1)) {
@@ -1859,12 +1859,15 @@ public class HiveGameState extends GameState implements Serializable {
                 }
             }
         }
-        int whoWon = 0; // 0 = no one, 1 = player1 (black), 2 = player2 (white)
+        int whoWon = 0; // 0 = no one, 1 = player1 (black), 2 = player2 (white), 3 = both
         if (player1Surr == 6){
-            whoWon++;
+            whoWon = 1;
         }
         if (player2Surr == 6){
-            whoWon++;
+            whoWon = 2;
+        }
+        if (player1Surr == 6 && player2Surr == 6){
+            whoWon = 3;
         }
         return whoWon;
     }
