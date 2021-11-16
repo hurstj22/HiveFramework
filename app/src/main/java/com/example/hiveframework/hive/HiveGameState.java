@@ -1860,15 +1860,15 @@ public class HiveGameState extends GameState implements Serializable {
                 }
             }
         }
-        int whoWon = 0; // 0 = no one, 1 = player1 (black), 2 = player2 (white), 3 = both
+        int whoWon = -1; // 0 = no one, 1 = player1 (white), 2 = player2 (black), 3 = both
         if (player1Surr == 6){
-            whoWon = 1;
+            whoWon = 0;
         }
         if (player2Surr == 6){
-            whoWon = 2;
+            whoWon = 1;
         }
         if (player1Surr == 6 && player2Surr == 6){
-            whoWon = 3;
+            whoWon = 2;
         }
         return whoWon;
     }

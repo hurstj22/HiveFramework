@@ -1,4 +1,5 @@
 package com.example.hiveframework.hive;
+import android.util.Log;
 import android.widget.ImageButton;
 
 import com.example.hiveframework.GameFramework.actionMessage.EndTurnAction;
@@ -26,14 +27,10 @@ public class HiveLocalGame extends LocalGame {
     //Tag for logging
     private static final String TAG = "HiveLocalGame";
 
-    Tile currentTile;
-    int[] newIndexPt = new int[2]; //index pair, (col, row) for going from float to gameBoard index
-    int oldX;
+    int oldX; //for going from float to gameBoard index
     int oldY;
     int newX;
     int newY;
-    Tile.PlayerPiece piece;
-    Tile.Bug type;
 
     /**
      * Constructor for the HiveLocalGame.
@@ -75,9 +72,14 @@ public class HiveLocalGame extends LocalGame {
         HiveGameState state = (HiveGameState) super.state;
 
         // if we get here, then we've found a winner, so return the 0/1
-        // value that corresponds to that mark; then return a message
-        int gameWinner = state.getWhoseTurn();
-        //return playerNames[gameWinner]+" is the winner.";
+        int gameWinner = state.winOrNah();
+        if(gameWinner > 0) { //someone won!
+            // if we get here, then we've found a winner, so return the 0/1
+            if(gameWinner == 2) {
+                return "It's a cat's game.";
+            }
+            return playerNames[gameWinner] + " is the winner.";
+        }
         return null;
     }
 
@@ -204,13 +206,15 @@ public class HiveLocalGame extends LocalGame {
 
     /**
      *
-     * @return
+     * @return an int representation of who won, 0 for a player, 1 for a cat's game
      */
     public int whoWon(){
         String gameOver = checkIfGameOver();
-        if(gameOver == null || gameOver.equals("It's a cat's game.")) return -1; //if both queens are trapped
+        if(gameOver == null) return -1; //if both queens are trapped
         if(gameOver.equals(playerNames[0]+" is the winner.")) return 0;
-        return 1;
+        if(gameOver.equals("It's a cat's game.")) return 1;
+
+        return -1;
     }
 
 }

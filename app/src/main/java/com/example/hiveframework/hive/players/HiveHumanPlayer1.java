@@ -311,12 +311,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 //not sure if I can reset it since possibly it's just a pointer that gets assigned in moveAction... not sure about this one
                 moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
                 game.sendAction(moveActionFromHand);
-                //selectedImageButton = null; //reset the selected image since either nothing is going to happen or the pieces will move
-
-                hiveGame.setCurrentIdSelected(-1); //reset selected image button
-                selectActionFromHand.setSelectedImageButton(null);
-                selectActionFromHand.setSelectedTile(null);
-                selectActionFromHand = null;
                 return true;
             }
             else if(!hasTapped && selectedImageButton == null){ //selecting from the board so pass a selectAction with the x and y coords
@@ -337,7 +331,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     @Override
     public void onClick(View view) {
-        //HiveMoveAction moveAction = new HiveMoveAction(this);
         HiveSelectAction selectAction = new HiveSelectAction(this);
         EndTurnAction endTurnAction = new EndTurnAction(this);
 
@@ -388,8 +381,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      */
     @Override
     protected void initAfterReady() {
-        //if(hiveGame != null) {
-            //if (hiveGame.getWhoseTurn() == 0) { //player 1's turn, thus selected must be P1's
                 beeId = beeP1Image.getId();
                 beetleId = beetleP1Image.getId();
                 spiderId = spiderP1Image.getId();

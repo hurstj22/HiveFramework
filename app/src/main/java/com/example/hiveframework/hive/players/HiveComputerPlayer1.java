@@ -6,6 +6,7 @@ import android.widget.ImageButton;
 import com.example.hiveframework.GameFramework.GameMainActivity;
 import com.example.hiveframework.GameFramework.actionMessage.EndTurnAction;
 import com.example.hiveframework.GameFramework.infoMessage.GameInfo;
+import com.example.hiveframework.GameFramework.infoMessage.IllegalMoveInfo;
 import com.example.hiveframework.GameFramework.players.GameComputerPlayer;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.hive.HiveGameState;
@@ -43,12 +44,13 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private int newY = -1; //store the coordinates that the player wants to move to, used in the touch event
     private int oldX = -1;
     private int oldY = -1;
-    private Tile currentTile = null;
+    private Tile potentialTile = null;
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
     private ArrayList<Tile> potentialMoves = null; //this comes from the gameState
 
     private HiveMoveAction moveAction;
+    private IllegalMoveInfo illegalMove = new IllegalMoveInfo();
     private EndTurnAction endTurn = new EndTurnAction(this);
     private Tile.Bug[] bugArray; //holds the type of all the bugs possible to play for the computer to select from
     private Random whatAmIDoingToday = new Random();
@@ -116,7 +118,6 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     protected void receiveInfo(GameInfo info) {
 
         if(info == null){
-
             return;
         }
 
@@ -127,10 +128,10 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             }
 
 
-            switch(whatAmIDoingToday.nextInt(6)) {//I believe this picks 0 - 2 since it's not inclusive of 3.
+            switch(whatAmIDoingToday.nextInt(6)) {
                 //This switch statement is the brains of the operation: chooses between placing on the board, moving from one spot to another, and skipping turn
 
-                case 3:
+                case 3: //several chances for the ai to choose from their hand
                 case 4:
                 case 5:
                 case 0: //picking a tile from the computer's hand and placing it on the board
@@ -162,6 +163,11 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers
                                                                                     // so that the gameState can be updated later in the HiveLocalGame
                                 moveAction.setComputerMove(true);
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
                             }
                         }Log.i(TAG, "this was not a valid move");
@@ -169,12 +175,23 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     break;
                 case 2: //picking a tile from the tiles already placed on the board:
                     Log.i(TAG,"I'm trying to play from the board");
+                    if(hiveGame.getComputerPlayersTiles().size() < 2){ //only move things on the board if there's several pieces there
+                        Log.i(TAG,"There's not enough pieces for me to move around the board yet");
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        game.sendAction(endTurn);
+                        return;
+                    }
                     ArrayList<ArrayList<Tile>> gameBoard = new ArrayList<ArrayList<Tile>>();
                     gameBoard = hiveGame.getGameBoard();
                     int i =0;
                     int goalX = -1;
                     int goalY = -1;
                     boolean queenFound = false;
+                    //From James: The gameboard is a 2D array you must iterate with nested loops
                     for (ArrayList<Tile> t : gameBoard) //iterate game board to see if queen is there
                         //if queen is found set new goal X and Y
                         //may not be able to move there
@@ -191,22 +208,22 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
 
                     Tile random = randomTileFromBoard();
                     if(random != null) {//there was nothing belonging to the ai on the board :(
-                        //then calls validMove on it to see about populating those gosh darn potentialMoves
 
-                        //This is good for moving from a board position to a new board position
-                        if (hiveGame.validMove(random)) {
-                            potentialMoves = hiveGame.getPotentialMoves();
-                            currentTile = randomTileFromPotentials(); //gets a random viable moving location
-                            if (queenFound){
-                                currentTile.setIndexX(goalX);
-                                currentTile.setIndexY(goalY);
-                            }else {
-                                currentTile.setIndexX(random.getIndexX()); //I don't think you want to set these in this case, if you're pulling from potentials,
-                                //the x and y's are already set. What you want to do is update the x and y of the moveAction
-                                currentTile.setIndexY(random.getIndexY());
-                            }
-                            moveAction.setCurrentTile(random);
-                            moveAction.setComputerMove(true);
+                        //This is for moving from a board position to a new board position
+                        if (hiveGame.selectTile(random)) {
+                            potentialMoves = hiveGame.getPotentialMoves(); //then calls selectMove on it to see about populating those gosh darn potentialMoves
+                            potentialTile = randomTileFromPotentials(); //gets a random viable moving location
+                            //if (queenFound){
+                            //    currentTile.setIndexX(goalX); //From James: this is trying to place the tile on top of the queen and that doesn't work
+                            //    currentTile.setIndexY(goalY);
+                            //}
+
+                            //create the action with the coordinates we'd like to move to from the potential tile
+                            Log.i(TAG, "I'm moving to this location: ("+  potentialTile.getIndexX() + ","+ potentialTile.getIndexY() + ")");
+                            moveAction = new HiveMoveAction(this, potentialTile.getIndexX(), potentialTile.getIndexY());
+                            moveAction.setCurrentTile(random); //this is the tile that's moving
+                            moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers, to be used in hiveLocalGame
+                            moveAction.setComputerMove(true); //tell the game the computer is moving
                             game.sendAction(moveAction);
                         }
                     }
@@ -218,7 +235,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         if (hiveGame.getPotentialMoves().size()  < 1)
                         {
                             try {
-                                Thread.sleep(2000);
+                                Thread.sleep(1000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
