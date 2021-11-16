@@ -144,6 +144,7 @@ public class HiveGameStateTest {
         hiveGameState.makeMove(ant, 3,4);
         assertEquals(3, ant.getIndexX()); //check new xCord
         assertEquals(4, ant.getIndexY()); //check new yCord
+        assertEquals(Tile.Bug.ANT, hiveGameState.getGameBoard().get(3).get(4).getType()); //now ant at new position
         assertEquals(Tile.Bug.EMPTY, hiveGameState.getGameBoard().get(2).get(3).getType()); //check empty tile made in old location
     }
 
