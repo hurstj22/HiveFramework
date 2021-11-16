@@ -176,6 +176,7 @@ public class HiveLocalGame extends LocalGame {
                     hiveState.setSelectFlag(false);
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
                         //set the move boolean in hiveState to true
+                        hiveState.setPlacedPiece(true);
                         return true; //able to make the move
                     }
                 }

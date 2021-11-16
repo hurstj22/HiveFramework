@@ -22,6 +22,9 @@ public class HiveGameState extends GameState implements Serializable {
     private static final String TAG = "HiveGameState";
     private static final long serialVersionUID = 7552321013488624386L;
 
+    //Holds gamestate from beginning of turn
+    private HiveGameState undoTurn;
+
     public enum Direction {
         UP_LEFT,
         UP_RIGHT,
@@ -46,10 +49,12 @@ public class HiveGameState extends GameState implements Serializable {
     private ArrayList<Tile> computerPlayersTiles;
     Queue<Tile> tileQueue;
     //boolean for placed piece
+    private boolean placedPiece;
     /**
      * Default constructor.
      */
     public HiveGameState(){
+        placedPiece = false;
         //Initialize gameBoard to be 8 rows of empty tiles
         gameBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
@@ -613,6 +618,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if potential moves exist. false if not.
      */
     public boolean selectTile(Tile tile) {
+
         //we should make sure the person whose turn it is has placed their queen somewhere
         if(validMove(tile)) {
             //if the piece can be moved legally
@@ -661,32 +667,26 @@ public class HiveGameState extends GameState implements Serializable {
                     //Check tile above left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x - 1).get(y + 1))) {
                     //Check tile above right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y + 1));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x).get(y - 1))) {
                     //Check tile to the left of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y - 1));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x).get(y + 1))) {
                     //Check tile to the right of ti is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y + 1));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x + 1).get(y))) {
                     //Check tile below left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x + 1).get(y + 1))) {
                     //Check tile below right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y + 1));
-                    return true;
                 }
             } else {
                 // For odd rows
@@ -695,34 +695,31 @@ public class HiveGameState extends GameState implements Serializable {
                     //Check tile above left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y - 1));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x - 1).get(y))) {
                     //Check tile above right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x).get(y - 1))) {
                     //Check tile to the left of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y - 1));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x).get(y + 1))) {
                     //Check tile to the right of ti is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y + 1));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x + 1).get(y - 1))) {
                     //Check tile below left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y - 1));
-                    return true;
                 } else if (nextTo(tile, gameBoard.get(x + 1).get(y))) {
                     //Check tile below right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y));
-                    return true;
                 }
 
+            }
+            if (!potentialMoves.isEmpty()) {
+                return true;
             }
             return false;
     }
@@ -747,37 +744,32 @@ public class HiveGameState extends GameState implements Serializable {
                 //Check tile above left of tile is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x-1).get(y));
-                return true;
+
             } else if(gameBoard.get(x-1).get(y+1).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x-1).get(y+1))) {
                 //Check tile above right of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x-1).get(y+1));
-                return true;
             } else if(gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x).get(y-1))) {
                 //Check tile to the left of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x).get(y-1));
-                return true;
             } else if(gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x).get(y+1))) {
                 //Check tile to the right of ti is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x).get(y+1));
-                return true;
             } else if(gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x+1).get(y))) {
                 //Check tile below left of tile is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x+1).get(y));
-                return true;
             } else if(gameBoard.get(x+1).get(y+1).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x+1).get(y+1))) {
                 //Check tile below right of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x+1).get(y+1));
-                return true;
             }
         } else {
             // For odd rows
@@ -787,39 +779,36 @@ public class HiveGameState extends GameState implements Serializable {
                 //Check tile above left of tile is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x-1).get(y-1));
-               return true;
             } else if(gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x-1).get(y))) {
                 //Check tile above right of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x-1).get(y));
-                return true;
             } else if(gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x).get(y-1))) {
                 //Check tile to the left of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x).get(y-1));
-                return true;
             } else if(gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x).get(y+1))) {
                 //Check tile to the right of ti is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x).get(y+1));
-                return true;
             } else if(gameBoard.get(x+1).get(y-1).getType() == Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x+1).get(y-1))) {
                 //Check tile below left of tile is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x+1).get(y-1));
-                return true;
             } else if(gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY &&
                     nextTo(tile, gameBoard.get(x+1).get(y))) {
                 //Check tile below right of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x+1).get(y));
-                return true;
             }
 
+        }
+        if(!potentialMoves.isEmpty()) {
+            return true;
         }
         return false;
     }
@@ -1266,7 +1255,9 @@ public class HiveGameState extends GameState implements Serializable {
         // commented out coordinate things for testing purposes so we can pass in indexes
         //need to get position of newTile based on x and y coordinates
         //int[] newTileCords = positionOfTile(newXCoord, newYCoord);
-
+        if(placedPiece){
+            return false;
+        }
         //hold old Position
         int[] oldTileCords = new int[2];
         oldTileCords[0] = moveTile.getIndexX();
@@ -1304,7 +1295,6 @@ public class HiveGameState extends GameState implements Serializable {
         potentialMoves = new ArrayList<Tile>(); //reset potentialMoves
        return false;
     }
-
     /**
      * A helper function to determine the indices given points on the gameboard
      * @param xCord the x coordinate on the board
@@ -1614,6 +1604,10 @@ public class HiveGameState extends GameState implements Serializable {
 
     //testing class for playing Oracle
     public void addTile(Tile newTile){
+        Tile beneath = gameBoard.get(newTile.getIndexX()).get(newTile.getIndexY());
+        if( beneath != null) {
+            newTile.setOnTopOf(beneath);
+        }
         gameBoard.get(newTile.getIndexX()).set(newTile.getIndexY(), newTile);
     }
 
@@ -1669,6 +1663,9 @@ public class HiveGameState extends GameState implements Serializable {
     public int getWhoseTurn(){
         return whoseTurn;
     }
+    public HiveGameState getUndoTurn() {
+        return getUndoTurn();
+    }
 
     public int getBoardSize(){
         return GBSIZE;
@@ -1707,7 +1704,9 @@ public class HiveGameState extends GameState implements Serializable {
     public void setSelectFlag(boolean selectFlag) {
         this.selectFlag = selectFlag;
     }
-
+    public void setUndoTurn(HiveGameState current) {this.undoTurn = current; }
+    public boolean getPlacedPiece() {return placedPiece;}
+    public void setPlacedPiece(boolean bool) {this.placedPiece = bool;}
     /**
      * Basic bounds checking for the gameBoard
      *

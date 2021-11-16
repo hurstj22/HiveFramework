@@ -157,6 +157,11 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             }
             currentTurnTextView.setText("" + this.allPlayerNames[hiveGame.getWhoseTurn()] + "'s Turn");
 
+            //set placedPiece to false
+            hiveGame.setPlacedPiece(false);
+            //Update the undoTurn variable in HiveGameState
+            hiveGame.setUndoTurn(hiveGame);
+
             //update player 1's piece counters
             beeP1Counter.setText("" + hiveGame.getPiecesRemain()[0][0]);
             spiderP1Counter.setText("" + hiveGame.getPiecesRemain()[0][1]);
@@ -350,6 +355,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 //yet to be coded
                 break;
             case R.id.undoButton: //undo the last move by resetting the gameState to a previous one
+
                 //yet to be coded
                 break;
         }
