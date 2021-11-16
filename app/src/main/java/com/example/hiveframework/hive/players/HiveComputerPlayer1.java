@@ -62,8 +62,8 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
      * @return a randomly picked tile that the computer player has on the board
      */
     private Tile randomTileFromBoard() {
-        int sizeOfList = hiveGame.getComputerPlayersTiles().size();
-        if(sizeOfList > 0){
+        int sizeOfList = hiveGame.getComputerPlayersTiles().size() - 1;
+        if(sizeOfList > -1){
             int pick = randPick.nextInt(sizeOfList);
             return hiveGame.getComputerPlayersTiles().get(pick);
         }
@@ -175,7 +175,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     break;
                 case 2: //picking a tile from the tiles already placed on the board:
                     Log.i(TAG,"I'm trying to play from the board");
-                    if(hiveGame.getComputerPlayersTiles().size() < 2){ //only move things on the board if there's several pieces there
+                    if(hiveGame.getComputerPlayersTiles().size() < 3){ //only move things on the board if there's several pieces there
                         Log.i(TAG,"There's not enough pieces for me to move around the board yet");
                         try {
                             Thread.sleep(1000);
@@ -208,15 +208,15 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
 
                     Tile random = randomTileFromBoard();
                     if(random != null) {//there was nothing belonging to the ai on the board :(
-
+                        Log.i(TAG, "I'm trying to move my: "+ random.getType());
                         //This is for moving from a board position to a new board position
                         if (hiveGame.selectTile(random)) {
                             potentialMoves = hiveGame.getPotentialMoves(); //then calls selectMove on it to see about populating those gosh darn potentialMoves
                             potentialTile = randomTileFromPotentials(); //gets a random viable moving location
-                            //if (queenFound){
-                            //    currentTile.setIndexX(goalX); //From James: this is trying to place the tile on top of the queen and that doesn't work
-                            //    currentTile.setIndexY(goalY);
-                            //}
+                            if (queenFound){
+                                potentialTile.setIndexX(goalX); //From James: this is trying to place the tile on top of the queen and that doesn't work
+                                potentialTile.setIndexY(goalY);
+                            }
 
                             //create the action with the coordinates we'd like to move to from the potential tile
                             Log.i(TAG, "I'm moving to this location: ("+  potentialTile.getIndexX() + ","+ potentialTile.getIndexY() + ")");

@@ -156,6 +156,7 @@ public class HiveGameState extends GameState implements Serializable {
             this.computerPlayersTiles.add(copyTile);
         }
         this.selectFlag = other.getSelectFlag();
+        tileQueue = new LinkedList<Tile>();
     }
 
     /**
