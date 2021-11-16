@@ -45,6 +45,8 @@ public class HiveGameState extends GameState implements Serializable {
     private ArrayList<Tile> potentialMoves;
     private ArrayList<Tile> computerPlayersTiles;
     Queue<Tile> tileQueue;
+    int numRows = 7;
+    int numCols = 14;
     //boolean for placed piece
     /**
      * Default constructor.
@@ -62,6 +64,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
         //Initialize displayBoard to be mirror gameBoard
         //HELLO! I don't think we need this if we draw everything based on the gameBoard
+        //HENLO! I agree we can probably just yeet displayBoard
         displayBoard = new ArrayList<ArrayList<Tile>>();
         for(int i=0; i < GBSIZE; i++) {
             displayBoard.add(new ArrayList<Tile>(GBSIZE));
@@ -1872,5 +1875,42 @@ public class HiveGameState extends GameState implements Serializable {
             whoWon = 2;
         }
         return whoWon;
+    }
+    
+    public void reSeize(){
+        for (int row = 0; row < gameBoard.size(); row++){
+            for (int col = 0; col < gameBoard.get(row).size(); col--){
+                if (gameBoard.get(row).get(col).getType() != Tile.Bug.EMPTY){
+                    if (row == 0){ //tile in first row
+                        gameBoard.add(0, new ArrayList<Tile>(numCols)); //add new row at top
+                        for (int i = 0; i < numCols; i++){ //fill it with empty tiles
+                            gameBoard.get(0).add(i, new Tile((0), i, Tile.PlayerPiece.EMPTY));
+                        }
+                        numRows++; //update numRows
+                    }
+                    if (col == 0){ //tile in first col
+                        //add col of empty tiles to left
+                        for (int i = 0; i < gameBoard.size(); i++){
+                            gameBoard.get(i).add(0, new Tile(i, 0, Tile.PlayerPiece.EMPTY));
+                        }
+                        numCols++; //update numCols
+                    }
+                    if (row == (numRows -1)){
+                        gameBoard.add(new ArrayList<Tile>(numCols)); //add new row at bottom
+                        for (int i = 0; i < numCols; i++){ //fill it with empty tiles
+                            gameBoard.get(numCols-1).add(i, new Tile((numCols-1), i, Tile.PlayerPiece.EMPTY));
+                        }
+                        numRows++; //update numRows
+                    }
+                    if (col == (numCols - 1)){
+                        //add col of empty tiles to left
+                        for (int i = 0; i < gameBoard.size(); i++){
+                            gameBoard.get(i).add(0, new Tile(i, 0, Tile.PlayerPiece.EMPTY));
+                        }
+                        numCols++; //update numCols
+                    }
+                }
+            }
+        }
     }
 }

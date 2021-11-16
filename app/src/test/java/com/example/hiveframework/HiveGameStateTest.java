@@ -6,6 +6,9 @@ import com.example.hiveframework.hive.HiveGameState;
 import com.example.hiveframework.hive.Tile;
 
 import org.junit.Test;
+
+import java.util.ArrayList;
+
 /**
  * This class holds all unit tests for testing functionality
  * of methods within our game state.
@@ -129,16 +132,37 @@ public class HiveGameStateTest {
     public void testToString() {
     }
 
+    /**
+     * Tests that tile is moved correctly in gameBoard
+     * Written by Isaac Reinhard
+     */
     @Test
     public void makeMove() {
+        HiveGameState hiveGameState = new HiveGameState();
+        Tile ant = new Tile(2, 3, Tile.PlayerPiece.B, Tile.Bug.ANT, -1); //create a mundane test bug
+        hiveGameState.surroundingTiles(ant, 0);
+        hiveGameState.makeMove(ant, 3,4);
+        assertEquals(3, ant.getIndexX()); //check new xCord
+        assertEquals(4, ant.getIndexY()); //check new yCord
+        assertEquals(Tile.Bug.ANT, hiveGameState.getGameBoard().get(3).get(4).getType()); //now ant at new position
+        assertEquals(Tile.Bug.EMPTY, hiveGameState.getGameBoard().get(2).get(3).getType()); //check empty tile made in old location
     }
 
     @Test
     public void positionOfTile() {
     }
 
+    /**
+     * This is a test to make sure pieces are removed
+     * Written by Isaac Reinhard
+     */
     @Test
     public void removePiecesRemain() {
+        HiveGameState hiveGameState = new HiveGameState();
+        hiveGameState.setWhoseTurn(0);
+        hiveGameState.removePiecesRemain(Tile.Bug.QUEEN_BEE); //remove Bee
+        int numBees = hiveGameState.getPiecesRemain(Tile.Bug.QUEEN_BEE); //get how many bees
+        assertEquals(0, numBees); //bees should now be 0 -- you start out with 1 bee
     }
 
     @Test
@@ -154,8 +178,39 @@ public class HiveGameStateTest {
 
     }
 
+    /**
+     * This is written to test that surrounding tiles works on toggle 0
+     * Written by Isaac Reinhard
+     */
     @Test
     public void surroundingTiles() {
+        HiveGameState hiveGameState = new HiveGameState();
+        Tile ant = new Tile(2, 3, Tile.PlayerPiece.B, Tile.Bug.ANT, -1); //create a mundane test bug
+        hiveGameState.addTile(ant);
+        hiveGameState.surroundingTiles(ant, 0);
+        ArrayList<Tile> potentials = hiveGameState.getPotentialMoves();
+        int counter = 0; //should be 6 as adding all tiles around placedTile
+        for (int i = 0; i < potentials.size(); i++){
+            if (potentials.get(i).getIndexX() == 1 && potentials.get(i).getIndexY() == 3){
+                counter++;
+            }
+            if (potentials.get(i).getIndexX() == 1 && potentials.get(i).getIndexY() == 4){
+                counter++;
+            }
+            if (potentials.get(i).getIndexX() == 2 && potentials.get(i).getIndexY() == 2){
+                counter++;
+            }
+            if (potentials.get(i).getIndexX() == 2 && potentials.get(i).getIndexY() == 4){
+                counter++;
+            }
+            if (potentials.get(i).getIndexX() == 3 && potentials.get(i).getIndexY() == 3){
+                counter++;
+            }
+            if (potentials.get(i).getIndexX() == 3 && potentials.get(i).getIndexY() == 4){
+                counter++;
+            }
+        }
+        assertEquals(6, counter);
     }
 
     @Test
