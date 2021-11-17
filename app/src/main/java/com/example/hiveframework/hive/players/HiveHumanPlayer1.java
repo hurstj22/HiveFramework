@@ -41,7 +41,7 @@ import edu.up.cs301.game.R;
 public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchListener, View.OnClickListener {
 
     //Tag for logging
-    private static final String TAG = "TTTHumanPlayer1";
+    private static final String TAG = "HiveHumanPlayer1";
     // the surface view
     private HiveSurfaceView surfaceView;
     private FrameLayout mainFrame; //the main frame which houses all the buttons on the sides
@@ -129,8 +129,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     /**
      * Callback method, called when player gets a message
      *
-     * @param info
-     * 		the message
+     * @param info the message
      */
     @Override
     public void receiveInfo(GameInfo info) {
@@ -148,7 +147,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         else {
             //make a copy of the passed in gameState to pull data from
             hiveGame = new HiveGameState((HiveGameState) info);
-            //hiveGame.setCopyforUndo(hiveGame)
+            //Code for undoing a move, DOESN'T WORK YET
 //            if(hiveGame.getUndoTurn() != null) {
 //                HiveGameState undo = new HiveGameState(hiveGame.getUndoTurn());
 //                undoTurnAction = new HiveUndoTurnAction(this, undo);
@@ -296,8 +295,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     /**
      * returns the GUI's top view
      *
-     * @return
-     * 		the GUI's top view
+     * @return the GUI's top view
      */
     @Override
     public View getTopView() {
@@ -305,6 +303,11 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     }
 
     @Override
+    /**
+     * onTouch handles the surfaceView touches and maps the touch
+     * to a corresponding index in the gameState gameBoard
+     * sends move actions to place pieces or move them on the board
+     */
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
             inX = motionEvent.getX();
@@ -341,8 +344,13 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     }
 
     @Override
+    /**
+     * OnClick listener functionality
+     * sends the appropriate action to the game framework
+     * if the user clicks a button or imageButton for placing a piece
+     * from the user's hand
+     */
     public void onClick(View view) {
-        HiveSelectAction selectAction = new HiveSelectAction(this);
         EndTurnAction endTurnAction = new EndTurnAction(this);
 
         switch(view.getId()) {
@@ -393,35 +401,11 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      */
     @Override
     protected void initAfterReady() {
-                beeId = beeP1Image.getId();
-                beetleId = beetleP1Image.getId();
-                spiderId = spiderP1Image.getId();
-                grasshopperId = grasshopperP1Image.getId();
-                antId = antP1Image.getId();
-    }
-
-    //setter and getters for instance variables
-    public ImageButton getSelectedImageButton() {
-        return selectedImageButton;
-    }
-    public void setSelectedImageButton(ImageButton selectedImageButton) {
-        this.selectedImageButton = selectedImageButton;
-    }
-
-    public float getNewX() {
-        return newX;
-    }
-
-    public float getNewY() {
-        return newY;
-    }
-
-    public ArrayList<ImageButton> getImagesArray() {
-        return imagesArray;
-    }
-
-    public HiveSurfaceView getSurfaceView() {
-        return surfaceView;
+        beeId = beeP1Image.getId();
+        beetleId = beetleP1Image.getId();
+        spiderId = spiderP1Image.getId();
+        grasshopperId = grasshopperP1Image.getId();
+        antId = antP1Image.getId();
     }
 
     /**

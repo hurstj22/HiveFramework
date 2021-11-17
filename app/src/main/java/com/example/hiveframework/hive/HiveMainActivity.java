@@ -31,7 +31,7 @@ public class HiveMainActivity extends GameMainActivity {
     public static final int PORT_NUMBER = 5213;
 
     /**
-     * a tic-tac-toe game is for two players. The default is human vs. computer
+     * a Hive game is for two players. The default is human vs. computer
      */
     @Override
     public GameConfig createDefaultConfig() {
@@ -47,14 +47,14 @@ public class HiveMainActivity extends GameMainActivity {
         });
 
         // dumb computer player
-        playerTypes.add(new GamePlayerType("Computer Player (dumb)") {
+        playerTypes.add(new GamePlayerType("Computer Player (smartish)") {
             public GamePlayer createPlayer(String name) {
                 return new HiveComputerPlayer1(name);
             }
         });
 
         // smarter computer player
-        playerTypes.add(new GamePlayerType("Computer Player (smart)") {
+        playerTypes.add(new GamePlayerType("Computer Player (dumb)") {
             public GamePlayer createPlayer(String name) {
                 return new HiveComputerPlayer2(name);
             }
@@ -64,8 +64,8 @@ public class HiveMainActivity extends GameMainActivity {
         GameConfig defaultConfig = new GameConfig(playerTypes, 2,2, "Hive", PORT_NUMBER);
 
         // Add the default players
-        defaultConfig.addPlayer("Human", 0); // yellow-on-blue GUI
-        defaultConfig.addPlayer("Computer", 1); // dumb computer player
+        defaultConfig.addPlayer("Friendly Human", 0); // Default GUI
+        defaultConfig.addPlayer("Computer Overlord", 1); // dumb computer player
 
         // Set the initial information for the remote player
         defaultConfig.setRemoteData("Remote Player", "", 1); // GUI

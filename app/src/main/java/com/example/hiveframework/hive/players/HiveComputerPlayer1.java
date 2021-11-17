@@ -35,7 +35,7 @@ import java.util.Random;
  */
 public class HiveComputerPlayer1 extends GameComputerPlayer {
     private HiveGameState hiveGame;
-    private static final String TAG = "TTTLessDumbAiPlayer1";
+    private static final String TAG = "HiveLessDumbAiPlayer1";
     private Random randPick = new Random();
     private boolean hasTapped = false;
     private float inX = -1;
@@ -115,6 +115,10 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     }
 
     @Override
+    /**
+     * Receives info for the computer plauer to use
+     * to either send a move from hand action, move from board, or skip action
+     */
     protected void receiveInfo(GameInfo info) {
 
         if(info == null){
