@@ -54,6 +54,7 @@ public class HiveGameState extends GameState implements Serializable {
     int numCols = 14; //for the gameBoard col size
     //boolean for placed piece
     private boolean placedPiece;
+
     /**
      * Default constructor.
      */
@@ -603,7 +604,7 @@ public class HiveGameState extends GameState implements Serializable {
             switch (tile.getType()){
                 case ANT:
                     //utilize the ant function to find potential moves
-                    return antMove(tile, tile.getIndexX(), tile.getIndexY());
+                    return antValidMove(tile);
                 case BEETLE:
                     //utilize the beetleSearch function to find potential moves.
                     return beetleSearch(tile);
@@ -1031,42 +1032,109 @@ public class HiveGameState extends GameState implements Serializable {
         }
         return false;
     }
-    /** ant tile movement
+    /** ant tile movement: determines if the ant tile is on edge
      * @param tile the ant tile coming in
-     * @param x the x location as index
-     * @param y the y location as index
+     *  x location as index
+     *  y location as index
+     * @return should always return false.
      */
-    public boolean antMove(Tile tile,int x,int y){
-        if(antValidMove(tile,x,y))
-        {
-            //makeMove(tile, x, y);
-            return true;
-        }
-        return false;
-    }
-    //determines if the ant tile is on edge
-    private boolean antValidMove(Tile tile,int x,int y) {
-        Tile nextile = gameBoard.get(x).get(y);
-        //create arraylist of potential invalid moves
+    private boolean antValidMove(Tile tile) {
 
-        ArrayList<int[]> inValidMoves = new ArrayList<int[]>();
-        for (int s = 0; s < 14; s++) {
-            for (int j = 0; j < 14; j++) {
-                int[] inValid = new int[2];
-                if (s == 0 || s == 14 || j == 0 || j == 14) {
-                    inValid[0] = s;
-                    inValid[1] = j;
-                    inValidMoves.add(inValid);
-                }
+        int x = tile.getIndexX();
+        int y = tile.getIndexY();
+        Tile nextile = gameBoard.get(x).get(y);
+        Boolean valid = false;
+
+        if (breakHive(tile, false)){
+            return false;
+            //checks breakHive to make sure you can even move
+        }
+        ArrayList<Tile> checkedTiles = new ArrayList<>();
+        checkedTiles.add(tile); //do not check current tile again
+        if ( x % 2 == 0 ) {
+            //if the tile is on an even row
+            //check if the surrounding tile is empty and if it is connected to the hive
+            //if it is, recursive call and check
+            //Check tile to the above left
+            if (gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y), false)) {
+                antSearch(gameBoard.get(x-1).get(y), checkedTiles);
+                valid = true;
+            }
+            //Check the tile to the above right
+            if (gameBoard.get(x-1).get(y+1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y + 1), false)) {
+                antSearch(gameBoard.get(x-1).get(y+1), checkedTiles);
+                valid = true;
+            }
+
+            //Check the tile to the left
+            if (gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y - 1), false)) {
+                antSearch(gameBoard.get(x).get(y-1), checkedTiles);
+                valid = true;
+            }
+            //Check the tile to the above right
+            if (gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y + 1), false)) {
+                antSearch(gameBoard.get(x).get(y+1), checkedTiles);
+                valid = true;
+            }
+
+            //Check the tile to the below left
+            if (gameBoard.get(x+1).get(y-1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y - 1), false)) {
+                antSearch(gameBoard.get(x+1).get(y-1), checkedTiles);
+                valid = true;
+            }
+            //Check the tile to the above right
+            if (gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y), false)) {
+                antSearch(gameBoard.get(x+1).get(y), checkedTiles);
+                valid = true;
+            }
+        } else {
+            //if the tile is on an odd row
+            //Check tile to the above left
+            if (gameBoard.get(x-1).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y - 1), false)) {
+                antSearch(gameBoard.get(x-1).get(y-1), checkedTiles);
+                valid = true;
+            }
+            //Check the tile to the above right
+            if (gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y), false)) {
+                antSearch(gameBoard.get(x-1).get(y), checkedTiles);
+                valid = true;
+            }
+
+            //Check the tile to the left
+            if (gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y - 1), false)) {
+                antSearch(gameBoard.get(x).get(y-1), checkedTiles);
+                valid = true;
+            }
+
+            //Check the tile to the right
+            if (gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y + 1), false)) {
+                antSearch(gameBoard.get(x).get(y+1), checkedTiles);
+                valid = true;
+            }
+
+            //Check the tile to the below left
+            if (gameBoard.get(x+1).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y -1), false)) {
+                antSearch(gameBoard.get(x+1).get(y-1), checkedTiles);
+                valid = true;
+            }
+
+            if (gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y), false)) {
+                antSearch(gameBoard.get(x+1).get(y), checkedTiles);
+                valid = true;
             }
         }
-        int[] potentialMove = new int[2];
-        potentialMove[0] = nextile.getIndexX();
-        potentialMove[1] = nextile.getIndexY();
-        if(inValidMoves.contains(potentialMove)){
-            return false;
+
+        return valid;
+    }
+    private void antSearch(Tile tile, ArrayList<Tile> checkedTiles){
+        if(!checkedTiles.contains(tile)) { //is not in checked tiles, will add it to check then add to potential moves
+            checkedTiles.add(tile);
+            potentialMoves.add(tile);
         }
-        return true;
+        else
+            return;
+
+
     }
 
     /**
