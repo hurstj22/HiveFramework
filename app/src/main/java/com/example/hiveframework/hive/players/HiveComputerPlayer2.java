@@ -118,7 +118,7 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
             hiveGame =  new HiveGameState((HiveGameState) info);
 
             Log.d(TAG, "receiveInfo: player is " + this.playerNum);
-            Log.d(TAG, "receiveInfo: line 64 turn is " + hiveGame.getWhoseTurn());
+            Log.d(TAG, "receiveInfo: line 121 turn is " + hiveGame.getWhoseTurn());
             Log.d(TAG, "pm: "+ potentialMoves);
             if (this.playerNum != hiveGame.getWhoseTurn()) {
                 Log.i(TAG, "receiveInfo: NOT YOUR TURN");
@@ -147,7 +147,7 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
                             if (potentialMoves == null || potentialMoves.size() <= 0) { //if for some reason there was nothing to do with that Tile then end your turn :(
                                 Log.i(TAG, "receiveInfo: potentials was empty:");
                                 try {
-                                    Thread.sleep(1500);
+                                    Thread.sleep(1000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
@@ -164,6 +164,11 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
                                 moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers
                                 // so that the gameState can be updated later in the HiveLocalGame
                                 moveAction.setComputerMove(true);
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
                             }
                         }
