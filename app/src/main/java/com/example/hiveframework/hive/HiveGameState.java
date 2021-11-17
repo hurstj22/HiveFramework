@@ -304,7 +304,7 @@ public class HiveGameState extends GameState implements Serializable {
                     handPieces += piece;
                 }
             }
-            if(countVisited == totalPieces - handPieces) { //there are 22 total pieces, 21 counting the piece taken out
+            if(countVisited >= totalPieces - handPieces) { //there are 22 total pieces, 21 counting the piece taken out
                 return false; //if the board can be traversed with bfs and all
                             //tiles on the boardhave been denoted as visited then
                             //return false the hive has NOT been broken
