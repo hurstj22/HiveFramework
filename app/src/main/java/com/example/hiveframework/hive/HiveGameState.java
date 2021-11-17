@@ -1139,33 +1139,54 @@ public class HiveGameState extends GameState implements Serializable {
 
     /**
      * Performs a search function on spider tiles, populates potentials arrayList
-     * @param tile the spider tile coming in
+     * @param spider the spider tile coming in
      * @return true if it was a successful search
      */
-    public boolean spiderSearch (Tile tile ) {
+    public boolean spiderSearch (Tile spider ) {
         // The tile the spider is on
-        int row = tile.getIndexX();
-        int col = tile.getIndexY();
+        int row = spider.getIndexX();
+        int col = spider.getIndexY();
 
-        ArrayList<int[]> ValidMoves = new ArrayList<int[]>();
-        for (int s = row - 3; s < row + 3; s++) {
-            for (int j = col - 3; j < col + 3; j++) {
-                int[] Valid = new int[2];
+        for (int s1 = row - 1; s1 < row + 2; s1++) {
+            for (int j1 = col - 1; j1 < col + 2; j1++) {
+                //if (s1 == row - 1 || s1 == row + 1 || j1 == col - 1 || j1 == col + 1) { //if a tile is three spaces away and valid to move to then go for it!
+                    Tile tile1Away = getTile(s1, j1);
+                    if (tile1Away != null) {
+                        if (nextTo(spider, tile1Away, false)) {
+                            //potentialMoves.add(tile1Away);
 
-                if (s == row - 3 || s == row + 3 || j == col - 3 || j == col + 3) { //if a tile is three spaces away and valid to move to then go for it!
+                            for (int s2 = s1 - 1; s2 < s1 + 2; s2++) { //now look for next tile to search on
+                                for (int j2 = j1 - 1; j2 < j1 + 2; j2++) {
+                                    //if (s2 == s1 - 1 || s2 == s1 + 1 || j2 == j1 - 1 || j2 == j2 + 1) {
+                                        Tile tile2Away = getTile(s2, j2);
+                                        if (tile2Away != null) {
+                                            if (nextTo(tile2Away, tile1Away, false)) {
 
-                    Valid[0] = s;
-                    Valid[1] = j;
-                    Tile newTile = getTile(s, j);
-                    // check if valid move breaks bfs
-                    if (newTile.getType() == Tile.Bug.EMPTY && !breakHive(newTile, true)) {
-                        potentialMoves.add(newTile);
+                                                for (int s3 = s2 - 1; s3 < s2 + 2; s3++) { //now look for next tile to search on
+                                                    for (int j3 = j2 - 1; j3 < j2 + 2; j3++) {
+
+                                                        //if (s2 == s1 - 1 || s2 == s1 + 1 || j2 == j1 - 1 || j2 == j2 + 1) {
+                                                        Tile tile3Away = getTile(s2, j2);
+                                                        if (tile3Away != null) {
+                                                            if (nextTo(tile3Away, tile1Away, false) &&
+                                                                    tile3Away.getIndexX() != tile1Away.getIndexX() && tile3Away.getIndexY() != tile1Away.getIndexY()) {
+                                                                potentialMoves.add(tile3Away);
+                                                            }
+                                                        }
+                                                        //}
+                                                    }
+                                                } // 3 away for loop
+                                            }
+                                        }
+                                    //}
+                                }
+                            } // 2 away for loop
+
+                        }
                     }
-
-                }
-
+                //}
             }
-        }
+        } //1 away for loop
         if (potentialMoves.isEmpty()) {
             return false; //found no where to go :(
         }
@@ -1706,7 +1727,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return the tile if it is within the limits of the gameboard, otherwise null
      */
     public Tile getTile(int x, int y){
-        if(x > gameBoard.size() || y > gameBoard.size() * 2){
+        if(x > gameBoard.size() || y > gameBoard.size() * 2 || x < 0 || y < 0){
             return null;
         }
         return gameBoard.get(x).get(y);
