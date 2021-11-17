@@ -1144,28 +1144,30 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public boolean spiderSearch (Tile tile ) {
         // The tile the spider is on
-        int m = tile.getIndexX();
-        int n = tile.getIndexY();
+        int row = tile.getIndexX();
+        int col = tile.getIndexY();
 
         ArrayList<int[]> ValidMoves = new ArrayList<int[]>();
-        for (int s = m - 3; s < m + 3; m++) {
-            for (int j = n - 3; j < n + 3; n++) {
+        for (int s = row - 3; s < row + 3; s++) {
+            for (int j = col - 3; j < col + 3; j++) {
                 int[] Valid = new int[2];
 
-                if (s == m - 3 || s == m + 3 || j == n - 3 || j == n + 3) { //if a tile is three spaces away and valid to move to then go for it!
+                if (s == row - 3 || s == row + 3 || j == col - 3 || j == col + 3) { //if a tile is three spaces away and valid to move to then go for it!
 
                     Valid[0] = s;
                     Valid[1] = j;
-                    Tile newTile = new Tile(s, j, tile.getPlayerPiece());
+                    Tile newTile = getTile(s, j);
                     // check if valid move breaks bfs
-                    if (breakHive(newTile, true)){
-                        break;
+                    if (newTile.getType() == Tile.Bug.EMPTY && !breakHive(newTile, true)) {
+                        potentialMoves.add(newTile);
                     }
-                    potentialMoves.add(newTile);
 
                 }
 
             }
+        }
+        if (potentialMoves.isEmpty()) {
+            return false; //found no where to go :(
         }
         return true;
     }
