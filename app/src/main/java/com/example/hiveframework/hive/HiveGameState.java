@@ -1034,8 +1034,8 @@ public class HiveGameState extends GameState implements Serializable {
     }
     /** ant tile movement: determines if the ant tile is on edge
      * @param tile the ant tile coming in
-     *  x location as index
-     *  y location as index
+     *  x location as indexX
+     *  y location as indexY
      * @return should always return false.
      */
     private boolean antValidMove(Tile tile) {
