@@ -109,38 +109,102 @@ public class Tile {
         }
     }
 
+    /**
+     * Sets bug type of Tile
+     * @param bug - type of bug passed in
+     */
     public void setType(Bug bug) {
         type = bug;
     }
+
+    /**
+     * Sets what tile is on top of a tile
+     * @param tile - tile that is on top of other tile
+     */
     public void setOnTopOf(Tile tile) {
         onTopOf = tile;
     }
+
+    /**
+     * Sets x index of tile in gameboard
+     * @param x - incoming x
+     */
     public void setIndexX(int x) {
         indexX = x;
     }
+
+    /**
+     * Sets x index of tile in gameboard
+     * @param y - incoming y
+     */
     public void setIndexY(int y ) {indexY = y; }
+
+    /**
+     * Returns x position of tile
+     * @return
+     */
     public int getIndexX() {
         return indexX;
     }
+
+    /**
+     * Returns y position of tile
+     * @return
+     */
     public int getIndexY() {
         return indexY;
     }
+
+    /**
+     * returns bug type of tile
+     * @return
+     */
     public Bug getType() {
         return type;
     }
+
+    /**
+     * returns tile that is on top of tile
+     * @return
+     */
     public Tile getOnTopOf() {
         return onTopOf;
     }
+
+    /**
+     * returns what player owns piece
+     * @return
+     */
     public PlayerPiece getPlayerPiece(){
         return piece;
     }
+
+    /**
+     * returns if tile has been visited for bfs
+     * @return
+     */
     public boolean getVisited() { return visited; }
+
+    /**
+     * sets if tile has been visited for bfs
+     * @param v
+     */
     public void setVisited(boolean v){
         visited = v;
     }
+
+    /**
+     * sets index of tile
+     * @param idx - incoming index
+     */
     public void setId(int idx){
         this.id = idx;
     }
+
+    /**
+     * Returns Id of tile 
+     * @return
+     */
     public int getId(){
         return id;
     }
