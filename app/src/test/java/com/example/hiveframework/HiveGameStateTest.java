@@ -324,12 +324,48 @@ public class HiveGameStateTest {
         assertEquals(0, numBees); //bees should now be 0 -- you start out with 1 bee
     }
 
+    //checking the Bug list in the current turn @Kelly Nguyen
     @Test
     public void getPiecesRemain() {
+        Tile tile = new Tile(0, 0, Tile.PlayerPiece.B);
+
+        HiveGameState hgs = new HiveGameState();
+        assertEquals(6, hgs.getPiecesRemain(Tile.Bug.ANT));
     }
 
+    //Tests the functionality of touchingOtherColor @Kelly Nguyen
     @Test
     public void touchingOtherColor() {
+        HiveGameState gameState;
+        gameState = new HiveGameState();
+
+        for (int i = 2; i < 4; i++) {
+            for (int j = 3; j < 6; j++) {
+                if (i == 2) {
+                    Tile blackTile = new Tile(i, j, Tile.PlayerPiece.B);
+                    if (j == 3) {
+                        blackTile.setType(Tile.Bug.ANT);
+                    } else if (j == 4) {
+                        blackTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        blackTile.setType(Tile.Bug.SPIDER);
+                    }
+                    gameState.addTile(blackTile);
+                } else {
+                    Tile whiteTile = new Tile(i, j, Tile.PlayerPiece.W);
+                    if (j == 3) {
+                        whiteTile.setType(Tile.Bug.ANT);
+                    } else if (j == 4) {
+                        whiteTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        whiteTile.setType(Tile.Bug.SPIDER);
+                    }
+                    gameState.addTile(whiteTile);
+                }
+            }
+        }
+        Tile t = gameState.getTile(3,3);
+        assertFalse(gameState.touchingOtherColor(2,3, t.getPlayerPiece()));
     }
 
     @Test
@@ -447,8 +483,13 @@ public class HiveGameStateTest {
         assertEquals(5, numAnts); //true since an ant was decremented
     }
 
+    //this is test to see if set turn works @Kelly Nguyen
     @Test
     public void setWhoseTurn() {
+        HiveGameState hgs = new HiveGameState();
+        hgs.setWhoseTurn(1);
+        int testTurn = 1;
+        assertEquals(1, hgs.getWhoseTurn());
     }
 
     @Test
