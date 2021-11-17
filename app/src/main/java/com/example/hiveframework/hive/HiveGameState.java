@@ -22,7 +22,7 @@ public class HiveGameState extends GameState implements Serializable {
     private static final String TAG = "HiveGameState";
     private static final long serialVersionUID = 7552321013488624386L;
 
-    public enum Direction {
+    public enum Direction { //directions used in search functions
         UP_LEFT,
         UP_RIGHT,
         LEFT,
@@ -33,20 +33,19 @@ public class HiveGameState extends GameState implements Serializable {
 
     //Variables of gameState
     private ArrayList<ArrayList<Tile>> gameBoard;
-    private ArrayList<ArrayList<Tile>> displayBoard;
     private int piecesRemain[][]; //represents how many of each bug a player has
-    private int whoseTurn;
-    private int countVisited;
-    private int currentIdSelected;
-    private boolean selectFlag;
+    private int whoseTurn; //whose turn it is currently 0 -> player1, 1 -> player2
+    private int countVisited; //number of visited tiles when performing bfs
+    private int currentIdSelected; //the current id of the imageButton selected
+    private boolean selectFlag; //true if an imageButton is selected
 
     private static final int tileSize = 300;
     private final int GBSIZE = 7; //size of the gameboard
-    private ArrayList<Tile> potentialMoves;
-    private ArrayList<Tile> computerPlayersTiles;
-    Queue<Tile> tileQueue;
-    int numRows = 7;
-    int numCols = 14;
+    private ArrayList<Tile> potentialMoves; //the moves that a selected piece could move to
+    private ArrayList<Tile> computerPlayersTiles; //the pieces that the computer currently has down on the board
+    Queue<Tile> tileQueue; //the queue used in BFS
+    int numRows = 7; //for the gameBoard row size
+    int numCols = 14; //for the gameBoard col size
     //boolean for placed piece
     /**
      * Default constructor.
@@ -62,18 +61,7 @@ public class HiveGameState extends GameState implements Serializable {
                 gameBoard.get(i).add(j, new Tile (i, j, Tile.PlayerPiece.EMPTY));
             }
         }
-        //Initialize displayBoard to be mirror gameBoard
-        //HELLO! I don't think we need this if we draw everything based on the gameBoard
-        //HENLO! I agree we can probably just yeet displayBoard
-        displayBoard = new ArrayList<ArrayList<Tile>>();
-        for(int i=0; i < GBSIZE; i++) {
-            displayBoard.add(new ArrayList<Tile>(GBSIZE));
-        }
-        for(int i = 0; i < GBSIZE; i++){
-            for(int j = 0; j < GBSIZE*2; j++){
-                displayBoard.get(i).add(j, gameBoard.get(i).get(j));
-            }
-        }
+
         //initialize piecesRemain for all players
         //row 0 = PLAYER1
         //row 1 = PLAYER2
@@ -127,16 +115,6 @@ public class HiveGameState extends GameState implements Serializable {
             }
         }
 
-        this.displayBoard = new ArrayList<ArrayList<Tile>>();
-        for(int i=0; i < GBSIZE; i++) {
-            this.displayBoard.add(new ArrayList<Tile>(GBSIZE));
-        }
-        for (int row = 0; row < GBSIZE; row++){
-            for (int col = 0; col < GBSIZE; col++){
-                Tile copyTile = new Tile(other.displayBoard.get(row).get(col));
-                this.displayBoard.get(row).add(col, copyTile);
-            }
-        }
         this.piecesRemain = new int[2][5];
         for (int i = 0; i < other.getPiecesRemain().length; i++){
             for (int j = 0; j < other.getPiecesRemain()[i].length; j++){
@@ -169,15 +147,6 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public HiveGameState newGame(){
         return new HiveGameState(); //creates a new blank gameState object
-    }
-
-    /**
-     * Exits the game,
-     * called when the exit game button is clicked
-     * @return true in order to exit the game
-     */
-    public boolean endGame(){
-        return true;
     }
 
     /**
@@ -222,7 +191,7 @@ public class HiveGameState extends GameState implements Serializable {
      * able to be placed on the board somewhere. If it is, then this method
      * populates the potentialMoves arrayList.
      * ONLY ALLOWS A TILE TO BE PLACED ON A NON EDGE LOCATION
-     * Intential: in hive there are no edges, and it would be unfair to take advantage of edges when placing
+     * Intentional: in hive there are no edges, and it would be unfair to take advantage of edges when placing
      * @param tile the tile that was selected and wants to be placed on the board
      * @return true if the tile is able to be placed, false if it is not permitted to be selected/placed
      */
@@ -735,7 +704,7 @@ public class HiveGameState extends GameState implements Serializable {
      * valid moves for the queen bee tile. Returns false if no moves are found.
      *
      * @param tile the tile the player wishes to move
-     * @return
+     * @return true if successful search, false otherwise
      */
     public boolean queenSearch(Tile tile) {
         //Ensure adjacent tiles are empty with things next to them
@@ -1047,8 +1016,10 @@ public class HiveGameState extends GameState implements Serializable {
         }
         return false;
     }
-    /**ant tile movement
-     *
+    /** ant tile movement
+     * @param tile the ant tile coming in
+     * @param x the x location as index
+     * @param y the y location as index
      */
     public boolean antMove(Tile tile,int x,int y){
         if(antValidMove(tile,x,y))
@@ -1083,6 +1054,11 @@ public class HiveGameState extends GameState implements Serializable {
         return true;
     }
 
+    /**
+     * Performs a search function on spider tiles, populates potentials arrayList
+     * @param tile the spider tile coming in
+     * @return true if it was a successful search
+     */
     public boolean spiderSearch (Tile tile ) {
         // The tile the spider is on
         int m = tile.getIndexX();
@@ -1192,7 +1168,8 @@ public class HiveGameState extends GameState implements Serializable {
 
     /**
      * Method to print out gameState in readable format.
-     * @return
+     * @return the state of the game as a string, each empty tile is ***,
+     * and all other pieces are signified by their first letter
      */
     @Override
     public String toString(){
@@ -1356,7 +1333,7 @@ public class HiveGameState extends GameState implements Serializable {
     }
 
     /**
-     * Returns how many pieces left of bug type in player hand
+     * Returns how many pieces left of bug type in players hand
      * @param bug the bug piece to decrement in the "hand"
      */
     public int getPiecesRemain(Tile.Bug bug){
@@ -1468,10 +1445,10 @@ public class HiveGameState extends GameState implements Serializable {
 
     /**
      * Updates potentialMoves based on tile selected by player to be placed
-     * @param inTile
+     * @param inTile the tile being selected
      * for condition 0 it is the only tile on the gameboard
      * for condition 1 it is the tile selected from the players hand
-     * @param toggle
+     * @param toggle what mode to be in
      * 0 - only one tile on game board, so potentials all positions surrounding tile
      * 1 - multiple tiles, so potentials empty spaces around tiles with same selected color
      *     that are not touching other players color
@@ -1496,10 +1473,11 @@ public class HiveGameState extends GameState implements Serializable {
     /**
      * updates potentialMoves based on tile on board
      * used when placing a tile on the board from the hand of a player
-     * @param placedTile
-     * @param toggle
+     * @param placedTile the tile that is being checked around
+     * @param toggle tells whether to put it in look for pieces of the same color
+     *               or look for the pieces surrounding the placeTile no matter the color
      */
-    public void surroundingTiles(Tile placedTile, int toggle){ //known bugs, doesn't work if you pass in corner or side pieces due to no bounds checking
+    public void surroundingTiles(Tile placedTile, int toggle){
         int x = placedTile.getIndexX();
         int y = placedTile.getIndexY();
         Tile.PlayerPiece playerColor = placedTile.getPlayerPiece();
@@ -1615,16 +1593,20 @@ public class HiveGameState extends GameState implements Serializable {
         }
     }
 
-    //testing class for playing Oracle
+    /**
+     * testing class for playing Oracle, adds a tile to the gameboard,
+     * circumvents any move/error checking
+     * @param newTile the tile that is being added to the gameBoard
+     */
     public void addTile(Tile newTile){
         gameBoard.get(newTile.getIndexX()).set(newTile.getIndexY(), newTile);
     }
 
     /**
      *  returns null if the get request is out of bounds
-     * @param x
-     * @param y
-     * @return
+     * @param x the row index
+     * @param y the col index
+     * @return the tile if it is within the limits of the gameboard, otherwise null
      */
     public Tile getTile(int x, int y){
         if(x > gameBoard.size() || y > gameBoard.size() * 2){
@@ -1634,10 +1616,11 @@ public class HiveGameState extends GameState implements Serializable {
     }
 
     /**
-     *
-     * @param potentialArr
-     * @param gamePiece
-     * @return
+     * This method looks through a given array list and compares indexes of the tiles within the list
+     * with the gamepiece's indexes, if they're the same this tile exists within.
+     * @param potentialArr the array that the gamepiece is hoping to be in
+     * @param gamePiece the piece that this function is looking for in the potentialArr
+     * @return true if the tile was found, false otherwise
      */
     public boolean containsTile(ArrayList<Tile> potentialArr, Tile gamePiece){
         for(int i = 0; i < potentialArr.size(); i++){
@@ -1649,53 +1632,98 @@ public class HiveGameState extends GameState implements Serializable {
         return false;
     }
 
+    /**
+     *
+     * @return the gameBoard as a 2D arraylist
+     */
     public ArrayList<ArrayList<Tile>> getGameBoard(){
         return gameBoard;
     }
 
-    public ArrayList<ArrayList<Tile>> getDisplayBoard(){
-        return displayBoard;
-    }
-
+    /**
+     * The potentialMoves of a selected tile
+     * @return potentialMoves, a 1D arrayList
+     */
     public ArrayList<Tile> getPotentialMoves() {
         return potentialMoves;
     }
 
+    /**
+     * player 0's pieces are in row 0, player 1's in row 1
+     * @return the pieces remaining in the 2 player's hands
+     */
     public int[][] getPiecesRemain(){
         return piecesRemain;
     }
 
+    /**
+     * Set the current turn
+     * @param turn, either 1 or 0
+     */
     public void setWhoseTurn(int turn){
        this.whoseTurn = turn;
     }
 
+    /**
+     *
+     * @return the index of whose turn it is, either 0 or 1
+     */
     public int getWhoseTurn(){
         return whoseTurn;
     }
 
+    /**
+     *
+     * @return the current size of the rows of the gameboard
+     */
     public int getBoardSize(){
         return GBSIZE;
     }
 
+    /**
+     *
+     * @return the id of the imageButton selected currently
+     */
     public int getCurrentIdSelected(){
         return currentIdSelected;
     }
+
+    /**
+     *
+     * @param id of the imageButton that should be set
+     */
     public void setCurrentIdSelected(int id){
         currentIdSelected = id;
     }
 
+    /**
+     *
+     * @return the list of tiles that the computer player has down on the board
+     */
     public ArrayList<Tile> getComputerPlayersTiles() {
         return computerPlayersTiles;
     }
 
+    /**
+     *
+     * @param computerPlayersTiles the list of computerTiles to point to
+     */
     public void setComputerPlayersTiles(ArrayList<Tile> computerPlayersTiles) {
         this.computerPlayersTiles = computerPlayersTiles;
     }
 
+    /**
+     *
+     * @param tileToBeAdded the tile to be added to the list of computer tiles currently on the board
+     */
     public void addComputerPlayersTiles(Tile tileToBeAdded){
         this.computerPlayersTiles.add(tileToBeAdded);
     }
 
+    /**
+     *
+     * @param potentialMoves sets the potentialMoves of a piece to the incoming arrayList
+     */
     public void setPotentialMoves(ArrayList<Tile> potentialMoves) {
         this.potentialMoves = new ArrayList<Tile>();
         for(int i = 0; i < potentialMoves.size(); i++){
@@ -1703,10 +1731,18 @@ public class HiveGameState extends GameState implements Serializable {
         }
     }
 
+    /**
+     *
+     * @return true if an imageButton is selected, false otherwise
+     */
      public boolean getSelectFlag(){
         return this.selectFlag;
      }
 
+    /**
+     *
+     * @param selectFlag sets to true if an imageButton is selected in the onClick
+     */
     public void setSelectFlag(boolean selectFlag) {
         this.selectFlag = selectFlag;
     }
@@ -1726,8 +1762,8 @@ public class HiveGameState extends GameState implements Serializable {
     }
 
     /**
-     * Returns true if game won or false if game not won
-     * @return
+     * Returns an integer representation of who won or -1 if game not won
+     * @return 0 if player 1 lost, 1 if player 2 lost, and 2 if they tied
      */
     public int winOrNah(){
         Tile.PlayerPiece player;
@@ -1876,7 +1912,11 @@ public class HiveGameState extends GameState implements Serializable {
         }
         return whoWon;
     }
-    
+
+    /**
+     * Resizes the board by adding a row to the top and bottom
+     * and adding a column to the left and right
+     */
     public void reSeize(){
         for (int row = 0; row < gameBoard.size(); row++){
             for (int col = 0; col < gameBoard.get(row).size(); col--){
