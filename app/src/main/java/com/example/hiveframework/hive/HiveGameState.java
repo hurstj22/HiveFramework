@@ -22,7 +22,8 @@ public class HiveGameState extends GameState implements Serializable {
     private static final String TAG = "HiveGameState";
     private static final long serialVersionUID = 7552321013488624386L;
 
-    public enum Direction { //directions used in search functions
+    //directions used in search functions
+    public enum Direction {
         UP_LEFT,
         UP_RIGHT,
         LEFT,
