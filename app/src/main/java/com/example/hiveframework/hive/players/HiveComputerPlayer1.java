@@ -217,7 +217,6 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 potentialTile.setIndexX(goalX); //From James: this is trying to place the tile on top of the queen and that doesn't work
                                 potentialTile.setIndexY(goalY);
                             }
-
                             //create the action with the coordinates we'd like to move to from the potential tile
                             Log.i(TAG, "I'm moving to this location: ("+  potentialTile.getIndexX() + ","+ potentialTile.getIndexY() + ")");
                             moveAction = new HiveMoveAction(this, potentialTile.getIndexX(), potentialTile.getIndexY());
