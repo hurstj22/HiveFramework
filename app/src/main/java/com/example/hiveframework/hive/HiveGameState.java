@@ -1034,8 +1034,8 @@ public class HiveGameState extends GameState implements Serializable {
     }
     /** ant tile movement: determines if the ant tile is on edge
      * @param tile the ant tile coming in
-     *  x location as index
-     *  y location as index
+     *  x location as indexX
+     *  y location as indexY
      * @return should always return false.
      */
     private boolean antValidMove(Tile tile) {
@@ -1045,19 +1045,20 @@ public class HiveGameState extends GameState implements Serializable {
         Tile nextile = gameBoard.get(x).get(y);
         Boolean valid = false;
 
-        if (breakHive(tile, false)){
+        if (breakHive(tile, true)){
             return false;
             //checks breakHive to make sure you can even move
         }
         ArrayList<Tile> checkedTiles = new ArrayList<>();
-        checkedTiles.add(tile); //do not check current tile again
+        checkedTiles.add(tile); //do not check current tile again //error could be local variable
         if ( x % 2 == 0 ) {
             //if the tile is on an even row
             //check if the surrounding tile is empty and if it is connected to the hive
             //if it is, recursive call and check
             //Check tile to the above left
-            if (gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y), false)) {
-                antSearch(gameBoard.get(x-1).get(y), checkedTiles);
+            if (nextTo(tile, gameBoard.get(x-1).get(y) , false)) {
+                if (antSearch(gameBoard.get(x-1).get(y), checkedTiles));
+                antValidMove(gameBoard.get(x-1).get(y));
                 valid = true;
             }
             //Check the tile to the above right
@@ -1090,35 +1091,35 @@ public class HiveGameState extends GameState implements Serializable {
         } else {
             //if the tile is on an odd row
             //Check tile to the above left
-            if (gameBoard.get(x-1).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y - 1), false)) {
+            if (gameBoard.get(x-1).get(y-1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y - 1), false)) {
                 antSearch(gameBoard.get(x-1).get(y-1), checkedTiles);
                 valid = true;
             }
             //Check the tile to the above right
-            if (gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y), false)) {
+            if (gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y), false)) {
                 antSearch(gameBoard.get(x-1).get(y), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the left
-            if (gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y - 1), false)) {
+            if (gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y - 1), false)) {
                 antSearch(gameBoard.get(x).get(y-1), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the right
-            if (gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y + 1), false)) {
+            if (gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y + 1), false)) {
                 antSearch(gameBoard.get(x).get(y+1), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the below left
-            if (gameBoard.get(x+1).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y -1), false)) {
+            if (gameBoard.get(x+1).get(y-1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y -1), false)) {
                 antSearch(gameBoard.get(x+1).get(y-1), checkedTiles);
                 valid = true;
             }
 
-            if (gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y), false)) {
+            if (gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y), false)) {
                 antSearch(gameBoard.get(x+1).get(y), checkedTiles);
                 valid = true;
             }
@@ -1126,13 +1127,14 @@ public class HiveGameState extends GameState implements Serializable {
 
         return valid;
     }
-    private void antSearch(Tile tile, ArrayList<Tile> checkedTiles){
-        if(!checkedTiles.contains(tile)) { //is not in checked tiles, will add it to check then add to potential moves
+    private boolean antSearch(Tile tile, ArrayList<Tile> checkedTiles){
+        if(containsTile(checkedTiles, tile)) { //is not in checked tiles, will add it to check then add to potential moves
             checkedTiles.add(tile);
-            potentialMoves.add(tile);
+            potentialMoves.add(tile); //never calls itself not recursive
+            return true;
         }
         else
-            return;
+            return false;
 
 
     }

@@ -1,5 +1,6 @@
 package com.example.hiveframework.GameFramework;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -18,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
@@ -555,6 +558,7 @@ public abstract class GameMainActivity extends Activity implements
      * <p>
      * NOTE: With the current layout it could either be a Button or ImageButton.
      */
+    @SuppressLint("ClickableViewAccessibility")
     public void onClick(View button) {
 
         Logger.log(TAG, "Clicked "+button);
@@ -569,7 +573,22 @@ public abstract class GameMainActivity extends Activity implements
             addPlayer();
             this.playerTable.invalidate(); // show the user the change
         }
+        // Add Rules Button
+        if (button.getId() == R.id.rulesButton) {
+            ImageView mImageView;
+            mImageView = (ImageView) findViewById(R.id.rules);
+            mImageView.setImageResource(R.drawable.rules);
+            mImageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        return true;
+                    }
+                    return false;
 
+                }
+            });
+        }
         // Delete Player Button
         else if (button.getId() == R.id.delPlayerButton) {
             // Search the existing players to find out which delete button got
