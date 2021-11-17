@@ -2,17 +2,20 @@ package com.example.hiveframework.GameFramework;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -21,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
@@ -55,6 +59,8 @@ public abstract class GameMainActivity extends Activity implements
         View.OnClickListener {
     //Tag for Logging
     private static final String TAG = "GameMainActivity";
+    ImageView mImageView = null;
+    boolean isFull = false;
     /*
      * ====================================================================
      * Instance Variables
@@ -161,6 +167,10 @@ public abstract class GameMainActivity extends Activity implements
     @Override
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Making rules button possible
+        mImageView = findViewById(R.id.rulesButton);
+        mImageView.setImageResource(R.drawable.rules);
+
 
         //Set Context for Toast Logging
         Logger.setContext(getApplicationContext());
@@ -575,19 +585,17 @@ public abstract class GameMainActivity extends Activity implements
         }
         // Add Rules Button
         if (button.getId() == R.id.rulesButton) {
-            ImageView mImageView;
-            mImageView = (ImageView) findViewById(R.id.rules);
-            mImageView.setImageResource(R.drawable.rules);
-            mImageView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_UP) {
-                        return true;
-                    }
-                    return false;
+            if(isFull){
+                isFull = false;
+                mImageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                mImageView.setAdjustViewBounds(true);
+            }else{
+                isFull = true;
+                mImageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-                }
-            });
+            }
+
         }
         // Delete Player Button
         else if (button.getId() == R.id.delPlayerButton) {
