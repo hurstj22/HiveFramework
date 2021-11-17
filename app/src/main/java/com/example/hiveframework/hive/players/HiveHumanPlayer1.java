@@ -23,6 +23,7 @@ import com.example.hiveframework.hive.HiveSurfaceView;
 import com.example.hiveframework.hive.Tile;
 import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
+import com.example.hiveframework.hive.hiveActionMessage.HiveUndoTurnAction;
 
 import java.util.ArrayList;
 
@@ -102,6 +103,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
     HiveSelectAction selectActionFromHand = null;
+    HiveUndoTurnAction undoTurnAction = null;
 
     //id numbers to hold the id nums of all images
     int beeId;
@@ -147,6 +149,10 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             //make a copy of the passed in gameState to pull data from
             hiveGame = new HiveGameState((HiveGameState) info);
             //hiveGame.setCopyforUndo(hiveGame)
+//            if(hiveGame.getUndoTurn() != null) {
+//                HiveGameState undo = new HiveGameState(hiveGame.getUndoTurn());
+//                undoTurnAction = new HiveUndoTurnAction(this, undo);
+//            }
 
             //change the color of the turn banner to the player's color then change the text
             if(hiveGame.getWhoseTurn() == 0){ //first player
@@ -156,6 +162,11 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 currentTurnTextView.setTextColor(Color.BLUE);
             }
             currentTurnTextView.setText("" + this.allPlayerNames[hiveGame.getWhoseTurn()] + "'s Turn");
+
+            //set placedPiece to false
+            hiveGame.setPlacedPiece(false);
+            //Update the undoTurn variable in HiveGameState
+            hiveGame.setUndoTurn(hiveGame);
 
             //update player 1's piece counters
             beeP1Counter.setText("" + hiveGame.getPiecesRemain()[0][0]);
@@ -350,6 +361,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 //yet to be coded
                 break;
             case R.id.undoButton: //undo the last move by resetting the gameState to a previous one
+                game.sendAction(undoTurnAction);
                 //yet to be coded
                 break;
         }

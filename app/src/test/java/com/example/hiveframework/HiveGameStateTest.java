@@ -100,16 +100,142 @@ public class HiveGameStateTest {
     public void selectTile() {
     }
 
+    //Tests beetlesearch functionality -Ali
     @Test
     public void beetleSearch() {
+        HiveGameState gameState = new HiveGameState();
+        //Create a board with 5, 2 the Queen to be moved
+        for (int i = 2; i < 4; i++) {
+            for (int j = 3; j < 6; j++) {
+                if (i == 2) {
+                    Tile blackTile = new Tile(i, j, Tile.PlayerPiece.B);
+                    if (j == 3) {
+                        blackTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        blackTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        blackTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(blackTile);
+                } else {
+                    Tile whiteTile = new Tile(i, j, Tile.PlayerPiece.W);
+                    if (j == 3) {
+                        whiteTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        whiteTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        whiteTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(whiteTile);
+                }
+            }
+        }
+
+        boolean movePossible = gameState.beetleSearch(gameState.getTile(3, 3));
+        Tile.Bug piece = gameState.getTile(3,3).getType();
+         assertEquals(Tile.Bug.BEETLE, piece);
+        int xCoord = gameState.getPotentialMoves().get(0).getIndexX();
+        int yCoord = gameState.getPotentialMoves().get(0).getIndexY();
+        int potentialSize = gameState.getPotentialMoves().size();
+
+        assertEquals(4, potentialSize);
     }
 
+    //Tests queensearch for functionality --Ali
     @Test
     public void queenSearch() {
+        HiveGameState gameState = new HiveGameState();
+        //Create a board with 5, 2 the Queen to be moved
+        for (int i = 2; i < 4; i++) {
+            for (int j = 3; j < 6; j++) {
+                if (i == 2) {
+                    Tile blackTile = new Tile(i, j, Tile.PlayerPiece.B);
+                    if (j == 3) {
+                        blackTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        blackTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        blackTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(blackTile);
+                } else {
+                    Tile whiteTile = new Tile(i, j, Tile.PlayerPiece.W);
+                    if (j == 3) {
+                        whiteTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        whiteTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        whiteTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(whiteTile);
+                }
+            }
+        }
+
+        boolean movePossible = gameState.queenSearch(gameState.getTile(3, 5));
+        Tile.Bug piece = gameState.getTile(3,5).getType();
+//        assertEquals(Tile.Bug.QUEEN_BEE, piece);
+        int xCoord = gameState.getPotentialMoves().get(0).getIndexX();
+        int yCoord = gameState.getPotentialMoves().get(0).getIndexY();
+        int potentialSize = gameState.getPotentialMoves().size();
+
+        assertEquals(2, potentialSize);
+
+
     }
 
+    //Tests the funcitonality of GrasshopperSearch ---Ali
     @Test
     public void startGrasshopperSearch() {
+        HiveGameState gameState;
+        gameState = new HiveGameState();
+        //Create a board with 4, 2 the grasshopper to be moved
+        for (int i = 2; i < 4; i++) {
+            for (int j = 3; j < 6; j++) {
+                if (i == 2) {
+                    Tile blackTile = new Tile(i, j, Tile.PlayerPiece.B);
+                    if (j == 3) {
+                        blackTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        blackTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        blackTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(blackTile);
+                } else {
+                    Tile whiteTile = new Tile(i, j, Tile.PlayerPiece.W);
+                    if (j == 3) {
+                        whiteTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        whiteTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        whiteTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(whiteTile);
+                }
+            }
+        }
+        HiveGameState gameState2 = new HiveGameState(gameState);
+        //startgrasshopper search on the tile returned by getTile(2, 4)
+        gameState.startGrasshopperSearch(gameState.getTile(2, 4));
+        int xCoord = gameState.getPotentialMoves().get(2).getIndexX();
+        int yCoord = gameState.getPotentialMoves().get(2).getIndexY();
+        int potentialSize = gameState.getPotentialMoves().size();
+
+        //Also test on other grasshopper
+        gameState2.startGrasshopperSearch(gameState2.getTile(3, 4));
+
+
+        Tile.Bug piece = gameState2.getTile(3,4).getType();
+        int potentialSize2 = gameState2.getPotentialMoves().size();
+        // assertEquals(2, xCoord);
+        assertEquals(Tile.Bug.GRASSHOPPER, piece);
+        assertEquals(4, potentialSize);
+        assertEquals(4, potentialSize2);
+        assertEquals(4, xCoord);
+        assertEquals(3,yCoord);
+
+
     }
 
     @Test
@@ -124,8 +250,41 @@ public class HiveGameStateTest {
     public void spiderSearch() {
     }
 
+    //Tests the functionality of nextTo --Ali
     @Test
     public void nextTo() {
+        HiveGameState gameState;
+        gameState = new HiveGameState();
+        //Create a board with 4, 2 the grasshopper to be moved
+        for (int i = 2; i < 4; i++) {
+            for (int j = 3; j < 6; j++) {
+                if (i == 2) {
+                    Tile blackTile = new Tile(i, j, Tile.PlayerPiece.B);
+                    if (j == 3) {
+                        blackTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        blackTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        blackTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(blackTile);
+                } else {
+                    Tile whiteTile = new Tile(i, j, Tile.PlayerPiece.W);
+                    if (j == 3) {
+                        whiteTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        whiteTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        whiteTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(whiteTile);
+                }
+            }
+        }
+
+        boolean isNextTo = gameState.nextTo(gameState.getTile(2,5), gameState.getTile(3,6), false);
+        assertTrue(isNextTo);
+        assertEquals(gameState.getTile(3,5).getType(), Tile.Bug.QUEEN_BEE);
     }
 
     @Test
@@ -213,8 +372,43 @@ public class HiveGameStateTest {
         assertEquals(6, counter);
     }
 
+
+    //Tests to ensure that a tile is preserved if another tile is placed beneath it
     @Test
     public void addTile() {
+        HiveGameState gameState;
+        gameState = new HiveGameState();
+        //Create a board with 4, 2 the grasshopper to be moved
+        for (int i = 2; i < 4; i++) {
+            for (int j = 3; j < 6; j++) {
+                if (i == 2) {
+                    Tile blackTile = new Tile(i, j, Tile.PlayerPiece.B);
+                    if (j == 3) {
+                        blackTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        blackTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        blackTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(blackTile);
+                } else {
+                    Tile whiteTile = new Tile(i, j, Tile.PlayerPiece.W);
+                    if (j == 3) {
+                        whiteTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        whiteTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        whiteTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(whiteTile);
+                }
+            }
+        }
+        Tile test = gameState.getTile(2,4);
+        gameState.addTile(new Tile( 2, 4, Tile.PlayerPiece.B,Tile.Bug.BEETLE, 1));
+        Tile beneath = gameState.getTile(2,4).getOnTopOf();
+
+        assertNotEquals(null, beneath);
     }
 
     @Test
