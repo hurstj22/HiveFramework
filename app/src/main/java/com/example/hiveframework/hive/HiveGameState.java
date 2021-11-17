@@ -612,7 +612,8 @@ public class HiveGameState extends GameState implements Serializable {
                     return startGrasshopperSearch(tile);
                 case SPIDER:
                     //utilize the SpiderSearch function to find potential moves.
-                    return spiderSearch(tile);
+                    int spiderCounter = 0; //only add moves that are 3 tiles away
+                    return spiderSearch(tile, spiderCounter);
                 case QUEEN_BEE:
                     //utilize the queenSearch function to find potential moves.
                     return queenSearch(tile);
@@ -1074,7 +1075,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @param tile the spider tile coming in
      * @return true if it was a successful search
      */
-    public boolean spiderSearch (Tile tile ) {
+    /* public boolean spiderSearch (Tile tile ) {
         // The tile the spider is on
         int row = tile.getIndexX();
         int col = tile.getIndexY();
@@ -1101,6 +1102,207 @@ public class HiveGameState extends GameState implements Serializable {
         if(potentialMoves.isEmpty()){
             return false; //found no where to go :(
         }
+        return true;
+    } */
+    /**
+     * Checks for valid moves for the Queen Bee tile. Modifies ArrayList potentialMoves to reflect
+     * valid moves for the queen bee tile. Returns false if no moves are found.
+     *
+     * @param tile the tile the player wishes to move
+     * @return true if successful search, false otherwise
+     */
+    public boolean spiderSearch(Tile tile, int spiderCounter) {
+        //Ensure adjacent tiles are empty with things next to them
+        int x = tile.getIndexX();
+        int y = tile.getIndexY();
+        if(!tileQueue.isEmpty()){
+            tileQueue.poll();
+        }
+        do {
+                if (x % 2 == 0) {
+                    // For even rows
+
+                    if (isValidSpider(gameBoard.get(x - 1).get(y)) &&
+                            nextTo(tile, gameBoard.get(x - 1).get(y), false)) {
+                        //Check tile above left of tile is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x - 1).get(y));
+                            spiderSearch(gameBoard.get(x - 1).get(y), myCount); //look for next tile and increment found a possible path
+                        }
+
+                    }
+                    if (isValidSpider(gameBoard.get(x - 1).get(y + 1)) &&
+                            nextTo(tile, gameBoard.get(x - 1).get(y + 1), false)) {
+                        //Check tile above right of til is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y + 1));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x - 1).get(y + 1));
+                            spiderSearch(gameBoard.get(x - 1).get(y + 1), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x).get(y - 1)) &&
+                            nextTo(tile, gameBoard.get(x).get(y - 1), false)) {
+                        //Check tile to the left of til is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x).get(y - 1));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x).get(y - 1));
+                            spiderSearch(gameBoard.get(x).get(y - 1), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x).get(y+ 1)) &&
+                            nextTo(tile, gameBoard.get(x).get(y + 1), false)) {
+                        //Check tile to the right of ti is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x).get(y + 1));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x).get(y + 1));
+                            spiderSearch(gameBoard.get(x).get(y + 1), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x + 1).get(y)) &&
+                            nextTo(tile, gameBoard.get(x + 1).get(y), false)) {
+                        //Check tile below left of tile is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x + 1).get(y));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x + 1).get(y));
+                            spiderSearch(gameBoard.get(x + 1).get(y), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x + 1).get(y + 1)) &&
+                            nextTo(tile, gameBoard.get(x + 1).get(y + 1), false)) {
+                        //Check tile below right of til is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x + 1).get(y + 1));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x + 1).get(y + 1));
+                            spiderSearch(gameBoard.get(x + 1).get(y + 1), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                } else {
+                    // For odd rows
+
+                    if (isValidSpider(gameBoard.get(x - 1).get(y - 1)) &&
+                            nextTo(tile, gameBoard.get(x - 1).get(y - 1), false)) {
+                        //Check tile above left of tile is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y - 1));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x - 1).get(y - 1));
+                            spiderSearch(gameBoard.get(x - 1).get(y - 1), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x - 1).get(y)) &&
+                            nextTo(tile, gameBoard.get(x - 1).get(y), false)) {
+                        //Check tile above right of til is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x - 1).get(y));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x - 1).get(y));
+                            spiderSearch(gameBoard.get(x - 1).get(y), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x).get(y - 1)) &&
+                            nextTo(tile, gameBoard.get(x).get(y - 1), false)) {
+                        //Check tile to the left of til is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x).get(y - 1));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x).get(y - 1));
+                            spiderSearch(gameBoard.get(x).get(y - 1), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x).get(y + 1)) &&
+                            nextTo(tile, gameBoard.get(x).get(y + 1), false)) {
+                        //Check tile to the right of ti is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x).get(y + 1));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x).get(y + 1));
+                            spiderSearch(gameBoard.get(x).get(y + 1), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x + 1).get(y - 1)) &&
+                            nextTo(tile, gameBoard.get(x + 1).get(y - 1), false)) {
+                        //Check tile below left of tile is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x + 1).get(y - 1));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x + 1).get(y - 1));
+                            spiderSearch(gameBoard.get(x + 1).get(y - 1), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+                    if (isValidSpider(gameBoard.get(x + 1).get(y)) &&
+                            nextTo(tile, gameBoard.get(x + 1).get(y), false)) {
+                        //Check tile below right of til is empty and nextTo
+                        //If true, add tile to ArrayList<Tile> potentials
+                        int myCount = spiderCounter++;
+                        if (spiderCounter == 3) {
+                            potentialMoves.add(gameBoard.get(x + 1).get(y));
+                        } else {
+                            tileQueue.offer(gameBoard.get(x +1).get(y));
+                            spiderSearch(gameBoard.get(x + 1).get(y), myCount); //look for next tile and increment found a possible path
+                        }
+                    }
+
+                }
+        } while(!tileQueue.isEmpty());
+
+        if(!potentialMoves.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Helper method for the spider search,
+     * determines if a tile is valid to visit
+     * @param tile the tile about to be visited
+     * @return true if valid to visit, false otherwise
+     */
+    public boolean isValidSpider(Tile tile){
+
+        if(tile.getIndexX() < 0 || tile.getIndexY() < 0 ||
+                tile.getIndexX() >= gameBoard.size() || tile.getIndexY() >= gameBoard.size() * 2){
+            return false; //out of bounds
+        }
+
+        if(tile.getType() != Tile.Bug.EMPTY){
+            return false; //empty spaces aren't part of the graph
+        }
+
+        //already visited
+        if(tile.getVisited()){
+            return false;
+        }
+
+        //can be visited, is valid tile
         return true;
     }
 
