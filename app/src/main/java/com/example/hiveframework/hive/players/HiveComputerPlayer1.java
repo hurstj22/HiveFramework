@@ -130,9 +130,11 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             if (this.playerNum != hiveGame.getWhoseTurn()) {
                 return; //not you're turn
             }
-
-
-            switch(whatAmIDoingToday.nextInt(6)) {
+            int computersMove = 0;
+            if(hiveGame.getComputerPlayersTiles().size() > 2){ //there's tiles on the board, so I got options :)
+                computersMove = whatAmIDoingToday.nextInt(6);
+            }
+            switch(computersMove) {
                 //This switch statement is the brains of the operation: chooses between placing on the board, moving from one spot to another, and skipping turn
 
                 case 3: //several chances for the ai to choose from their hand
