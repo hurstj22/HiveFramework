@@ -9,6 +9,7 @@ import com.example.hiveframework.GameFramework.LocalGame;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
+import com.example.hiveframework.hive.hiveActionMessage.HiveUndoTurnAction;
 import com.example.hiveframework.hive.players.HiveHumanPlayer1;
 
 import java.util.ArrayList;
@@ -135,6 +136,12 @@ public class HiveLocalGame extends LocalGame {
             return true; //successfully changed turns
         }
 
+        if(action instanceof HiveUndoTurnAction) {
+            HiveUndoTurnAction undoTurnAction = (HiveUndoTurnAction) action;
+            HiveGameState undoTurn = undoTurnAction.getStartTurn();
+            hiveState = new HiveGameState(hiveState.getUndoTurn());
+            return true;
+        }
         if(canMove(playerId)) {
             HiveSelectAction select = null; //start out as null
             HiveMoveAction move = null;

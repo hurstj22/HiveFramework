@@ -23,7 +23,7 @@ public class HiveGameState extends GameState implements Serializable {
     private static final long serialVersionUID = 7552321013488624386L;
 
     //Holds gamestate from beginning of turn
-    private HiveGameState undoTurn;
+    private HiveGameState undoTurn = null;
 
     public enum Direction {
         UP_LEFT,
@@ -618,7 +618,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if potential moves exist. false if not.
      */
     public boolean selectTile(Tile tile) {
-
+        undoTurn = new HiveGameState(this);
         //we should make sure the person whose turn it is has placed their queen somewhere
         if(validMove(tile)) {
             //if the piece can be moved legally
