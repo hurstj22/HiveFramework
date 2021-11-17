@@ -82,6 +82,12 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
+                    <ImageView
+                        android:id="@+id/rules"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/rules" />
+
                     <Button
                         android:id="@+id/rulesButton"
                         android:layout_width="wrap_content"
