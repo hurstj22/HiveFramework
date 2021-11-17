@@ -53,6 +53,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     protected HiveGameState state;
     private int potentialCounter;
     private ArrayList<Tile> potentialList;
+
     /**
      * Constructor for the HiveSurfaceView class.
      *
@@ -62,6 +63,11 @@ public class HiveSurfaceView extends FlashSurfaceView {
         super(context);
     }
 
+    /**
+     * Contructor for surface view
+     * @param context - a reference to the activity this animation is run under
+     * @param attrs - attributes of surfaceView
+     */
     public HiveSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
@@ -86,6 +92,17 @@ public class HiveSurfaceView extends FlashSurfaceView {
         yellowPaint.setStrokeWidth(5);
     }
 
+    /**
+     * Method used to draw hexagon on surfaceView
+     * @param mCanvas - canvas tor draw on
+     * @param x - xCord of hexagon
+     * @param y - yCord of hexagon
+     * @param radius - radius of hexagon
+     * @param sides - how many sides, in our case 6
+     * @param startAngle - where to start drawing
+     * @param anticlockwise - to draw clockwise or counterclockwise
+     * @param paint - paint to use
+     */
     private void drawPolygon(Canvas mCanvas, float x, float y, float radius, float sides, float startAngle, boolean anticlockwise, Paint paint) {
         if (sides < 3) {
             return; }
@@ -103,11 +120,17 @@ public class HiveSurfaceView extends FlashSurfaceView {
         mCanvas.restore();
     }
 
+    /**
+     * Method called that actually draws on the surface view
+     * @param canvas - canvas of what we are drawing on
+     */
     public void onDraw(Canvas canvas){
+        //information used to draw hexagons correctly
         int startX = (int) halfWidth;
         int startY = 2*(int) c;
         int separation = (int) (2*halfWidth);
         int separationY = radius + (int) c;
+
         //draws the gameboard hexes
         if(state != null) {
             potentialCounter = 0;
@@ -201,7 +224,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
      * Maps where user clicks to row and column in gameBoard array
      * @param x - input x coordinate
      * @param y - input y coordinate
-     * @return column, row
+     * @return row, column
      */
     public int[] mapPixelToSquare(float x, float y) {
 
@@ -249,6 +272,10 @@ public class HiveSurfaceView extends FlashSurfaceView {
         return returnArray;
     }
 
+    /**
+     * Sets state to passed in state
+     * @param state - incoming state
+     */
     public void setState(HiveGameState state) {
         this.state = state;
     }
