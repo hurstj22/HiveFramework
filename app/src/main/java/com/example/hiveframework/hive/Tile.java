@@ -173,8 +173,4 @@ public class Tile {
         mCanvas.restore();
     }
 
-    //draw the tiles here according to their type then loop through in surface view
-    //public void drawTile(Canvas canvas, float x, float y){
-
-    //}
 }

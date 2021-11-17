@@ -133,12 +133,13 @@ public class HiveLocalGame extends LocalGame {
         int whoseMove = hiveState.getWhoseTurn();
         if(action instanceof EndTurnAction){
             hiveState.setWhoseTurn(1 - whoseMove);
+            hiveState.setPlacedPiece(false);
             return true; //successfully changed turns
         }
 
         if(action instanceof HiveUndoTurnAction) {
-            HiveUndoTurnAction undoTurnAction = (HiveUndoTurnAction) action;
-            HiveGameState undoTurn = undoTurnAction.getStartTurn();
+            //HiveUndoTurnAction undoTurnAction = (HiveUndoTurnAction) action;
+            //HiveGameState undoTurn = undoTurnAction.getStartTurn();
             hiveState = new HiveGameState(hiveState.getUndoTurn());
             return true;
         }
@@ -156,7 +157,15 @@ public class HiveLocalGame extends LocalGame {
                     if(hiveState.getTile(oldX, oldY) == null){
                         return false; //request is out of bounds
                     }
-                    if(hiveState.getTile(oldX, oldY).getType() != Tile.Bug.EMPTY){
+                    else if(hiveState.getWhoseTurn() == 0 &&
+                            hiveState.getTile(oldX, oldY).getPlayerPiece() != Tile.PlayerPiece.W){
+                        return false; //trying to select someone elses piece! :( How could you!?
+                    }
+                    else if(hiveState.getWhoseTurn() == 1 &&
+                            hiveState.getTile(oldX, oldY).getPlayerPiece() != Tile.PlayerPiece.B){
+                        return false; //trying to select someone elses piece! :( How could you!?
+                    }
+                    else if(hiveState.getTile(oldX, oldY).getType() != Tile.Bug.EMPTY){
                         return hiveState.selectTile(hiveState.getTile(oldX, oldY));
                     }
                     return false; //selected an empty spot, there's no bug there to ask to move
@@ -188,12 +197,12 @@ public class HiveLocalGame extends LocalGame {
                     }
                 }
                 else if (move.isComputerMove()){ //the computer is trying to make a move
-                    move.setComputerMove(false); //reset the computer since it tried to make a move
                     hiveState.setPotentialMoves(move.getComputerPotentialMoves()); //update the gameStates potentials to be compared against in the makeMove
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
                         move.getCurrentTile().setIndexX((int) move.getX()); //update the x and y indices
                         move.getCurrentTile().setIndexY((int) move.getY());
                         hiveState.addComputerPlayersTiles(move.getCurrentTile()); //now add it to the arrayList kept in the gameState of all computer tiles
+                        move.setComputerMove(false); //reset the computer since it tried to make a move
                         return true; //computer was able to make the move
                     }
                 }
@@ -202,6 +211,8 @@ public class HiveLocalGame extends LocalGame {
                     newY = (int) move.getY();
 
                     if(hiveState.makeMove(hiveState.getTile(oldX, oldY), newX, newY)) { //pass in the tile to move
+                        //set the move boolean in hiveState to true
+                        hiveState.setPlacedPiece(true);
                         return true; //able to make the move
                     }
                 }

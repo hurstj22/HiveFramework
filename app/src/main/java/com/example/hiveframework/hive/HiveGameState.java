@@ -26,7 +26,6 @@ public class HiveGameState extends GameState implements Serializable {
     //Holds gamestate from beginning of turn
     private HiveGameState undoTurn = null;
 
-
     //directions used in search functions
 
     public enum Direction {
@@ -131,9 +130,6 @@ public class HiveGameState extends GameState implements Serializable {
             }
         }
 
-        this.whoseTurn = other.getWhoseTurn();
-        this.currentIdSelected = other.getCurrentIdSelected();
-
         this.potentialMoves = new ArrayList<Tile>();
         for (int i = 0; i < other.getPotentialMoves().size(); i++){
             Tile copyTile = new Tile((other.getPotentialMoves()).get(i));
@@ -147,6 +143,9 @@ public class HiveGameState extends GameState implements Serializable {
         }
         this.selectFlag = other.getSelectFlag();
         tileQueue = new LinkedList<Tile>();
+        this.whoseTurn = other.getWhoseTurn();
+        this.currentIdSelected = other.getCurrentIdSelected();
+        this.placedPiece = other.getPlacedPiece();
     }
 
     /**
@@ -594,6 +593,9 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if potential moves exist. false if not.
      */
     public boolean selectTile(Tile tile) {
+        if(placedPiece){
+            return false;
+        }
         undoTurn = new HiveGameState(this);
         //we should make sure the person whose turn it is has placed their queen somewhere
         if(validMove(tile)) {
@@ -1268,9 +1270,7 @@ public class HiveGameState extends GameState implements Serializable {
         // commented out coordinate things for testing purposes so we can pass in indexes
         //need to get position of newTile based on x and y coordinates
         //int[] newTileCords = positionOfTile(newXCoord, newYCoord);
-        if(placedPiece){
-            return false;
-        }
+
         //hold old Position
         int[] oldTileCords = new int[2];
         oldTileCords[0] = moveTile.getIndexX();
@@ -1776,8 +1776,24 @@ public class HiveGameState extends GameState implements Serializable {
     public void setSelectFlag(boolean selectFlag) {
         this.selectFlag = selectFlag;
     }
-    public void setUndoTurn(HiveGameState current) {this.undoTurn = current; }
+
+    /**
+     *
+     * @param current the current board to be stored to if the player wants to undo their move
+     */
+    public void setUndoTurn(HiveGameState current) {
+        this.undoTurn = new HiveGameState(current); }
+
+    /**
+     *
+     * @return the placePiece boolean saying if a piece has been played during a turn
+     */
     public boolean getPlacedPiece() {return placedPiece;}
+
+    /**
+     *
+     * @param bool sets the state's piece for if a place has been played during a turn
+     */
     public void setPlacedPiece(boolean bool) {this.placedPiece = bool;}
     /**
      * Basic bounds checking for the gameBoard

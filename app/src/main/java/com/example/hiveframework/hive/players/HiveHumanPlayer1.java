@@ -163,6 +163,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             currentTurnTextView.setText("" + this.allPlayerNames[hiveGame.getWhoseTurn()] + "'s Turn");
 
             //set placedPiece to false
+            if(hiveGame.getPlacedPiece()){
+                hiveGame.setSelectFlag(false);
+            }
             hiveGame.setPlacedPiece(false);
             //Update the undoTurn variable in HiveGameState
             hiveGame.setUndoTurn(hiveGame);
@@ -191,6 +194,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                     }
                 }
             }
+            hiveGame.setSelectFlag(false);
             surfaceView.setState(hiveGame); //update the surfaceView
             surfaceView.invalidate();
             Logger.log(TAG, "receiving");
