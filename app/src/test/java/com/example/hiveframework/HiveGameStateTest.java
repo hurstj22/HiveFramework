@@ -373,7 +373,7 @@ public class HiveGameStateTest {
     }
 
 
-    //Tests to ensure that a tile is preserved if another tile is placed beneath it
+    //Tests to ensure that a tile is preserved if another tile is placed beneath it - Ali
     @Test
     public void addTile() {
         HiveGameState gameState;
