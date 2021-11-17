@@ -129,8 +129,11 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
 
             Log.d(TAG, "receiveInfo: it is comps turn ");
             //need to create a random tile, then call isValid on the tile
-
-            switch(whatAmIDoingToday.nextInt(2)) { //I believe this picks 0 - 2 since it's not inclusive of 3.
+            int computersMove = 0;
+            if(hiveGame.getComputerPlayersTiles().size() > 2){ //there's tiles on the board, so I got options :)
+                computersMove = whatAmIDoingToday.nextInt(2);
+            }
+            switch(computersMove) { //I believe this picks 0 - 2 since it's not inclusive of 3.
                 //This switch statement is the brains of the operation: chooses between placing on the board, moving from one spot to another, and skipping turn
 
                 case 0: //picking a tile from the computer's hand and placing it on the board
