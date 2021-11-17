@@ -1070,17 +1070,15 @@ public class HiveGameState extends GameState implements Serializable {
             for (int j = n - 3; j < n + 3; n++) {
                 int[] Valid = new int[2];
 
-                if (s == m - 3 || s == m + 3 || j == n - 3 || j == n + 3) {
+                if (s == m - 3 || s == m + 3 || j == n - 3 || j == n + 3) { //if a tile is three spaces away and valid to move to then go for it!
 
                     Valid[0] = s;
                     Valid[1] = j;
                     Tile newTile = new Tile(s, j, tile.getPlayerPiece());
                     // check if valid move breaks bfs
-
-                    if (breakHive(newTile, false)){
+                    if (breakHive(newTile, true)){
                         break;
                     }
-
                     potentialMoves.add(newTile);
 
                 }
