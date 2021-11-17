@@ -663,27 +663,32 @@ public class HiveGameState extends GameState implements Serializable {
             if (x % 2 == 0) {
                 // For even rows
 
-                if (nextTo(tile, gameBoard.get(x - 1).get(y))) {
+                if (nextTo(tile, gameBoard.get(x - 1).get(y), true)) {
                     //Check tile above left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y));
-                } else if (nextTo(tile, gameBoard.get(x - 1).get(y + 1))) {
+                }
+                if (nextTo(tile, gameBoard.get(x - 1).get(y + 1),true )) {
                     //Check tile above right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y + 1));
-                } else if (nextTo(tile, gameBoard.get(x).get(y - 1))) {
+                }
+                if (nextTo(tile, gameBoard.get(x).get(y - 1),true )) {
                     //Check tile to the left of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y - 1));
-                } else if (nextTo(tile, gameBoard.get(x).get(y + 1))) {
+                }
+                if (nextTo(tile, gameBoard.get(x).get(y + 1),true )) {
                     //Check tile to the right of ti is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y + 1));
-                } else if (nextTo(tile, gameBoard.get(x + 1).get(y))) {
+                }
+                if (nextTo(tile, gameBoard.get(x + 1).get(y),true )) {
                     //Check tile below left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y));
-                } else if (nextTo(tile, gameBoard.get(x + 1).get(y + 1))) {
+                }
+                if (nextTo(tile, gameBoard.get(x + 1).get(y + 1),true )) {
                     //Check tile below right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y + 1));
@@ -691,27 +696,32 @@ public class HiveGameState extends GameState implements Serializable {
             } else {
                 // For odd rows
 
-                if (nextTo(tile, gameBoard.get(x - 1).get(y - 1))) {
+                if (nextTo(tile, gameBoard.get(x - 1).get(y - 1),true )) {
                     //Check tile above left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y - 1));
-                } else if (nextTo(tile, gameBoard.get(x - 1).get(y))) {
+                }
+                if (nextTo(tile, gameBoard.get(x - 1).get(y), true)) {
                     //Check tile above right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y));
-                } else if (nextTo(tile, gameBoard.get(x).get(y - 1))) {
+                }
+                if (nextTo(tile, gameBoard.get(x).get(y - 1), true)) {
                     //Check tile to the left of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y - 1));
-                } else if (nextTo(tile, gameBoard.get(x).get(y + 1))) {
+                }
+                if (nextTo(tile, gameBoard.get(x).get(y + 1), true)) {
                     //Check tile to the right of ti is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y + 1));
-                } else if (nextTo(tile, gameBoard.get(x + 1).get(y - 1))) {
+                }
+                if (nextTo(tile, gameBoard.get(x + 1).get(y - 1), true)) {
                     //Check tile below left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y - 1));
-                } else if (nextTo(tile, gameBoard.get(x + 1).get(y))) {
+                }
+                if (nextTo(tile, gameBoard.get(x + 1).get(y), true)) {
                     //Check tile below right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y));
@@ -739,34 +749,39 @@ public class HiveGameState extends GameState implements Serializable {
         if (x % 2 == 0) {
             // For even rows
 
-            if(gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x-1).get(y))){
+            if(gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x-1).get(y), false)){
                 //Check tile above left of tile is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x-1).get(y));
 
-            } else if(gameBoard.get(x-1).get(y+1).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x-1).get(y+1))) {
+            }
+            if(gameBoard.get(x-1).get(y+1).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x-1).get(y+1), false)) {
                 //Check tile above right of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x-1).get(y+1));
-            } else if(gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x).get(y-1))) {
+            }
+            if(gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x).get(y-1),false )) {
                 //Check tile to the left of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x).get(y-1));
-            } else if(gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x).get(y+1))) {
+            }
+            if(gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x).get(y+1), false)) {
                 //Check tile to the right of ti is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x).get(y+1));
-            } else if(gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x+1).get(y))) {
+            }
+            if(gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x+1).get(y),false )) {
                 //Check tile below left of tile is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x+1).get(y));
-            } else if(gameBoard.get(x+1).get(y+1).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x+1).get(y+1))) {
+            }
+            if(gameBoard.get(x+1).get(y+1).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x+1).get(y+1),false )) {
                 //Check tile below right of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x+1).get(y+1));
@@ -774,33 +789,38 @@ public class HiveGameState extends GameState implements Serializable {
         } else {
             // For odd rows
 
-            if(gameBoard.get(x-1).get(y-1).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x-1).get(y-1))){
+            if(gameBoard.get(x-1).get(y-1).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x-1).get(y-1),false )){
                 //Check tile above left of tile is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x-1).get(y-1));
-            } else if(gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x-1).get(y))) {
+            }
+            if(gameBoard.get(x-1).get(y).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x-1).get(y), false)) {
                 //Check tile above right of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x-1).get(y));
-            } else if(gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x).get(y-1))) {
+            }
+            if(gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x).get(y-1), false)) {
                 //Check tile to the left of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x).get(y-1));
-            } else if(gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x).get(y+1))) {
+            }
+            if(gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x).get(y+1),false )) {
                 //Check tile to the right of ti is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x).get(y+1));
-            } else if(gameBoard.get(x+1).get(y-1).getType() == Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x+1).get(y-1))) {
+            }
+            if(gameBoard.get(x+1).get(y-1).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x+1).get(y-1), false)) {
                 //Check tile below left of tile is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x+1).get(y-1));
-            } else if(gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY &&
-                    nextTo(tile, gameBoard.get(x+1).get(y))) {
+            }
+            if(gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY &&
+                    nextTo(tile, gameBoard.get(x+1).get(y),false )) {
                 //Check tile below right of til is empty and nextTo
                 //If true, add tile to ArrayList<Tile> potentials
                 potentialMoves.add(gameBoard.get(x+1).get(y));
@@ -1105,9 +1125,10 @@ public class HiveGameState extends GameState implements Serializable {
      *
      * @param selectedTile the tile the player wishes to move
      * @param tile the tile to be checked against
+     * @param isBeetle
      * @return
      */
-    public boolean nextTo(Tile selectedTile, Tile tile) {
+    public boolean nextTo(Tile selectedTile, Tile tile, boolean isBeetle) {
         if (tile.getType() == Tile.Bug.EMPTY) {
             // Assign tile coordinates to integer values for ease of handling
             int x = tile.getIndexX();
@@ -1116,27 +1137,32 @@ public class HiveGameState extends GameState implements Serializable {
             if (x % 2 == 0) {
                 // For even rows
 
-                if(gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY &&
+                if((isBeetle || gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x-1).get(y) != selectedTile){
                     //Check tile above left of tile
                     return true;
-                } else if(gameBoard.get(x-1).get(y+1).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x-1).get(y+1).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x-1).get(y+1) != selectedTile) {
                     //Check tile above right of tile
                     return true;
-                } else if(gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x).get(y-1) != selectedTile) {
                     //Check tile to the left of tile
                     return true;
-                } else if(gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x).get(y+1) != selectedTile) {
                     //Check tile to the right of tile
                     return true;
-                } else if(gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x+1).get(y) != selectedTile) {
                     //Check tile below left of tile
                     return true;
-                } else if(gameBoard.get(x+1).get(y+1).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x+1).get(y+1).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x+1).get(y+1) != selectedTile) {
                     //Check tile below right of tile
                     return true;
@@ -1144,27 +1170,32 @@ public class HiveGameState extends GameState implements Serializable {
                 } else {
                 // For odd rows
 
-                if(gameBoard.get(x-1).get(y-1).getType() != Tile.Bug.EMPTY &&
+                if((isBeetle || gameBoard.get(x-1).get(y-1).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x-1).get(y-1) != selectedTile ){
                     //Check tile above left of tile
                     return true;
-                } else if(gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x-1).get(y) != selectedTile ) {
                     //Check tile above right of tile
                     return true;
-                } else if(gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x).get(y-1) != selectedTile ) {
                     //Check tile to the left of tile
                     return true;
-                } else if(gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x).get(y+1) != selectedTile ) {
                     //Check tile to the right of tile
                     return true;
-                } else if(gameBoard.get(x+1).get(y-1).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x+1).get(y-1).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x+1).get(y-1) != selectedTile) {
                     //Check tile below left of tile
                     return true;
-                } else if(gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY &&
+                }
+                if((isBeetle || gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY ) &&
                         gameBoard.get(x+1).get(y) != selectedTile) {
                     //Check tile below right of tile
                     return true;

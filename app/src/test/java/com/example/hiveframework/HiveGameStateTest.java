@@ -97,10 +97,48 @@ public class HiveGameStateTest {
     public void selectTile() {
     }
 
+    //Tests beetlesearch functionality -Ali
     @Test
     public void beetleSearch() {
+        HiveGameState gameState = new HiveGameState();
+        //Create a board with 5, 2 the Queen to be moved
+        for (int i = 2; i < 4; i++) {
+            for (int j = 3; j < 6; j++) {
+                if (i == 2) {
+                    Tile blackTile = new Tile(i, j, Tile.PlayerPiece.B);
+                    if (j == 3) {
+                        blackTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        blackTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        blackTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(blackTile);
+                } else {
+                    Tile whiteTile = new Tile(i, j, Tile.PlayerPiece.W);
+                    if (j == 3) {
+                        whiteTile.setType(Tile.Bug.BEETLE);
+                    } else if (j == 4) {
+                        whiteTile.setType(Tile.Bug.GRASSHOPPER);
+                    } else {
+                        whiteTile.setType(Tile.Bug.QUEEN_BEE);
+                    }
+                    gameState.addTile(whiteTile);
+                }
+            }
+        }
+
+        boolean movePossible = gameState.beetleSearch(gameState.getTile(3, 3));
+        Tile.Bug piece = gameState.getTile(3,3).getType();
+         assertEquals(Tile.Bug.BEETLE, piece);
+        int xCoord = gameState.getPotentialMoves().get(0).getIndexX();
+        int yCoord = gameState.getPotentialMoves().get(0).getIndexY();
+        int potentialSize = gameState.getPotentialMoves().size();
+
+        assertEquals(4, potentialSize);
     }
 
+    //Tests queensearch for functionality --Ali
     @Test
     public void queenSearch() {
         HiveGameState gameState = new HiveGameState();
@@ -133,9 +171,9 @@ public class HiveGameStateTest {
 
         boolean movePossible = gameState.queenSearch(gameState.getTile(3, 5));
         Tile.Bug piece = gameState.getTile(3,5).getType();
-        assertEquals(Tile.Bug.QUEEN_BEE, piece);
-//        int xCoord = gameState.getPotentialMoves().get(0).getIndexX();
-//        int yCoord = gameState.getPotentialMoves().get(0).getIndexY();
+//        assertEquals(Tile.Bug.QUEEN_BEE, piece);
+        int xCoord = gameState.getPotentialMoves().get(0).getIndexX();
+        int yCoord = gameState.getPotentialMoves().get(0).getIndexY();
         int potentialSize = gameState.getPotentialMoves().size();
 
         assertEquals(2, potentialSize);
@@ -241,7 +279,7 @@ public class HiveGameStateTest {
             }
         }
 
-        boolean isNextTo = gameState.nextTo(gameState.getTile(2,5), gameState.getTile(3,6));
+        boolean isNextTo = gameState.nextTo(gameState.getTile(2,5), gameState.getTile(3,6), false);
         assertTrue(isNextTo);
         assertEquals(gameState.getTile(3,5).getType(), Tile.Bug.QUEEN_BEE);
     }
