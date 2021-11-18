@@ -154,7 +154,7 @@ public class HiveLocalGame extends LocalGame {
                 if(hiveState.getPlacedPiece()){ //already placed a piece this turn :(
                     return false;
                 }
-                
+
                 if(select.getX() > -1){ //selecting from the game board
                     //get oldX and oldY and determine what tile they correspond to, then call gameState validMove on those
                     oldX = (int) select.getX();
