@@ -141,6 +141,7 @@ public class HiveLocalGame extends LocalGame {
             //HiveUndoTurnAction undoTurnAction = (HiveUndoTurnAction) action;
             //HiveGameState undoTurn = undoTurnAction.getStartTurn();
             hiveState = new HiveGameState(hiveState.getUndoTurn());
+            hiveState.setPlacedPiece(false);
             return true;
         }
         if(canMove(playerId)) {
@@ -150,6 +151,10 @@ public class HiveLocalGame extends LocalGame {
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
                 select = (HiveSelectAction) action;
 
+                if(hiveState.getPlacedPiece()){ //already placed a piece this turn :(
+                    return false;
+                }
+                
                 if(select.getX() > -1){ //selecting from the game board
                     //get oldX and oldY and determine what tile they correspond to, then call gameState validMove on those
                     oldX = (int) select.getX();
