@@ -1146,39 +1146,39 @@ public class HiveGameState extends GameState implements Serializable {
         // The tile the spider is on
         int row = spider.getIndexX();
         int col = spider.getIndexY();
+        //gameBoard.get(row).set(col, new Tile(row, col, spider.getPlayerPiece())); //overwrite where the spider was with an empty tile temporarily
 
         for (int s1 = row - 1; s1 < row + 2; s1++) {
             for (int j1 = col - 1; j1 < col + 2; j1++) {
-                //if (s1 == row - 1 || s1 == row + 1 || j1 == col - 1 || j1 == col + 1) { //if a tile is three spaces away and valid to move to then go for it!
                     Tile tile1Away = getTile(s1, j1);
                     if (tile1Away != null) {
-                        if (nextTo(spider, tile1Away, false)) {
-                            //potentialMoves.add(tile1Away);
+                        if (tile1Away.getType() == Tile.Bug.EMPTY &&
+                                nextTo(spider, tile1Away, false)) {
 
                             for (int s2 = s1 - 1; s2 < s1 + 2; s2++) { //now look for next tile to search on
                                 for (int j2 = j1 - 1; j2 < j1 + 2; j2++) {
-                                    //if (s2 == s1 - 1 || s2 == s1 + 1 || j2 == j1 - 1 || j2 == j2 + 1) {
+
                                         Tile tile2Away = getTile(s2, j2);
                                         if (tile2Away != null) {
-                                            if (nextTo(tile2Away, tile1Away, false)) {
+                                            if (tile2Away.getType() == Tile.Bug.EMPTY &&
+                                                    nextTo(tile1Away, tile2Away, false) && !breakHive(tile2Away, true) &&
+                                            tile2Away.getIndexX() != spider.getIndexX() && tile2Away.getIndexY() != spider.getIndexY()) {
 
                                                 for (int s3 = s2 - 1; s3 < s2 + 2; s3++) { //now look for next tile to search on
                                                     for (int j3 = j2 - 1; j3 < j2 + 2; j3++) {
 
-                                                        //if (s2 == s1 - 1 || s2 == s1 + 1 || j2 == j1 - 1 || j2 == j2 + 1) {
-                                                        Tile tile3Away = getTile(s2, j2);
+                                                        Tile tile3Away = getTile(s3, j3);
                                                         if (tile3Away != null) {
-                                                            if (nextTo(tile3Away, tile1Away, false) &&
-                                                                    tile3Away.getIndexX() != tile1Away.getIndexX() && tile3Away.getIndexY() != tile1Away.getIndexY()) {
+                                                            if (tile3Away.getType() == Tile.Bug.EMPTY && nextTo(tile2Away, tile3Away, false)
+                                                                    && !breakHive(tile3Away, true) &&
+                                                                    tile3Away.getIndexX() != spider.getIndexX() && tile3Away.getIndexY() != spider.getIndexY()) {
                                                                 potentialMoves.add(tile3Away);
                                                             }
                                                         }
-                                                        //}
                                                     }
                                                 } // 3 away for loop
                                             }
                                         }
-                                    //}
                                 }
                             } // 2 away for loop
 
@@ -1207,6 +1207,10 @@ public class HiveGameState extends GameState implements Serializable {
             // Assign tile coordinates to integer values for ease of handling
             int x = tile.getIndexX();
             int y = tile.getIndexY();
+            if(getTile(x-1, y) == null || getTile(x, y-1) == null
+                    || getTile(x + 1, y) == null || getTile(x, y + 1) == null){
+                return false; //on the edge
+            }
 
             if (x % 2 == 0) {
                 // For even rows
@@ -1727,7 +1731,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return the tile if it is within the limits of the gameboard, otherwise null
      */
     public Tile getTile(int x, int y){
-        if(x > gameBoard.size() || y > gameBoard.size() * 2 || x < 0 || y < 0){
+        if(x >= gameBoard.size() || y >= gameBoard.size() * 2 || x < 0 || y < 0){
             return null;
         }
         return gameBoard.get(x).get(y);
