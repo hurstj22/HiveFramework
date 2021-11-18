@@ -307,14 +307,15 @@ public class HiveGameState extends GameState implements Serializable {
                     handPieces += piece;
                 }
             }
-            for(int i = 0; i < gameBoard.size(); i++) {
-                for (int j = 0; j < gameBoard.size() * 2; j++) {
-                    if(!gameBoard.get(i).get(j).getVisited() && gameBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
+            for(int i = 0; i < testBoard.size(); i++) {
+                for (int j = 0; j < testBoard.size() * 2; j++) {
+                    if(!testBoard.get(i).get(j).getVisited() && testBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
                         Log.i("BFS: ", "Found a tile that wasn't connected");
-                        return false; //We didn't visit a tile during bfs
+                        return true; //We didn't visit a tile during bfs
                     }
                 }
             }
+            return false; //reached this spot and didn't find a piece that wasn't visited. Hive wasn't broken
 
             //if(countVisited == totalPieces - handPieces) { //there are 22 total pieces, 21 counting the piece taken out
             //    return false; //if the board can be traversed with bfs and all

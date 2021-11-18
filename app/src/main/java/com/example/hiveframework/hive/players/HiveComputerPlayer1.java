@@ -81,8 +81,11 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private Tile randomTileFromPotentials() {
         //need to create a random tile, then call isValid on the tile
         if(potentialMoves != null){
-            int pick = randPick.nextInt(potentialMoves.size());
-            return potentialMoves.get(pick);
+            int sizeOfList = potentialMoves.size() - 1;
+            if(sizeOfList > -1) {
+                int pick = randPick.nextInt(potentialMoves.size());
+                return potentialMoves.get(pick);
+            }
         }
         return null; //if there's nothing in the potentials throw back null
     }
