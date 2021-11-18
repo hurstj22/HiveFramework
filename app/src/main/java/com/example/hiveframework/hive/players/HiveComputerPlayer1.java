@@ -55,6 +55,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private EndTurnAction endTurn = new EndTurnAction(this);
     private Tile.Bug[] bugArray; //holds the type of all the bugs possible to play for the computer to select from
     private Random whatAmIDoingToday = new Random();
+    private boolean played = false;
 
     /**
      * picks a random tile from the getComputerTiles() arrayList
@@ -131,6 +132,12 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             if (this.playerNum != hiveGame.getWhoseTurn()) {
                 return; //not you're turn
             }
+            if(played){
+                played = false;
+                game.sendAction(endTurn);
+                return;
+            }
+
             int computersMove = 0;
             if(hiveGame.getComputerPlayersTiles().size() > 2){ //there's tiles on the board, so I got options :)
                 computersMove = whatAmIDoingToday.nextInt(6);
@@ -154,6 +161,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 Log.i(TAG, "receiveInfo: potentials was empty:");
                                 sleep(2);
 
+                                played = true;
                                 game.sendAction(endTurn); //ends the turn if there's nothing valid to do
                                 return; //there's nothing in the potentials list
                             } else { //yay we have things we can do
@@ -169,6 +177,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 moveAction.setComputerMove(true);
                                 sleep(2);
 
+                                played = true;
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
                             }
                         }Log.i(TAG, "this was not a valid move");
@@ -180,6 +189,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         Log.i(TAG,"There's not enough pieces for me to move around the board yet");
                         sleep(2);
 
+                        played = true;
                         game.sendAction(endTurn);
                         return;
                     }
@@ -221,6 +231,8 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                             moveAction.setCurrentTile(random); //this is the tile that's moving
                             moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers, to be used in hiveLocalGame
                             moveAction.setComputerMove(true); //tell the game the computer is moving
+
+                            played = true;
                             game.sendAction(moveAction);
                         }
                     }
@@ -232,6 +244,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         if (hiveGame.getPotentialMoves().size()  < 1)
                         sleep(2);
                     }
+                    played = false;
                     game.sendAction(endTurn);
                     return;
             }
