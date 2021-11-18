@@ -201,6 +201,7 @@ public class HiveLocalGame extends LocalGame {
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
                         move.getCurrentTile().setIndexX((int) move.getX()); //update the x and y indices
                         move.getCurrentTile().setIndexY((int) move.getY());
+
                         hiveState.addComputerPlayersTiles(move.getCurrentTile()); //now add it to the arrayList kept in the gameState of all computer tiles
                         move.setComputerMove(false); //reset the computer since it tried to make a move
                         return true; //computer was able to make the move
@@ -217,6 +218,7 @@ public class HiveLocalGame extends LocalGame {
                     }
                 }
             }
+            Log.i("makeMove", "Unable to perform requested move*****");
             // return false, indicating there wasn't any legal move
             return false;
         }

@@ -1462,6 +1462,7 @@ public class HiveGameState extends GameState implements Serializable {
         oldTileCords[0] = moveTile.getIndexX();
         oldTileCords[1] = moveTile.getIndexY();
         if(newXIndex >= gameBoard.size() || newYIndex >= gameBoard.size() * 2){
+            potentialMoves.clear();
             return false; //out of bounds!
         }
         //if potentialMoves holds tile at newPosition then swap
@@ -1486,12 +1487,13 @@ public class HiveGameState extends GameState implements Serializable {
 
             //on top of something so don't make new empty tile
             else {
+
                 gameBoard.get(newXIndex).set(newYIndex, moveTile);
             }
-            potentialMoves = new ArrayList<Tile>(); //reset potentialMoves
+            potentialMoves.clear(); //reset potentialMoves
             return true;
         }
-        potentialMoves = new ArrayList<Tile>(); //reset potentialMoves
+        potentialMoves.clear(); //reset potentialMoves
        return false;
     }
     /**
