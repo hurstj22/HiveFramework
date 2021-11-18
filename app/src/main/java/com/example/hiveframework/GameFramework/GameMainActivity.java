@@ -168,8 +168,8 @@ public abstract class GameMainActivity extends Activity implements
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Making rules button possible
-        mImageView = findViewById(R.id.rulesButton);
-        mImageView.setImageResource(R.drawable.rules);
+//        mImageView = findViewById(R.id.rulesButton);
+//        mImageView.setImageResource(R.drawable.rules);
 
 
         //Set Context for Toast Logging

@@ -80,7 +80,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     private Button playButton = null;
     private Button quitButton = null;
-    private Button rulesButton = null;
+    private ImageView rulesButton = null;
     private Button endTurnButton = null;
     private Button undoButton = null;
 
@@ -214,7 +214,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         //Initialize the widget reference member variables declared at the top
         playButton = (Button)activity.findViewById(R.id.playButton);
         quitButton = (Button)activity.findViewById(R.id.quitButton);
-        rulesButton = (Button)activity.findViewById(R.id.rulesButton);
         endTurnButton = (Button)activity.findViewById(R.id.endTurnButton);
         undoButton = (Button)activity.findViewById(R.id.undoButton);
 
@@ -256,6 +255,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         antP2Image.setImageResource(R.drawable.anthexcropped);
         grasshopperP2Image = (ImageButton)activity.findViewById(R.id.grasshopperP2Image);
         grasshopperP2Image.setImageResource(R.drawable.grasshopperhexcropped);
+
+        //rules display
+        rulesButton = (ImageView)activity.findViewById(R.id.rulesButton);
 
         // set the surfaceView instance variable
         surfaceView = (HiveSurfaceView)myActivity.findViewById(R.id.hiveSurfaceView);
