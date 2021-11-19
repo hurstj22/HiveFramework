@@ -545,6 +545,10 @@ public class HiveGameStateTest {
     public void boundsCheck() {
     }
 
+    /**
+     * TO test if function catches win condition
+     * Written by Isaac Reinhard
+     */
     @Test
     public void winOrNah(){
         HiveGameState gameState = new HiveGameState();
