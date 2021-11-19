@@ -1052,12 +1052,12 @@ public class HiveGameState extends GameState implements Serializable {
         }
         return false;
     }
+
     /** ant tile movement: determines if the ant tile is on edge
      * @param tile the ant tile coming in
-     *  x location as indexX
-     *  y location as indexY
      * @return should always return false.
      */
+
     private boolean antValidMove(Tile tile) {
 
         int x = tile.getIndexX();
@@ -1072,15 +1072,7 @@ public class HiveGameState extends GameState implements Serializable {
         ArrayList<Tile> checkedTiles = new ArrayList<>();
         checkedTiles.add(tile); //do not check current tile again //error could be local variable
         if ( x % 2 == 0 ) {
-            //if the tile is on an even row
-            //check if the surrounding tile is empty and if it is connected to the hive
-            //if it is, recursive call and check
-            //Check tile to the above left
-            /*if (nextTo(tile, gameBoard.get(x-1).get(y), false)) {
-                if (antSearch(gameBoard.get(x-1).get(y), checkedTiles));
-                antValidMove(gameBoard.get(x-1).get(y));
-                valid = true;
-            }*/
+
             if (nextTo(tile, gameBoard.get(x-1).get(y), false)) {
                 antSearch(gameBoard.get(x-1).get(y), checkedTiles);
                 //antValidMove(gameBoard.get(x-1).get(y));
@@ -1170,11 +1162,7 @@ public class HiveGameState extends GameState implements Serializable {
             //check if the surrounding tile is empty and if it is connected to the hive
             //if it is, recursive call and check
             //Check tile to the above left
-            /*if (nextTo(tile, gameBoard.get(x-1).get(y), false)) {
-                if (antSearch(gameBoard.get(x-1).get(y), checkedTiles));
-                antValidMove(gameBoard.get(x-1).get(y));
-                valid = true;
-            }*/
+
             if (nextTo(tile, gameBoard.get(x-1).get(y), false)) {
                 antSearch(gameBoard.get(x-1).get(y), checkedTiles);
                 //antValidMove(gameBoard.get(x-1).get(y));
