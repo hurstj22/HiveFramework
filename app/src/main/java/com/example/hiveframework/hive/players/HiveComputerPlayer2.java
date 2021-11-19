@@ -5,6 +5,7 @@ import android.widget.ImageButton;
 
 import com.example.hiveframework.GameFramework.actionMessage.EndTurnAction;
 import com.example.hiveframework.GameFramework.infoMessage.GameInfo;
+import com.example.hiveframework.GameFramework.infoMessage.NotYourTurnInfo;
 import com.example.hiveframework.GameFramework.players.GameComputerPlayer;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.hive.HiveGameState;
@@ -43,6 +44,8 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
     private EndTurnAction endTurn = new EndTurnAction(this);
     private Tile.Bug[] bugArray; //holds the type of all the bugs possible to play for the computer to select from
     private Random whatAmIDoingToday = new Random();
+
+    private boolean played = false;
 
     /**
      * picks a random tile from the getComputerTiles() arrayList
@@ -107,9 +110,9 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
      * Receives all information for the computer player to place a tile on the board
      */
     protected void receiveInfo(GameInfo info) {
-        Log.d(TAG, "receiveInfo: receivng for computer");
+        //Log.d(TAG, "receiveInfo: receivng for computer");
 
-        if(info == null){
+        if(info == null || info instanceof NotYourTurnInfo){
             Log.d(TAG, "receiveInfo: info is null and returning ");
             return;
         }
@@ -117,16 +120,20 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
         if(info instanceof HiveGameState) {
             hiveGame =  new HiveGameState((HiveGameState) info);
 
-            Log.d(TAG, "receiveInfo: player is " + this.playerNum);
-            Log.d(TAG, "receiveInfo: line 121 turn is " + hiveGame.getWhoseTurn());
-            Log.d(TAG, "pm: "+ potentialMoves);
+            //Log.d(TAG, "receiveInfo: player is " + this.playerNum);
+            //Log.d(TAG, "receiveInfo: line 121 turn is " + hiveGame.getWhoseTurn());
+            //Log.d(TAG, "pm: "+ potentialMoves);
             if (this.playerNum != hiveGame.getWhoseTurn()) {
                 Log.i(TAG, "receiveInfo: NOT YOUR TURN");
                 Log.i(TAG, "receiveInfo: this.playerNum:"+ this.playerNum);
                 Log.i(TAG, "receiveInfo: hiveGame.whoseTurn:" + hiveGame.getWhoseTurn());
                 return; //not you're turn
             }
-
+            if(played){
+                played = false;
+                game.sendAction(endTurn);
+                return;
+            }
             Log.d(TAG, "receiveInfo: it is comps turn ");
             //need to create a random tile, then call isValid on the tile
             int computersMove = 0;
@@ -146,11 +153,9 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
                             potentialMoves = hiveGame.getPotentialMoves();
                             if (potentialMoves == null || potentialMoves.size() <= 0) { //if for some reason there was nothing to do with that Tile then end your turn :(
                                 Log.i(TAG, "receiveInfo: potentials was empty:");
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+
+                                sleep(2);
+                                played = false;
                                 game.sendAction(endTurn); //ends the turn if there's nothing valid to do
                                 return; //there's nothing in the potentials list
                             } else { //yay we have things we can do
@@ -164,31 +169,25 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
                                 moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers
                                 // so that the gameState can be updated later in the HiveLocalGame
                                 moveAction.setComputerMove(true);
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                                sleep(2);
+                                played = true;
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
+                                return;
                             }
                         }
                     }
                     break;
                 case 1: //The computer player decides to skip their turn
                     Log.i(TAG,"Today I will skip my turn");
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    sleep(2);
+                    played = false;
                     game.sendAction(endTurn);
                     return;
             }
+            played = false;
             game.sendAction(endTurn); //ends the turn if there's nothing valid to do
             return;
         }
-        game.sendAction(endTurn);
-        return;
     }
 
 }

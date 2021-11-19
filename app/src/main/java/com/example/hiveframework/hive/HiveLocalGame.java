@@ -141,6 +141,7 @@ public class HiveLocalGame extends LocalGame {
             //HiveUndoTurnAction undoTurnAction = (HiveUndoTurnAction) action;
             //HiveGameState undoTurn = undoTurnAction.getStartTurn();
             hiveState = new HiveGameState(hiveState.getUndoTurn());
+            hiveState.setPlacedPiece(false);
             return true;
         }
         if(canMove(playerId)) {
@@ -149,6 +150,10 @@ public class HiveLocalGame extends LocalGame {
 
             if (action instanceof HiveSelectAction) { //if we were passed a request to select from board or hand
                 select = (HiveSelectAction) action;
+
+                if(hiveState.getPlacedPiece()){ //already placed a piece this turn :(
+                    return false;
+                }
 
                 if(select.getX() > -1){ //selecting from the game board
                     //get oldX and oldY and determine what tile they correspond to, then call gameState validMove on those
@@ -201,6 +206,7 @@ public class HiveLocalGame extends LocalGame {
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
                         move.getCurrentTile().setIndexX((int) move.getX()); //update the x and y indices
                         move.getCurrentTile().setIndexY((int) move.getY());
+
                         hiveState.addComputerPlayersTiles(move.getCurrentTile()); //now add it to the arrayList kept in the gameState of all computer tiles
                         move.setComputerMove(false); //reset the computer since it tried to make a move
                         return true; //computer was able to make the move
@@ -217,6 +223,7 @@ public class HiveLocalGame extends LocalGame {
                     }
                 }
             }
+            Log.i("makeMove", "Unable to perform requested move*****");
             // return false, indicating there wasn't any legal move
             return false;
         }

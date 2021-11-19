@@ -7,6 +7,7 @@ import com.example.hiveframework.GameFramework.GameMainActivity;
 import com.example.hiveframework.GameFramework.actionMessage.EndTurnAction;
 import com.example.hiveframework.GameFramework.infoMessage.GameInfo;
 import com.example.hiveframework.GameFramework.infoMessage.IllegalMoveInfo;
+import com.example.hiveframework.GameFramework.infoMessage.NotYourTurnInfo;
 import com.example.hiveframework.GameFramework.players.GameComputerPlayer;
 import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.hive.HiveGameState;
@@ -54,6 +55,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private EndTurnAction endTurn = new EndTurnAction(this);
     private Tile.Bug[] bugArray; //holds the type of all the bugs possible to play for the computer to select from
     private Random whatAmIDoingToday = new Random();
+    private boolean played = false;
 
     /**
      * picks a random tile from the getComputerTiles() arrayList
@@ -79,8 +81,11 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private Tile randomTileFromPotentials() {
         //need to create a random tile, then call isValid on the tile
         if(potentialMoves != null){
-            int pick = randPick.nextInt(potentialMoves.size());
-            return potentialMoves.get(pick);
+            int sizeOfList = potentialMoves.size() - 1;
+            if(sizeOfList > -1) {
+                int pick = randPick.nextInt(potentialMoves.size());
+                return potentialMoves.get(pick);
+            }
         }
         return null; //if there's nothing in the potentials throw back null
     }
@@ -121,7 +126,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
      */
     protected void receiveInfo(GameInfo info) {
 
-        if(info == null){
+        if(info == null || info instanceof NotYourTurnInfo){
             return;
         }
 
@@ -130,6 +135,12 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             if (this.playerNum != hiveGame.getWhoseTurn()) {
                 return; //not you're turn
             }
+            if(played){
+                played = false;
+                game.sendAction(endTurn);
+                return;
+            }
+
             int computersMove = 0;
             if(hiveGame.getComputerPlayersTiles().size() > 2){ //there's tiles on the board, so I got options :)
                 computersMove = whatAmIDoingToday.nextInt(6);
@@ -151,11 +162,9 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                             potentialMoves = hiveGame.getPotentialMoves();
                             if (potentialMoves == null || potentialMoves.size() <= 0) { //if for some reason there was nothing to do with that Tile then end your turn :(
                                 Log.i(TAG, "receiveInfo: potentials was empty:");
-                                try {
-                                    Thread.sleep(1500);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                                sleep(2);
+
+                                played = true;
                                 game.sendAction(endTurn); //ends the turn if there's nothing valid to do
                                 return; //there's nothing in the potentials list
                             } else { //yay we have things we can do
@@ -169,11 +178,9 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers
                                                                                     // so that the gameState can be updated later in the HiveLocalGame
                                 moveAction.setComputerMove(true);
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                                sleep(2);
+
+                                played = true;
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
                             }
                         }Log.i(TAG, "this was not a valid move");
@@ -183,11 +190,9 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     Log.i(TAG,"I'm trying to play from the board");
                     if(hiveGame.getComputerPlayersTiles().size() < 3){ //only move things on the board if there's several pieces there
                         Log.i(TAG,"There's not enough pieces for me to move around the board yet");
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        sleep(2);
+
+                        played = true;
                         game.sendAction(endTurn);
                         return;
                     }
@@ -229,6 +234,8 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                             moveAction.setCurrentTile(random); //this is the tile that's moving
                             moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers, to be used in hiveLocalGame
                             moveAction.setComputerMove(true); //tell the game the computer is moving
+
+                            played = true;
                             game.sendAction(moveAction);
                         }
                     }
@@ -238,14 +245,9 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     if( hiveGame.getPotentialMoves() != null)
                     {
                         if (hiveGame.getPotentialMoves().size()  < 1)
-                        {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        sleep(2);
                     }
+                    played = false;
                     game.sendAction(endTurn);
                     return;
             }
@@ -253,8 +255,6 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             game.sendAction(endTurn); //ends the turn if there's nothing valid to do
             return;
         }
-        game.sendAction(endTurn);
-        return;
     }
 
     //setter and getters for instance variables

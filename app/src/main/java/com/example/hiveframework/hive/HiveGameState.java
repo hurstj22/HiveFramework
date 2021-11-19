@@ -1,6 +1,8 @@
 package com.example.hiveframework.hive;
 
 
+import android.util.Log;
+
 import com.example.hiveframework.GameFramework.infoMessage.GameState;
 
 import java.io.Serializable;
@@ -305,11 +307,21 @@ public class HiveGameState extends GameState implements Serializable {
                     handPieces += piece;
                 }
             }
-            if(countVisited >= totalPieces - handPieces) { //there are 22 total pieces, 21 counting the piece taken out
-                return false; //if the board can be traversed with bfs and all
-                            //tiles on the boardhave been denoted as visited then
-                            //return false the hive has NOT been broken
+            for(int i = 0; i < testBoard.size(); i++) {
+                for (int j = 0; j < testBoard.size() * 2; j++) {
+                    if(!testBoard.get(i).get(j).getVisited() && testBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
+                        Log.i("BFS: ", "Found a tile that wasn't connected");
+                        return true; //We didn't visit a tile during bfs
+                    }
+                }
             }
+            return false; //reached this spot and didn't find a piece that wasn't visited. Hive wasn't broken
+
+            //if(countVisited == totalPieces - handPieces) { //there are 22 total pieces, 21 counting the piece taken out
+            //    return false; //if the board can be traversed with bfs and all
+            //                //tiles on the boardhave been denoted as visited then
+             //               //return false the hive has NOT been broken
+            //}
         }
         return true; //hive will break, can't move piece
     }
@@ -337,7 +349,7 @@ public class HiveGameState extends GameState implements Serializable {
                 //RU: (row--, col++), RM: (row, col++), RD: (row++, col++)
 
                 //Queue all possible valid neighbors
-                if (isValidBFS(board.get(x - 1).get(y))) { //LU
+                if (ib(x-1, y) && isValidBFS(board.get(x - 1).get(y))) { //LU
                     //Check tile above left of tile
                     tileQueue.offer(board.get(x - 1).get(y));
                     bfs(x - 1, y, board); //call bfs on neighbor
@@ -407,6 +419,14 @@ public class HiveGameState extends GameState implements Serializable {
             }
         }
         return countVisited;
+    }
+
+    public boolean ib(int x, int y){
+        if(x < 0 || y < 0 ||
+                x >= gameBoard.size() || y >= gameBoard.size() * 2){
+            return false; //out of bounds
+        }
+        return true;
     }
 
     /**
@@ -1056,70 +1076,77 @@ public class HiveGameState extends GameState implements Serializable {
             //check if the surrounding tile is empty and if it is connected to the hive
             //if it is, recursive call and check
             //Check tile to the above left
-            if (nextTo(tile, gameBoard.get(x-1).get(y) , false)) {
+            /*if (nextTo(tile, gameBoard.get(x-1).get(y), false)) {
                 if (antSearch(gameBoard.get(x-1).get(y), checkedTiles));
                 antValidMove(gameBoard.get(x-1).get(y));
                 valid = true;
+            }*/
+            if (nextTo(tile, gameBoard.get(x-1).get(y), false)) {
+                antSearch(gameBoard.get(x-1).get(y), checkedTiles);
+                //antValidMove(gameBoard.get(x-1).get(y));
+                valid = true;
             }
+
             //Check the tile to the above right
-            if (gameBoard.get(x-1).get(y+1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y + 1), false)) {
+            if (nextTo(tile, gameBoard.get(x-1).get(y+1), false)) {
                 antSearch(gameBoard.get(x-1).get(y+1), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the left
-            if (gameBoard.get(x).get(y-1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y - 1), false)) {
+            if (nextTo(tile, gameBoard.get(x).get(y - 1), false))  {
                 antSearch(gameBoard.get(x).get(y-1), checkedTiles);
                 valid = true;
             }
             //Check the tile to the above right
-            if (gameBoard.get(x).get(y+1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y + 1), false)) {
+            if (nextTo(tile, gameBoard.get(x).get(y + 1), false)) {
                 antSearch(gameBoard.get(x).get(y+1), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the below left
-            if (gameBoard.get(x+1).get(y-1).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y - 1), false)) {
+            if (nextTo(tile, gameBoard.get(x + 1).get(y - 1), false)) {
                 antSearch(gameBoard.get(x+1).get(y-1), checkedTiles);
                 valid = true;
             }
             //Check the tile to the above right
-            if (gameBoard.get(x+1).get(y).getType() == Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y), false)) {
+            if (nextTo(tile, gameBoard.get(x + 1).get(y), false)) {
                 antSearch(gameBoard.get(x+1).get(y), checkedTiles);
                 valid = true;
             }
-        } else {
+        }
+        else {
             //if the tile is on an odd row
             //Check tile to the above left
-            if (gameBoard.get(x-1).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y - 1), false)) {
+            if (nextTo(tile, gameBoard.get(x - 1).get(y - 1), false)) {
                 antSearch(gameBoard.get(x-1).get(y-1), checkedTiles);
                 valid = true;
             }
             //Check the tile to the above right
-            if (gameBoard.get(x-1).get(y).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x - 1).get(y), false)) {
+            if (nextTo(tile,gameBoard.get(x - 1).get(y),false)) {
                 antSearch(gameBoard.get(x-1).get(y), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the left
-            if (gameBoard.get(x).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y - 1), false)) {
+            if (nextTo(tile, gameBoard.get(x).get(y - 1), false)) {
                 antSearch(gameBoard.get(x).get(y-1), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the right
-            if (gameBoard.get(x).get(y+1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x).get(y + 1), false)) {
+            if (nextTo(tile,gameBoard.get(x).get(y + 1),false)) {
                 antSearch(gameBoard.get(x).get(y+1), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the below left
-            if (gameBoard.get(x+1).get(y-1).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y -1), false)) {
+            if (nextTo(tile, gameBoard.get(x + 1).get(y - 1), false)) {
                 antSearch(gameBoard.get(x+1).get(y-1), checkedTiles);
                 valid = true;
             }
 
-            if (gameBoard.get(x+1).get(y).getType() != Tile.Bug.EMPTY && breakHive(gameBoard.get(x + 1).get(y), false)) {
+            if (nextTo(tile, gameBoard.get(x + 1).get(y), false)) {
                 antSearch(gameBoard.get(x+1).get(y), checkedTiles);
                 valid = true;
             }
@@ -1127,15 +1154,95 @@ public class HiveGameState extends GameState implements Serializable {
 
         return valid;
     }
-    private boolean antSearch(Tile tile, ArrayList<Tile> checkedTiles){
+    private void antSearch(Tile tile, ArrayList<Tile> checkedTiles){
         if(containsTile(checkedTiles, tile)) { //is not in checked tiles, will add it to check then add to potential moves
             checkedTiles.add(tile);
             potentialMoves.add(tile); //never calls itself not recursive
-            return true;
-        }
-        else
-            return false;
 
+        }
+        else {
+            return;
+        }
+        int x = tile.getIndexX();
+        int y = tile.getIndexY();
+        if ( x % 2 == 0 ) {
+            //if the tile is on an even row
+            //check if the surrounding tile is empty and if it is connected to the hive
+            //if it is, recursive call and check
+            //Check tile to the above left
+            /*if (nextTo(tile, gameBoard.get(x-1).get(y), false)) {
+                if (antSearch(gameBoard.get(x-1).get(y), checkedTiles));
+                antValidMove(gameBoard.get(x-1).get(y));
+                valid = true;
+            }*/
+            if (nextTo(tile, gameBoard.get(x-1).get(y), false)) {
+                antSearch(gameBoard.get(x-1).get(y), checkedTiles);
+                //antValidMove(gameBoard.get(x-1).get(y));
+
+            }
+
+            //Check the tile to the above right
+            if (nextTo(tile, gameBoard.get(x-1).get(y+1), false)) {
+                antSearch(gameBoard.get(x-1).get(y+1), checkedTiles);
+            }
+
+            //Check the tile to the left
+            if (nextTo(tile, gameBoard.get(x).get(y - 1), false))  {
+                antSearch(gameBoard.get(x).get(y-1), checkedTiles);
+            }
+            //Check the tile to the above right
+            if (nextTo(tile, gameBoard.get(x).get(y + 1), false)) {
+                antSearch(gameBoard.get(x).get(y+1), checkedTiles);
+
+            }
+
+            //Check the tile to the below left
+            if (nextTo(tile, gameBoard.get(x + 1).get(y - 1), false)) {
+                antSearch(gameBoard.get(x+1).get(y-1), checkedTiles);
+
+            }
+            //Check the tile to the above right
+            if (nextTo(tile, gameBoard.get(x + 1).get(y), false)) {
+                antSearch(gameBoard.get(x+1).get(y), checkedTiles);
+
+            }
+        }
+        else {
+            //if the tile is on an odd row
+            //Check tile to the above left
+            if (nextTo(tile, gameBoard.get(x - 1).get(y - 1), false)) {
+                antSearch(gameBoard.get(x-1).get(y-1), checkedTiles);
+
+            }
+            //Check the tile to the above right
+            if (nextTo(tile,gameBoard.get(x - 1).get(y),false)) {
+                antSearch(gameBoard.get(x-1).get(y), checkedTiles);
+
+            }
+
+            //Check the tile to the left
+            if (nextTo(tile, gameBoard.get(x).get(y - 1), false)) {
+                antSearch(gameBoard.get(x).get(y-1), checkedTiles);
+
+            }
+
+            //Check the tile to the right
+            if (nextTo(tile,gameBoard.get(x).get(y + 1),false)) {
+                antSearch(gameBoard.get(x).get(y+1), checkedTiles);
+
+            }
+
+            //Check the tile to the below left
+            if (nextTo(tile, gameBoard.get(x + 1).get(y - 1), false)) {
+                antSearch(gameBoard.get(x+1).get(y-1), checkedTiles);
+
+            }
+
+            if (nextTo(tile, gameBoard.get(x + 1).get(y), false)) {
+                antSearch(gameBoard.get(x+1).get(y), checkedTiles);
+
+            }
+        }
 
     }
 
@@ -1177,10 +1284,12 @@ public class HiveGameState extends GameState implements Serializable {
                                                                 potentialMoves.add(tile3Away);
                                                             }
                                                         }
+                                                        //}
                                                     }
                                                 } // 3 away for loop
                                             }
                                         }
+                                    //}
                                 }
                             } // 2 away for loop
 
@@ -1373,6 +1482,7 @@ public class HiveGameState extends GameState implements Serializable {
         oldTileCords[0] = moveTile.getIndexX();
         oldTileCords[1] = moveTile.getIndexY();
         if(newXIndex >= gameBoard.size() || newYIndex >= gameBoard.size() * 2){
+            potentialMoves.clear();
             return false; //out of bounds!
         }
         //if potentialMoves holds tile at newPosition then swap
@@ -1397,12 +1507,13 @@ public class HiveGameState extends GameState implements Serializable {
 
             //on top of something so don't make new empty tile
             else {
+
                 gameBoard.get(newXIndex).set(newYIndex, moveTile);
             }
-            potentialMoves = new ArrayList<Tile>(); //reset potentialMoves
+            potentialMoves.clear(); //reset potentialMoves
             return true;
         }
-        potentialMoves = new ArrayList<Tile>(); //reset potentialMoves
+        potentialMoves.clear(); //reset potentialMoves
        return false;
     }
     /**
