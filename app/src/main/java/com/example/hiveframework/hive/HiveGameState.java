@@ -2049,10 +2049,10 @@ public class HiveGameState extends GameState implements Serializable {
         if (player1Surr == 6){
             whoWon = 0;
         }
-        if (player2Surr == 6){
+        else if (player2Surr == 6){
             whoWon = 1;
         }
-        if (player1Surr == 6 && player2Surr == 6){
+        else if (player1Surr == 6 && player2Surr == 6){
             whoWon = 2;
         }
         return whoWon;

@@ -544,4 +544,22 @@ public class HiveGameStateTest {
     @Test
     public void boundsCheck() {
     }
+
+    @Test
+    public void winOrNah(){
+        HiveGameState gameState = new HiveGameState();
+        Tile bee = new Tile(2, 3, Tile.PlayerPiece.B, Tile.Bug.QUEEN_BEE, -1); //create a mundane test bug
+        Tile ant = new Tile(1, 3, Tile.PlayerPiece.B, Tile.Bug.ANT, -1); //create a mundane test bug
+        Tile beetle = new Tile(1, 4, Tile.PlayerPiece.B, Tile.Bug.BEETLE, -1); //create a mundane test bug
+        Tile grasshopper = new Tile(2, 2, Tile.PlayerPiece.B, Tile.Bug.GRASSHOPPER, -1); //create a mundane test bug
+        Tile ant2 = new Tile(2, 4, Tile.PlayerPiece.B, Tile.Bug.ANT, -1); //create a mundane test bug
+        Tile beetle2 = new Tile(3, 3, Tile.PlayerPiece.B, Tile.Bug.BEETLE, -1); //create a mundane test bug
+        Tile grasshopper2 = new Tile(3, 4, Tile.PlayerPiece.B, Tile.Bug.GRASSHOPPER, -1); //create a mundane
+        Tile[] testArray = new Tile[] {bee, ant, beetle, grasshopper, ant2, beetle2, grasshopper2};
+        for(Tile bug: testArray){
+            gameState.addTile(bug);
+        }
+        int win = gameState.winOrNah();
+        assertEquals(1, win);
+    }
 }

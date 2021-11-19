@@ -74,7 +74,7 @@ public class HiveLocalGame extends LocalGame {
 
         // if we get here, then we've found a winner, so return the 0/1
         int gameWinner = state.winOrNah();
-        if(gameWinner > 0) { //someone won!
+        if(gameWinner >= 0) { //someone won!
             // if we get here, then we've found a winner, so return the 0/1
             if(gameWinner == 2) {
                 return "It's a cat's game.";
