@@ -4,6 +4,7 @@ package com.example.hiveframework.hive;
 import android.util.Log;
 
 import com.example.hiveframework.GameFramework.infoMessage.GameState;
+import com.example.hiveframework.GameFramework.utilities.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -1053,7 +1054,7 @@ public class HiveGameState extends GameState implements Serializable {
         return false;
     }
 
-    /** ant tile movement: determines if the ant tile is on edge
+    /** ant tile movement: determines if the ant tile is on edge, and
      * @param tile the ant tile coming in
      * @return should always return false.
      */
@@ -1111,43 +1112,46 @@ public class HiveGameState extends GameState implements Serializable {
             //if the tile is on an odd row
             //Check tile to the above left
             if (nextTo(tile, gameBoard.get(x - 1).get(y - 1), false)) {
-                antSearch(gameBoard.get(x-1).get(y-1), checkedTiles);
+                antSearch(gameBoard.get(x - 1).get(y - 1), checkedTiles);
                 valid = true;
             }
             //Check the tile to the above right
-            if (nextTo(tile,gameBoard.get(x - 1).get(y),false)) {
-                antSearch(gameBoard.get(x-1).get(y), checkedTiles);
+            if (nextTo(tile, gameBoard.get(x - 1).get(y), false)) {
+                antSearch(gameBoard.get(x - 1).get(y), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the left
             if (nextTo(tile, gameBoard.get(x).get(y - 1), false)) {
-                antSearch(gameBoard.get(x).get(y-1), checkedTiles);
+                antSearch(gameBoard.get(x).get(y - 1), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the right
-            if (nextTo(tile,gameBoard.get(x).get(y + 1),false)) {
-                antSearch(gameBoard.get(x).get(y+1), checkedTiles);
+            if (nextTo(tile, gameBoard.get(x).get(y + 1), false)) {
+                antSearch(gameBoard.get(x).get(y + 1), checkedTiles);
                 valid = true;
             }
 
             //Check the tile to the below left
             if (nextTo(tile, gameBoard.get(x + 1).get(y - 1), false)) {
-                antSearch(gameBoard.get(x+1).get(y-1), checkedTiles);
+                antSearch(gameBoard.get(x + 1).get(y - 1), checkedTiles);
                 valid = true;
             }
 
             if (nextTo(tile, gameBoard.get(x + 1).get(y), false)) {
-                antSearch(gameBoard.get(x+1).get(y), checkedTiles);
+                antSearch(gameBoard.get(x + 1).get(y), checkedTiles);
                 valid = true;
             }
         }
-
+        for(Tile t : checkedTiles)
+            System.out.println("Checked tile " + t.toString());
         return valid;
+
     }
     private void antSearch(Tile tile, ArrayList<Tile> checkedTiles){
-        if(containsTile(checkedTiles, tile)) { //is not in checked tiles, will add it to check then add to potential moves
+
+        if(!containsTile(checkedTiles, tile)) { //is not in checked tiles, will add it to check then add to potential moves
             checkedTiles.add(tile);
             potentialMoves.add(tile); //never calls itself not recursive
 
@@ -1155,6 +1159,8 @@ public class HiveGameState extends GameState implements Serializable {
         else {
             return;
         }
+
+
         int x = tile.getIndexX();
         int y = tile.getIndexY();
         if ( x % 2 == 0 ) {
