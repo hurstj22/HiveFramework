@@ -1245,64 +1245,6 @@ public class HiveGameState extends GameState implements Serializable {
      * @param spider the spider tile coming in
      * @return true if it was a successful search
      */
-    public boolean spiderSearch (Tile spider ) {
-        // The tile the spider is on
-        int row = spider.getIndexX();
-        int col = spider.getIndexY();
-        //gameBoard.get(row).set(col, new Tile(row, col, spider.getPlayerPiece())); //overwrite where the spider was with an empty tile temporarily
-
-        for (int s1 = row - 1; s1 < row + 2; s1++) {
-            for (int j1 = col - 1; j1 < col + 2; j1++) {
-                    Tile tile1Away = getTile(s1, j1);
-                    if (tile1Away != null) {
-                        if (tile1Away.getType() == Tile.Bug.EMPTY &&
-                                nextTo(spider, tile1Away, false)) {
-
-                            for (int s2 = s1 - 1; s2 < s1 + 2; s2++) { //now look for next tile to search on
-                                for (int j2 = j1 - 1; j2 < j1 + 2; j2++) {
-
-                                        Tile tile2Away = getTile(s2, j2);
-                                        if (tile2Away != null) {
-                                            if (tile2Away.getType() == Tile.Bug.EMPTY &&
-                                                    nextTo(tile1Away, tile2Away, false) && !breakHive(tile2Away, true) &&
-                                            tile2Away.getIndexX() != spider.getIndexX() && tile2Away.getIndexY() != spider.getIndexY()) {
-
-                                                for (int s3 = s2 - 1; s3 < s2 + 2; s3++) { //now look for next tile to search on
-                                                    for (int j3 = j2 - 1; j3 < j2 + 2; j3++) {
-
-                                                        Tile tile3Away = getTile(s3, j3);
-                                                        if (tile3Away != null) {
-                                                            if (tile3Away.getType() == Tile.Bug.EMPTY && nextTo(tile2Away, tile3Away, false)
-                                                                    && !breakHive(tile3Away, true) &&
-                                                                    tile3Away.getIndexX() != spider.getIndexX() && tile3Away.getIndexY() != spider.getIndexY()) {
-                                                                potentialMoves.add(tile3Away);
-                                                            }
-                                                        }
-                                                        //}
-                                                    }
-                                                } // 3 away for loop
-                                            }
-                                        }
-                                    //}
-                                }
-                            } // 2 away for loop
-
-                        }
-                    }
-                //}
-            }
-        } //1 away for loop
-        if (potentialMoves.isEmpty()) {
-            return false; //found no where to go :(
-        }
-        return true;
-    }
-
-    /**
-     * Performs a search function on spider tiles, populates potentials arrayList
-     * @param spider the spider tile coming in
-     * @return true if it was a successful search
-     */
     public boolean spiderSearchBetter (Tile spider ) {
         // The tile the spider is on
         int row = spider.getIndexX();
@@ -1354,9 +1296,9 @@ public class HiveGameState extends GameState implements Serializable {
 
         gameBoard.get(row).set(col, spider); //put the spider back on the board
         potentialMoves.addAll(threeNeighbors); //add all remaining tiles to be potential spots
-        //if(potentialMoves.isEmpty()) { //if we didn't find any viable options quit
-        //    return false;
-        //}
+        if(potentialMoves.isEmpty()) { //if we didn't find any viable options quit
+            return false;
+        }
         return true;
     }
 
