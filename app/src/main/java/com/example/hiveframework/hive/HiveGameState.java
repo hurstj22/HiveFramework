@@ -634,7 +634,7 @@ public class HiveGameState extends GameState implements Serializable {
                     return startGrasshopperSearch(tile);
                 case SPIDER:
                     //utilize the SpiderSearch function to find potential moves.
-                    return spiderSearch(tile);
+                    return spiderSearchBetter(tile);
                 case QUEEN_BEE:
                     //utilize the queenSearch function to find potential moves.
                     return queenSearch(tile);
@@ -1296,6 +1296,148 @@ public class HiveGameState extends GameState implements Serializable {
             return false; //found no where to go :(
         }
         return true;
+    }
+
+    /**
+     * Performs a search function on spider tiles, populates potentials arrayList
+     * @param spider the spider tile coming in
+     * @return true if it was a successful search
+     */
+    public boolean spiderSearchBetter (Tile spider ) {
+        // The tile the spider is on
+        int row = spider.getIndexX();
+        int col = spider.getIndexY();
+        ArrayList<Tile> neighbors = new ArrayList<>(); //create an arraylist to hold the spider's neighbors
+        addNeighbors(neighbors, spider); //add all the spider's neighbors
+        gameBoard.get(row).set(col, new Tile(row, col, Tile.PlayerPiece.EMPTY)); //temporarily take out the spider from the gameBoard
+
+        for(int i = 0; i < neighbors.size(); i++){ //run through all neighbors
+            if(neighbors.get(i).getType() != Tile.Bug.EMPTY ||
+                    !onEdge(neighbors.get(i))){ //remove all non-empty neighbors and tiles that aren't on an edge
+                neighbors.remove(i);
+                i--; //as the arrayList dynamically resizes, have to go back one if we take away from it
+            }
+        }
+
+        //now call add neighbors on further iterations
+        ArrayList<Tile> twoNeighbors = new ArrayList<>();
+        for(Tile oneAway : neighbors){
+            addNeighbors(twoNeighbors, oneAway); //find the next spot that's two away from the first one away spots
+        }
+        for(int i = 0; i < twoNeighbors.size(); i++){ //pair down all two away neighbors
+            if(twoNeighbors.get(i).getType() != Tile.Bug.EMPTY ||
+                    !onEdge(twoNeighbors.get(i)) ||
+                    (twoNeighbors.get(i).getIndexX() == spider.getIndexX() &&
+                            twoNeighbors.get(i).getIndexY() == spider.getIndexY())){ //remove all non-empty neighbors and tiles that aren't on an edge
+                                                                                    //also cannot select the spider's current spot as a potential spot to move
+                twoNeighbors.remove(i);
+                i--; //as the arrayList dynamically resizes, have to go back one if we take away from it
+            }
+        }
+
+        //now call add neighbors on 3rd final iteration
+        ArrayList<Tile> threeNeighbors = new ArrayList<>();
+        for(Tile twoAway : twoNeighbors){
+            addNeighbors(threeNeighbors, twoAway); //find the next spot that's three away from the first spot
+        }
+        for(int i = 0; i < threeNeighbors.size(); i++){ //pair down all three away neighbors
+            if(threeNeighbors.get(i).getType() != Tile.Bug.EMPTY ||
+                    !onEdge(threeNeighbors.get(i)) || //remove all non-empty neighbors and tiles that aren't on an edge
+                    (threeNeighbors.get(i).getIndexX() == spider.getIndexX() && //also cannot select the spider's current spot as a potential spot to move
+                            threeNeighbors.get(i).getIndexY() == spider.getIndexY()) ||
+                            neighbors.contains(threeNeighbors.get(i))){ //also cannot backtrack, so if the tile is found in the initial neighbor list remove it
+
+                threeNeighbors.remove(i);
+                i--; //as the arrayList dynamically resizes, have to go back one if we take away from it
+            }
+        }
+
+        gameBoard.get(row).set(col, spider); //put the spider back on the board
+        potentialMoves.addAll(threeNeighbors); //add all remaining tiles to be potential spots
+        //if(potentialMoves.isEmpty()) { //if we didn't find any viable options quit
+        //    return false;
+        //}
+        return true;
+    }
+
+    /**
+     * method that adds all the surrounding tile's neighbors to an arrayList
+     * @param neighbors the arrayList being added to
+     * @param tile the tile that we are finding the neighbors of
+     */
+    public void addNeighbors(ArrayList<Tile> neighbors, Tile tile){
+        int x = tile.getIndexX();
+        int y = tile.getIndexY();
+
+        //add the neighbors of the tile
+        if (x % 2 == 0) { //even row
+            if(boundsCheck(x - 1, y)) neighbors.add(gameBoard.get(x - 1).get(y)); //tile above left of tile
+            if(boundsCheck(x - 1, y + 1)) neighbors.add(gameBoard.get(x - 1).get(y + 1)); //tile above right of tile
+            if(boundsCheck(x, y - 1)) neighbors.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+            if(boundsCheck(x, y + 1)) neighbors.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+            if(boundsCheck(x + 1, y)) neighbors.add(gameBoard.get(x + 1).get(y)); //tile below left of tile
+            if(boundsCheck(x + 1, y + 1)) neighbors.add(gameBoard.get(x + 1).get(y + 1)); //tile below right of tile
+        } else { //odd row
+            if(boundsCheck(x - 1, y - 1)) neighbors.add(gameBoard.get(x - 1).get(y - 1)); //tile above left of tile
+            if(boundsCheck(x - 1, y)) neighbors.add(gameBoard.get(x - 1).get(y)); //tile above right of tile
+            if(boundsCheck(x, y - 1)) neighbors.add(gameBoard.get(x).get(y - 1)); //tile to the left of tile
+            if(boundsCheck(x, y + 1)) neighbors.add(gameBoard.get(x).get(y + 1)); //tile to the right of tile
+            if(boundsCheck(x + 1, y - 1)) neighbors.add(gameBoard.get(x + 1).get(y - 1)); //tile below left of tile
+            if(boundsCheck(x + 1, y)) neighbors.add(gameBoard.get(x + 1).get(y)); //tile below right of tile
+        }
+
+    }
+
+    /**
+     * method to check if a tile is on the edge, ie not floating surrounded by empty tiles
+     * @param tile the tile being checked
+     * @return true if touching atleast one other non empty tile, false otherwise
+     */
+    public boolean onEdge(Tile tile){
+        int x = tile.getIndexX();
+        int y = tile.getIndexY();
+
+        //find if tile touches at least one other non empty tile
+        if (x % 2 == 0) { //even row
+            if((gameBoard.get(x - 1).get(y)).getType() != Tile.Bug.EMPTY){
+                return true;//tile above left of tile
+            }
+            if((gameBoard.get(x - 1).get(y + 1)).getType() != Tile.Bug.EMPTY){
+                return true;//tile above right of tile
+            }
+            if((gameBoard.get(x).get(y - 1)).getType() != Tile.Bug.EMPTY){
+                return true; //tile to the left of tile
+            }
+            if((gameBoard.get(x).get(y + 1)).getType() != Tile.Bug.EMPTY){
+                return true;
+            } //tile to the right of tile
+            if((gameBoard.get(x + 1).get(y)).getType() != Tile.Bug.EMPTY){
+                return true;//tile below left of tile
+            }
+            if((gameBoard.get(x + 1).get(y + 1)).getType() != Tile.Bug.EMPTY){
+                return true; //tile below right of tile
+            }
+        } else { //odd row
+            if((gameBoard.get(x - 1).get(y - 1)).getType() != Tile.Bug.EMPTY){
+                return true;//tile above left of tile
+            }
+            if((gameBoard.get(x - 1).get(y)).getType() != Tile.Bug.EMPTY){
+                return true;//tile above right of tile
+            }
+            if((gameBoard.get(x).get(y - 1)).getType() != Tile.Bug.EMPTY){
+                return true; //tile to the left of tile
+            }
+            if((gameBoard.get(x).get(y + 1)).getType() != Tile.Bug.EMPTY){
+                return true;
+            } //tile to the right of tile
+            if((gameBoard.get(x + 1).get(y - 1)).getType() != Tile.Bug.EMPTY){
+                return true;//tile below left of tile
+            }
+            if((gameBoard.get(x + 1).get(y)).getType() != Tile.Bug.EMPTY){
+                return true; //tile below right of tile
+            }
+        }
+        return false;
     }
 
     /**
