@@ -45,7 +45,8 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
     private Tile.Bug[] bugArray; //holds the type of all the bugs possible to play for the computer to select from
     private Random whatAmIDoingToday = new Random();
 
-    private boolean played = false;
+    private boolean played = false; //if the computer has completed an action successfully
+    private Tile tileFromHand = null; //tile that the computer is playing from their hand
 
     /**
      * picks a random tile from the getComputerTiles() arrayList
@@ -92,9 +93,22 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
         }
         return new Tile(-1, -1, piece, type, id); //returns a completely randomly generated tile
     }
+
     /**
-     https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum
+     * creates a queen tile to be placed on the board
+     * @return a generated tile with type queen bee and indices at -1 to indicate the tile is coming from the board
      */
+    private Tile queenFromHand(){
+        int id = -1; //this is going to be a generic computer id
+        Tile.PlayerPiece piece;
+        if(hiveGame.getWhoseTurn() == 0){
+            piece = Tile.PlayerPiece.W; //1st player
+        }
+        else{
+            piece = Tile.PlayerPiece.B; //2nd player
+        }
+        return new Tile(-1, -1, piece, Tile.Bug.QUEEN_BEE, id); //returns a completely randomly generated tile
+    }
 
     /**
      * constructor does nothing extra other than initializes the player
@@ -143,19 +157,29 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
             switch(computersMove) { //I believe this picks 0 - 2 since it's not inclusive of 3.
                 //This switch statement is the brains of the operation: chooses between placing on the board, moving from one spot to another, and skipping turn
 
+                case 3: //several chances for the ai to choose from their hand
+                case 4:
+                case 5:
                 case 0: //picking a tile from the computer's hand and placing it on the board
                     Log.i(TAG,"I'm trying to play from my hand");
-                    Tile randomTileFromHand = randomTileFromHand();
-                    Log.i(TAG,"My tile is a: "+ randomTileFromHand.getType());
-                    if (hiveGame.getPiecesRemain(randomTileFromHand.getType()) > 0) { //makes sure player has at least one of that piece remaining
-                        Log.i(TAG,"I have : "+ hiveGame.getPiecesRemain(randomTileFromHand.getType()) + " " + randomTileFromHand.getType() + "'s left");
-                        if (hiveGame.validMove(randomTileFromHand)) { //if there's validMoves to be made populate the local potentialMoves
+                    if(hiveGame.getPiecesRemain()[playerNum][0] == 1){ //if you haven't put the queen down... do it! Comp always plays queen first
+                        tileFromHand = queenFromHand(); //put the queen down
+                    }
+                    else {
+                        tileFromHand = randomTileFromHand(); //select a random other tile from the hand
+                    }
+
+                    Log.i(TAG,"My tile is a: "+ tileFromHand.getType());
+                    if (hiveGame.getPiecesRemain(tileFromHand.getType()) > 0) { //makes sure player has at least one of that piece remaining
+                        Log.i(TAG,"I have : "+ hiveGame.getPiecesRemain(tileFromHand.getType()) + " " + tileFromHand.getType() + "'s left");
+                        if (hiveGame.validMove(tileFromHand)) { //if there's validMoves to be made populate the local potentialMoves
+                            Log.i(TAG, "this was a valid move!");
                             potentialMoves = hiveGame.getPotentialMoves();
                             if (potentialMoves == null || potentialMoves.size() <= 0) { //if for some reason there was nothing to do with that Tile then end your turn :(
                                 Log.i(TAG, "receiveInfo: potentials was empty:");
-
                                 sleep(2);
-                                played = false;
+                                played = true;
+
                                 game.sendAction(endTurn); //ends the turn if there's nothing valid to do
                                 return; //there's nothing in the potentials list
                             } else { //yay we have things we can do
@@ -165,16 +189,16 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
                                 Log.i(TAG, "I'm moving to this location: ("+ newX + ","+ newY + ")");
 
                                 moveAction = new HiveMoveAction(this, newX, newY);
-                                moveAction.setCurrentTile(randomTileFromHand); //update with what tile was originally moving from the hand
+                                moveAction.setCurrentTile(tileFromHand); //update with what tile was originally moving from the hand
                                 moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers
                                 // so that the gameState can be updated later in the HiveLocalGame
                                 moveAction.setComputerMove(true);
                                 sleep(2);
                                 played = true;
+
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
-                                return;
                             }
-                        }
+                        }Log.i(TAG, "this was not a valid move");
                     }
                     break;
                 case 1: //The computer player decides to skip their turn
