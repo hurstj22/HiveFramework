@@ -162,7 +162,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
                             //drawBeetle(i, j);
                             break;
                         case ANT:
-                            id = R.drawable.anthexcropped;
+                            id = R.drawable.anthexnew;
                             //drawAnt(i, j);
                             break;
                     }

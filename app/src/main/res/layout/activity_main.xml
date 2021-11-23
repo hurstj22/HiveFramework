@@ -216,7 +216,7 @@
                                 android:adjustViewBounds="false"
                                 android:cropToPadding="false"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/anthexcropped" />
+                                app:srcCompat="@drawable/anthexnew" />
 
                             <TextView
                                 android:id="@+id/antP1Counter"
@@ -351,7 +351,7 @@
                                 android:adjustViewBounds="false"
                                 android:cropToPadding="false"
                                 android:scaleType="fitXY"
-                                app:srcCompat="@drawable/anthexcropped" />
+                                app:srcCompat="@drawable/anthexnew" />
 
                             <TextView
                                 android:id="@+id/antP2Counter"

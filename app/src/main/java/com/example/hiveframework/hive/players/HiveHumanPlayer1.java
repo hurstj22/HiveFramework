@@ -240,7 +240,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         beetleP1Image = (ImageButton)activity.findViewById(R.id.beetleP1Image);
         beetleP1Image.setImageResource(R.drawable.beetlehexcropped);
         antP1Image = (ImageButton)activity.findViewById(R.id.antP1Image);
-        antP1Image.setImageResource(R.drawable.anthexcropped);
+        antP1Image.setImageResource(R.drawable.anthexnew);
         grasshopperP1Image = (ImageButton)activity.findViewById(R.id.grasshopperP1Image);
         grasshopperP1Image.setImageResource(R.drawable.grasshopperhexcropped);
 
@@ -252,7 +252,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         beetleP2Image = (ImageButton)activity.findViewById(R.id.beetleP2Image);
         beetleP2Image.setImageResource(R.drawable.beetlehexcropped);
         antP2Image = (ImageButton)activity.findViewById(R.id.antP2Image);
-        antP2Image.setImageResource(R.drawable.anthexcropped);
+        antP2Image.setImageResource(R.drawable.anthexnew);
         grasshopperP2Image = (ImageButton)activity.findViewById(R.id.grasshopperP2Image);
         grasshopperP2Image.setImageResource(R.drawable.grasshopperhexcropped);
 
