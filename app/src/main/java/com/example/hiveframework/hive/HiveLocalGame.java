@@ -212,9 +212,10 @@ public class HiveLocalGame extends LocalGame {
                         return true; //computer was able to make the move
                     }
                 }
-                else if(hiveState.getTile(oldX, oldY).getType() != Tile.Bug.EMPTY){ //moving from board spot to board spot
+                else if(hiveState.getTile(oldX,oldY) != null && hiveState.getTile(oldX, oldY).getType() != Tile.Bug.EMPTY){ //moving from board spot to board spot
                     newX = (int) move.getX();
                     newY = (int) move.getY();
+
 
                     if(hiveState.makeMove(hiveState.getTile(oldX, oldY), newX, newY)) { //pass in the tile to move
                         //set the move boolean in hiveState to true
