@@ -235,7 +235,6 @@ public class HiveGameStateTest {
         assertEquals(4, xCoord);
         assertEquals(3,yCoord);
 
-
     }
 
     @Test
@@ -285,6 +284,7 @@ public class HiveGameStateTest {
         boolean isNextTo = gameState.nextTo(gameState.getTile(2,5), gameState.getTile(3,6), false);
         assertTrue(isNextTo);
         assertEquals(gameState.getTile(3,5).getType(), Tile.Bug.QUEEN_BEE);
+
     }
 
     @Test
