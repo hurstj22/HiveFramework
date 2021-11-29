@@ -53,8 +53,8 @@ public class HiveGameState extends GameState implements Serializable {
     private ArrayList<Tile> potentialMoves; //the moves that a selected piece could move to
     private ArrayList<Tile> computerPlayersTiles; //the pieces that the computer currently has down on the board
     Queue<Tile> tileQueue; //the queue used in BFS
-    int numRows = 7; //for the gameBoard row size
-    int numCols = 14; //for the gameBoard col size
+    private int numRows = 7; //for the gameBoard row size
+    private int numCols = 14; //for the gameBoard col size
     //boolean for placed piece
     private boolean placedPiece;
 
@@ -65,11 +65,11 @@ public class HiveGameState extends GameState implements Serializable {
         placedPiece = false;
         //Initialize gameBoard to be 8 rows of empty tiles
         gameBoard = new ArrayList<ArrayList<Tile>>();
-        for(int i=0; i < GBSIZE; i++) {
-            gameBoard.add(new ArrayList<Tile>(GBSIZE*2)); //rectangle so make the col's twice the size
+        for(int i=0; i < numRows; i++) {
+            gameBoard.add(new ArrayList<Tile>(numCols)); //rectangle so make the col's twice the size
         }
-        for(int i = 0; i < GBSIZE; i++){
-            for(int j = 0; j < GBSIZE*2; j++){ //add twice as many columns as rows to make rect grid
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < numCols; j++){ //add twice as many columns as rows to make rect grid
                 gameBoard.get(i).add(j, new Tile (i, j, Tile.PlayerPiece.EMPTY));
             }
         }
@@ -116,12 +116,12 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public HiveGameState(HiveGameState other){
         this.gameBoard = new ArrayList<ArrayList<Tile>>();
-        for(int i=0; i < GBSIZE; i++) {
-            this.gameBoard.add(new ArrayList<Tile>(GBSIZE));
+        for(int i=0; i < numRows; i++) {
+            this.gameBoard.add(new ArrayList<Tile>(numRows));
         }
 
-        for (int row = 0; row < GBSIZE; row++){
-            for (int col = 0; col < GBSIZE*2; col++){
+        for (int row = 0; row < numRows; row++){
+            for (int col = 0; col < numCols; col++){
                 Tile copyTile = new Tile(other.gameBoard.get(row).get(col));
                 this.gameBoard.get(row).add(col, copyTile);
             }
@@ -212,7 +212,7 @@ public class HiveGameState extends GameState implements Serializable {
         int bugCounter = 0;
         Tile tileInQuestion = new Tile(tile); //default just in case it doesn't get initialized later
 
-        for(int i = 0; i < gameBoard.size(); i++) {
+        for(int i = 0; i < numRows; i++) {
             for (int j = 0; j < gameBoard.get(i).size(); j++) {
                 if(gameBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
                     if(bugCounter <= 0) {//only update this tile once
@@ -225,7 +225,7 @@ public class HiveGameState extends GameState implements Serializable {
 
         //now we check a few things about the board to determine what to highlight as a potential move
         if(bugCounter <= 0){ //there's nothing on the board so you can place it anywhere
-            for(int i = 0; i < gameBoard.size(); i++) {
+            for(int i = 0; i < numRows; i++) {
                 for (int j = 0; j < gameBoard.get(i).size(); j++) {
                     if(boundsCheckPlace(i, j)){//if we're not on the edge, only allows placing on non edges
                         potentialMoves.add(gameBoard.get(i).get(j));
@@ -269,13 +269,13 @@ public class HiveGameState extends GameState implements Serializable {
         //perform a BFS on the gameBoard
         //copy the old gameBoard into a new temporary board to perform Bfs on
         ArrayList<ArrayList<Tile>> testBoard = new ArrayList<ArrayList<Tile>>();
-        for(int i=0; i < GBSIZE; i++) {
+        for(int i=0; i < numRows; i++) {
             if(testBoard != null){
-                testBoard.add(new ArrayList<Tile>(GBSIZE*2));
+                testBoard.add(new ArrayList<Tile>(numCols));
             }
         }
-        for(int i = 0; i < gameBoard.size(); i++) {
-            for (int j = 0; j < gameBoard.size()*2; j++) {
+        for(int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
                 if (tile.getIndexX() != -1) { //if this is a tile that is already on the board then check to take it out
                     if (i == tile.getIndexX() && j == tile.getIndexY() && !searchFunction) { //only remove piece if not looking as part of a move
                         testBoard.get(i).add(j, new Tile(i, j, Tile.PlayerPiece.EMPTY)); //take out the tile in question
@@ -424,7 +424,7 @@ public class HiveGameState extends GameState implements Serializable {
 
     public boolean ib(int x, int y){
         if(x < 0 || y < 0 ||
-                x >= gameBoard.size() || y >= gameBoard.size() * 2){
+                x >= numRows || y >= numRows * 2){
             return false; //out of bounds
         }
         return true;
@@ -439,7 +439,7 @@ public class HiveGameState extends GameState implements Serializable {
     public boolean isValidBFS(Tile tile){
 
         if(tile.getIndexX() < 0 || tile.getIndexY() < 0 ||
-                tile.getIndexX() >= gameBoard.size() || tile.getIndexY() >= gameBoard.size() * 2){
+                tile.getIndexX() >= numRows || tile.getIndexY() >= numRows * 2){
             return false; //out of bounds
         }
 
@@ -1561,7 +1561,7 @@ public class HiveGameState extends GameState implements Serializable {
         int[] oldTileCords = new int[2];
         oldTileCords[0] = moveTile.getIndexX();
         oldTileCords[1] = moveTile.getIndexY();
-        if(newXIndex >= gameBoard.size() || newYIndex >= gameBoard.size() * 2){
+        if(newXIndex >= numRows || newYIndex >= numCols){
             potentialMoves.clear();
             return false; //out of bounds!
         }
@@ -1769,8 +1769,8 @@ public class HiveGameState extends GameState implements Serializable {
             surroundingTiles(inTile, toggle);
         }
         else{
-            for (int i = 0; i < GBSIZE; i++) {
-                for (int j = 0; j < GBSIZE * 2; j++) {
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numRows * 2; j++) {
                     if (gameBoard.get(i).get(j).getPlayerPiece() == inTile.getPlayerPiece()){
                         //if(boundsCheck(i, j)) {
                             surroundingTiles(gameBoard.get(i).get(j), toggle);
@@ -1801,7 +1801,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
         //we're not allowing players to place things on the edge as there is no edge in Hive
         //Not a bug it's a FeAtURe
-        if (boundsCheckPlace(x, y)) {//only check this if we're not on the edge
+        if (boundsCheck(x, y)) {//only check this if we're not on the edge
             switch (toggle) {
                 case 0:
                     if (x % 2 == 0) { //even row
@@ -1995,7 +1995,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return the current size of the rows of the gameboard
      */
     public int getBoardSize(){
-        return GBSIZE;
+        return numRows;
     }
 
     /**
@@ -2092,7 +2092,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if within the gameboard and NOT on an edge
      */
     public boolean boundsCheck(int row, int col){
-        if (row >= 0 && row < (gameBoard.size())  && col >= 0 && col < (gameBoard.size() * 2)) {
+        if (row >= 0 && row < (numRows)  && col >= 0 && col < (numCols)) {
             return true;
         }
         return false;
@@ -2106,7 +2106,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if within the gameboard and NOT on an edge
      */
     public boolean boundsCheckPlace(int row, int col){
-        if (row > 0 && row < (gameBoard.size() - 1)  && col > 0 && col < (gameBoard.size() * 2) - 1) {
+        if (row > 1 && row < (numRows - 2)  && col > 1 && col < (numCols - 2)) {
             return true;
         }
         return false;
@@ -2120,7 +2120,7 @@ public class HiveGameState extends GameState implements Serializable {
         Tile.PlayerPiece player;
         int player1Surr = 0; //black
         int player2Surr = 0; //white
-        for (int x = 0; x < gameBoard.size(); x++){
+        for (int x = 0; x < numRows; x++){
             for (int y = 0; y < gameBoard.get(x).size(); y++){
                 if (gameBoard.get(x).get(y).getType() == Tile.Bug.QUEEN_BEE){
                     player = gameBoard.get(x).get(y).getPlayerPiece();
@@ -2269,7 +2269,7 @@ public class HiveGameState extends GameState implements Serializable {
      * and adding a column to the left and right
      */
     public void reSeize(){
-        for (int row = 0; row < gameBoard.size(); row++){
+        for (int row = 0; row < numRows; row++){
             for (int col = 0; col < gameBoard.get(row).size(); col--){
                 if (gameBoard.get(row).get(col).getType() != Tile.Bug.EMPTY){
                     if (row == 0){ //tile in first row
@@ -2281,7 +2281,7 @@ public class HiveGameState extends GameState implements Serializable {
                     }
                     if (col == 0){ //tile in first col
                         //add col of empty tiles to left
-                        for (int i = 0; i < gameBoard.size(); i++){
+                        for (int i = 0; i < numRows; i++){
                             gameBoard.get(i).add(0, new Tile(i, 0, Tile.PlayerPiece.EMPTY));
                         }
                         numCols++; //update numCols
@@ -2295,7 +2295,7 @@ public class HiveGameState extends GameState implements Serializable {
                     }
                     if (col == (numCols - 1)){
                         //add col of empty tiles to left
-                        for (int i = 0; i < gameBoard.size(); i++){
+                        for (int i = 0; i < numRows; i++){
                             gameBoard.get(i).add(0, new Tile(i, 0, Tile.PlayerPiece.EMPTY));
                         }
                         numCols++; //update numCols
