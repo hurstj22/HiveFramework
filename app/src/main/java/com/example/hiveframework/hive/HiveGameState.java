@@ -227,7 +227,7 @@ public class HiveGameState extends GameState implements Serializable {
         if(bugCounter <= 0){ //there's nothing on the board so you can place it anywhere
             for(int i = 0; i < gameBoard.size(); i++) {
                 for (int j = 0; j < gameBoard.get(i).size(); j++) {
-                    if(boundsCheck(i, j)){//if we're not on the edge, only allows placing on non edges
+                    if(boundsCheckPlace(i, j)){//if we're not on the edge, only allows placing on non edges
                         potentialMoves.add(gameBoard.get(i).get(j));
                     }
                 }
@@ -1065,10 +1065,11 @@ public class HiveGameState extends GameState implements Serializable {
         int y = tile.getIndexY();
         Tile nextile = gameBoard.get(x).get(y);
         Boolean valid = false;
+        gameBoard.get(x).set(y, new Tile(x, y, Tile.PlayerPiece.EMPTY)); //temporarily take out the ant from the gameBoard
 
-        if (breakHive(tile, false)){
+        if (!onEdge(tile)){
             return false;
-            //checks breakHive to make sure you can even move
+            //checks to make sure the tile is not in the middle of the board
         }
         ArrayList<Tile> checkedTiles = new ArrayList<>();
         checkedTiles.add(tile); //do not check current tile again //error could be local variable
@@ -1144,6 +1145,7 @@ public class HiveGameState extends GameState implements Serializable {
                 valid = true;
             }
         }
+        gameBoard.get(x).set(y, tile); //put the ant back in
         for(Tile t : checkedTiles)
             System.out.println("Checked tile " + t.toString());
         return valid;
@@ -1799,7 +1801,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
         //we're not allowing players to place things on the edge as there is no edge in Hive
         //Not a bug it's a FeAtURe
-        if (boundsCheck(x, y)) {//only check this if we're not on the edge
+        if (boundsCheckPlace(x, y)) {//only check this if we're not on the edge
             switch (toggle) {
                 case 0:
                     if (x % 2 == 0) { //even row
@@ -1922,7 +1924,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return the tile if it is within the limits of the gameboard, otherwise null
      */
     public Tile getTile(int x, int y){
-        if(x >= gameBoard.size() || y >= gameBoard.size() * 2 || x < 0 || y < 0){
+        if(!boundsCheck(x, y)){
             return null;
         }
         return gameBoard.get(x).get(y);
@@ -2081,6 +2083,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @param bool sets the state's piece for if a place has been played during a turn
      */
     public void setPlacedPiece(boolean bool) {this.placedPiece = bool;}
+
     /**
      * Basic bounds checking for the gameBoard
      *
@@ -2089,6 +2092,20 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if within the gameboard and NOT on an edge
      */
     public boolean boundsCheck(int row, int col){
+        if (row >= 0 && row < (gameBoard.size())  && col >= 0 && col < (gameBoard.size() * 2)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Basic bounds checking for the gameBoard placing a piece
+     *
+     * @param row the row that's being checked
+     * @param col the col that's being checked
+     * @return true if within the gameboard and NOT on an edge
+     */
+    public boolean boundsCheckPlace(int row, int col){
         if (row > 0 && row < (gameBoard.size() - 1)  && col > 0 && col < (gameBoard.size() * 2) - 1) {
             return true;
         }
