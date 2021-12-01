@@ -54,6 +54,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
     private int potentialCounter;
     private ArrayList<Tile> potentialList;
 
+
     /**
      * Constructor for the HiveSurfaceView class.
      *
@@ -217,6 +218,13 @@ public class HiveSurfaceView extends FlashSurfaceView {
                 } //end of for loops
             }
 
+            //draw the rules image if the user has clicked the button
+            if(state.getDrawRules()){
+                Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.rules); //create image using tile's id
+                Bitmap resizedImage = Bitmap.createScaledBitmap(image, 100, 100, true); //scales the image down to the right size
+
+                canvas.drawBitmap(resizedImage, 0, 0, tileColor);
+            }
         } //end of state if statement
     }
 

@@ -92,16 +92,6 @@
                         android:padding="10sp"
                         android:text="@string/rules_text" />
 
-                    <ImageView
-                        android:id="@+id/rulesImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:maxWidth="0sp"
-                        android:maxHeight="0sp"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/rules" />
-
                     <Button
                         android:id="@+id/endTurnButton"
                         android:layout_width="wrap_content"
@@ -265,6 +255,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="20" />
+
+                <ImageView
+                    android:id="@+id/rulesImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:maxWidth="0sp"
+                    android:maxHeight="0sp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/rules" />
 
                 <LinearLayout
                     android:id="@+id/playerTwoLayout"
