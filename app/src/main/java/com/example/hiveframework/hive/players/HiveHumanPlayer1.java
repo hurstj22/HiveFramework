@@ -104,7 +104,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     //array list of buttons to easily loop through and highlight the selected one
     HiveSelectAction selectActionFromHand = null;
     HiveUndoTurnAction undoTurnAction = null;
-    private boolean rulesClicked = false;
 
     //id numbers to hold the id nums of all images
     int beeId;
@@ -378,10 +377,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             case R.id.quitButton: //exits the game
                 myActivity.finishAffinity();
                 break;
-            case R.id.rulesButton: //image inside after touch
-                if(rulesClicked) {
-                    game.sendAction(drawRulesAction);
-                rulesClicked = !rulesClicked; //reset clicker boolean
+            case R.id.rulesButton: //rules button
+                game.sendAction(drawRulesAction);
                break;
 
             case R.id.undoButton: //undo the last move by resetting the gameState to a previous one
