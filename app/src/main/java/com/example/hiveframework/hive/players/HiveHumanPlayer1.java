@@ -16,7 +16,6 @@ import com.example.hiveframework.GameFramework.infoMessage.GameInfo;
 import com.example.hiveframework.GameFramework.infoMessage.IllegalMoveInfo;
 import com.example.hiveframework.GameFramework.infoMessage.NotYourTurnInfo;
 import com.example.hiveframework.GameFramework.players.GameHumanPlayer;
-import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.GameFramework.utilities.Logger;
 import com.example.hiveframework.hive.HiveGameState;
 import com.example.hiveframework.hive.HiveSurfaceView;
@@ -80,7 +79,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 
     private Button playButton = null;
     private Button quitButton = null;
-    private ImageView rulesButton = null;
+    private ImageView rulesImage = null;
+    private Button rulesButton = null;
     private Button endTurnButton = null;
     private Button undoButton = null;
 
@@ -177,6 +177,10 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             grasshopperP1Counter.setText("" + hiveGame.getPiecesRemain()[0][3]);
             antP1Counter.setText("" + hiveGame.getPiecesRemain()[0][4]);
 
+            //rules button attempt lets you know what image will be
+            rulesImage.setImageResource(R.drawable.rules);
+
+
             //update player 2's piece counters
             beeP2Counter.setText("" + hiveGame.getPiecesRemain()[1][0]);
             spiderP2Counter.setText("" + hiveGame.getPiecesRemain()[1][1]);
@@ -216,6 +220,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         quitButton = (Button)activity.findViewById(R.id.quitButton);
         endTurnButton = (Button)activity.findViewById(R.id.endTurnButton);
         undoButton = (Button)activity.findViewById(R.id.undoButton);
+        rulesButton = (Button)activity.findViewById(R.id.rulesButton);
+        rulesImage = activity.findViewById(R.id.rulesImage);
 
         currentTurnTextView = (TextView)activity.findViewById(R.id.currentTurnTextView); //Who's turn it is
         playerOneTextView = (TextView)activity.findViewById(R.id.playerOneTextView);
@@ -257,7 +263,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         grasshopperP2Image.setImageResource(R.drawable.grasshopperhexcropped);
 
         //rules display
-        rulesButton = (ImageView)activity.findViewById(R.id.rulesButton);
+        rulesImage = (ImageView)activity.findViewById(R.id.rulesImage);
 
         // set the surfaceView instance variable
         surfaceView = (HiveSurfaceView)myActivity.findViewById(R.id.hiveSurfaceView);
@@ -371,9 +377,14 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             case R.id.quitButton: //exits the game
                 myActivity.finishAffinity();
                 break;
+            case R.id.rulesImage: //image inside after touch
+                rulesImage.setVisibility(View.INVISIBLE);
+               break;
             case R.id.rulesButton: //pull up the rules
-                //yet to be coded
+                rulesImage.setVisibility(View.VISIBLE);
+
                 break;
+
             case R.id.undoButton: //undo the last move by resetting the gameState to a previous one
                 game.sendAction(undoTurnAction);
                 //yet to be coded
