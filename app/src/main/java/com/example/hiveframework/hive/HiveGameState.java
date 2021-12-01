@@ -25,12 +25,10 @@ public class HiveGameState extends GameState implements Serializable {
     private static final String TAG = "HiveGameState";
     private static final long serialVersionUID = 7552321013488624386L;
 
-
     //Holds gamestate from beginning of turn
     private HiveGameState undoTurn = null;
 
     //directions used in search functions
-
     public enum Direction {
         UP_LEFT,
         UP_RIGHT,
@@ -49,14 +47,12 @@ public class HiveGameState extends GameState implements Serializable {
     private boolean selectFlag; //true if an imageButton is selected
 
     private static final int tileSize = 300;
-    private final int GBSIZE = 7; //size of the gameboard
     private ArrayList<Tile> potentialMoves; //the moves that a selected piece could move to
     private ArrayList<Tile> computerPlayersTiles; //the pieces that the computer currently has down on the board
     Queue<Tile> tileQueue; //the queue used in BFS
     private int numRows = 7; //for the gameBoard row size
     private int numCols = 14; //for the gameBoard col size
-    //boolean for placed piece
-    private boolean placedPiece;
+    private boolean placedPiece;  //boolean for placed piece
     private boolean rulesClicked; //rules method
 
     /**
@@ -182,6 +178,9 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if can move there, false if not
      */
     public boolean validMove(Tile tile){
+        if(!potentialMoves.isEmpty()){ //check if the list has already been populated
+            potentialMoves.clear(); //reset the moves before filling it
+        }
         if(tile.getIndexX() == -1) { //tile coming in from the players hand to be placed
             return selectFromHand(tile);
         }
@@ -358,27 +357,27 @@ public class HiveGameState extends GameState implements Serializable {
                     tileQueue.offer(board.get(x - 1).get(y));
                     bfs(x - 1, y, board); //call bfs on neighbor
                 }
-                if (isValidBFS(board.get(x - 1).get(y + 1))) { //RU
+                if (ib(x-1, y+1) && isValidBFS(board.get(x - 1).get(y + 1))) { //RU
                     //Check tile above right of tile
                     tileQueue.offer(board.get(x - 1).get(y + 1));
                     bfs(x - 1, y+1, board); //call bfs on neighbor
                 }
-                if(isValidBFS(board.get(x).get(y-1))){ //LM
+                if(ib(x, y-1) && isValidBFS(board.get(x).get(y-1))){ //LM
                     //Check tile to the left of tile
                     tileQueue.offer(board.get(x).get(y-1));
                     bfs(x, y-1, board); //call bfs on neighbor
                 }
-                if(isValidBFS(board.get(x).get(y+1))){ //RM
+                if(ib(x, y+1) && isValidBFS(board.get(x).get(y+1))){ //RM
                     //Check tile to the right of tile
                     tileQueue.offer(board.get(x).get(y+1));
                     bfs(x, y+1, board); //call bfs on neighbor
                 }
-                if(isValidBFS(board.get(x+1).get(y))){ //LD
+                if(ib(x+1, y) && isValidBFS(board.get(x+1).get(y))){ //LD
                     //Check tile to the lower left of tile
                     tileQueue.offer(board.get(x+1).get(y));
                     bfs(x + 1, y, board); //call bfs on neighbor
                 }
-                if(isValidBFS(board.get(x+1).get(y+1))){ //RD
+                if(ib(x+1, y+1) && isValidBFS(board.get(x+1).get(y+1))){ //RD
                     //Check tile to the lower right of tile
                     tileQueue.offer(board.get(x+1).get(y + 1));
                     bfs(x + 1, y+1, board); //call bfs on neighbor
@@ -390,32 +389,32 @@ public class HiveGameState extends GameState implements Serializable {
                 //RU: (row--, col), RM: (row, col++), RD: (row++, col)
 
                 //Queue all possible valid neighbors
-                if (isValidBFS(board.get(x - 1).get(y - 1))) { //LU
+                if (ib(x-1, y-1) && isValidBFS(board.get(x - 1).get(y - 1))) { //LU
                     //Check tile above left of tile
                     tileQueue.offer(board.get(x - 1).get(y - 1));
                     bfs(x - 1, y-1, board); //call bbfs on neighbor
                 }
-                if (isValidBFS(board.get(x - 1).get(y))) { //RU
+                if (ib(x-1, y) && isValidBFS(board.get(x - 1).get(y))) { //RU
                     //Check tile above right of tile
                     tileQueue.offer(board.get(x - 1).get(y));
                     bfs(x - 1, y, board); //call bbfs on neighbor
                 }
-                if(isValidBFS(board.get(x).get(y-1))){ //LM
+                if(ib(x, y-1) && isValidBFS(board.get(x).get(y-1))){ //LM
                     //Check tile to the left of tile
                     tileQueue.offer(board.get(x).get(y-1));
                     bfs(x, y-1, board); //call bbfs on neighbor
                 }
-                if(isValidBFS(board.get(x).get(y+1))){ //RM
+                if(ib(x, y+1) && isValidBFS(board.get(x).get(y+1))){ //RM
                     //Check tile to the right of tile
                     tileQueue.offer(board.get(x).get(y+1));
                     bfs(x, y+1, board); //call bbfs on neighbor
                 }
-                if(isValidBFS(board.get(x+1).get(y-1))){ //LD
+                if(ib(x+1, y-1) && isValidBFS(board.get(x+1).get(y-1))){ //LD
                     //Check tile to the lower left of tile
                     tileQueue.offer(board.get(x+1).get(y-1));
                     bfs(x + 1, y-1, board); //call bbfs on neighbor
                 }
-                if(isValidBFS(board.get(x+1).get(y))){ //RD
+                if(ib(x+1, y) && isValidBFS(board.get(x+1).get(y))){ //RD
                     //Check tile to the lower right of tile
                     tileQueue.offer(board.get(x+1).get(y));
                     bfs(x + 1, y, board); //call bbfs on neighbor
@@ -425,6 +424,12 @@ public class HiveGameState extends GameState implements Serializable {
         return countVisited;
     }
 
+    /**
+     *
+     * @param x the xCoord
+     * @param y the yCoord
+     * @return true if in bounds, false if out of bounds
+     */
     public boolean ib(int x, int y){
         if(x < 0 || y < 0 ||
                 x >= numRows || y >= numRows * 2){
@@ -487,37 +492,37 @@ public class HiveGameState extends GameState implements Serializable {
                 //RU: (row--, col++), RM: (row, col++), RD: (row++, col++)
 
                 //Check tile above left of tile
-                if (gameBoard.get(x - 1).get(y).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x-1, y) && gameBoard.get(x - 1).get(y).getType() != Tile.Bug.EMPTY) {
                     count++;
                     LU = true;
                     sum += (x - 1) + y;
                 }
                 //Check tile above right of tile
-                if (gameBoard.get(x - 1).get(y + 1).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x-1, y+1) && gameBoard.get(x - 1).get(y + 1).getType() != Tile.Bug.EMPTY) {
                     count++;
                     RU = true;
                     sum += (x - 1) + (y + 1);
                 }
                 // Check tile to the left of tile
-                if (gameBoard.get(x).get(y - 1).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x, y-1) && gameBoard.get(x).get(y - 1).getType() != Tile.Bug.EMPTY) {
                     count++;
                     LM = true;
                     sum += x + (y - 1);
                 }
                 // Check tile to the right of tile
-                if (gameBoard.get(x).get(y + 1).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x, y+1) && gameBoard.get(x).get(y + 1).getType() != Tile.Bug.EMPTY) {
                     count++;
                     RM = true;
                     sum += x + (y + 1);
                 }
               //Check tile below left of tile
-                if (gameBoard.get(x + 1).get(y).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x+1, y) && gameBoard.get(x + 1).get(y).getType() != Tile.Bug.EMPTY) {
                     count++;
                     LD = true;
                     sum += (x + 1) + y;
                 }
                 // Check tile below right of tile
-                if (gameBoard.get(x + 1).get(y + 1).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x+1, y+1) && gameBoard.get(x + 1).get(y + 1).getType() != Tile.Bug.EMPTY) {
                     count++;
                     RD = true;
                     sum += (x + 1) + (y + 1);
@@ -550,37 +555,37 @@ public class HiveGameState extends GameState implements Serializable {
                 //RU: (row--, col), RM: (row, col++), RD: (row++, col)
 
                 //Check tile above left of tile
-                if (gameBoard.get(x-1).get(y-1).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x-1, y-1) && gameBoard.get(x-1).get(y-1).getType() != Tile.Bug.EMPTY) {
                     count++;
                     LU = true;
                     sum += (x - 1) + (y - 1);
                 }
                 //Check tile above right of tile
-                if (gameBoard.get(x - 1).get(y).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x-1, y) && gameBoard.get(x - 1).get(y).getType() != Tile.Bug.EMPTY) {
                     count++;
                     RU = true;
                     sum += (x - 1) + y;
                 }
                 // Check tile to the left of tile
-                if (gameBoard.get(x).get(y - 1).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x, y-1) && gameBoard.get(x).get(y - 1).getType() != Tile.Bug.EMPTY) {
                     count++;
                     LM = true;
                     sum += x + (y - 1);
                 }
                 // Check tile to the right of tile
-                if (gameBoard.get(x).get(y + 1).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x, y+1) && gameBoard.get(x).get(y + 1).getType() != Tile.Bug.EMPTY) {
                     count++;
                     RM = true;
                     sum += x + (y + 1);
                 }
                 //Check tile below left of tile
-                if (gameBoard.get(x + 1).get(y - 1).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x+1, y-1) && gameBoard.get(x + 1).get(y - 1).getType() != Tile.Bug.EMPTY) {
                     count++;
                     LD = true;
                     sum += (x + 1) + (y - 1);
                 }
                 // Check tile below right of tile
-                if (gameBoard.get(x + 1).get(y).getType() != Tile.Bug.EMPTY) {
+                if (boundsCheck(x+1, y) && gameBoard.get(x + 1).get(y).getType() != Tile.Bug.EMPTY) {
                     count++;
                     RD = true;
                     sum += (x + 1) + y;
@@ -1346,41 +1351,41 @@ public class HiveGameState extends GameState implements Serializable {
 
         //find if tile touches at least one other non empty tile
         if (x % 2 == 0) { //even row
-            if((gameBoard.get(x - 1).get(y)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x-1, y) && (gameBoard.get(x - 1).get(y)).getType() != Tile.Bug.EMPTY){
                 return true;//tile above left of tile
             }
-            if((gameBoard.get(x - 1).get(y + 1)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x-1, y+1) && (gameBoard.get(x - 1).get(y + 1)).getType() != Tile.Bug.EMPTY){
                 return true;//tile above right of tile
             }
-            if((gameBoard.get(x).get(y - 1)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x, y-1) && (gameBoard.get(x).get(y - 1)).getType() != Tile.Bug.EMPTY){
                 return true; //tile to the left of tile
             }
-            if((gameBoard.get(x).get(y + 1)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x, y+1) && (gameBoard.get(x).get(y + 1)).getType() != Tile.Bug.EMPTY){
                 return true;
             } //tile to the right of tile
-            if((gameBoard.get(x + 1).get(y)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x+1, y) && (gameBoard.get(x + 1).get(y)).getType() != Tile.Bug.EMPTY){
                 return true;//tile below left of tile
             }
-            if((gameBoard.get(x + 1).get(y + 1)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x+1, y+1) && (gameBoard.get(x + 1).get(y + 1)).getType() != Tile.Bug.EMPTY){
                 return true; //tile below right of tile
             }
         } else { //odd row
-            if((gameBoard.get(x - 1).get(y - 1)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x-1, y-1) && (gameBoard.get(x - 1).get(y - 1)).getType() != Tile.Bug.EMPTY){
                 return true;//tile above left of tile
             }
-            if((gameBoard.get(x - 1).get(y)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x-1, y) && (gameBoard.get(x - 1).get(y)).getType() != Tile.Bug.EMPTY){
                 return true;//tile above right of tile
             }
-            if((gameBoard.get(x).get(y - 1)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x, y-1) && (gameBoard.get(x).get(y - 1)).getType() != Tile.Bug.EMPTY){
                 return true; //tile to the left of tile
             }
-            if((gameBoard.get(x).get(y + 1)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x, y+1) && (gameBoard.get(x).get(y + 1)).getType() != Tile.Bug.EMPTY){
                 return true;
             } //tile to the right of tile
-            if((gameBoard.get(x + 1).get(y - 1)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x+1, y-1) && (gameBoard.get(x + 1).get(y - 1)).getType() != Tile.Bug.EMPTY){
                 return true;//tile below left of tile
             }
-            if((gameBoard.get(x + 1).get(y)).getType() != Tile.Bug.EMPTY){
+            if(boundsCheck(x+1, y) && (gameBoard.get(x + 1).get(y)).getType() != Tile.Bug.EMPTY){
                 return true; //tile below right of tile
             }
         }
@@ -1994,9 +1999,9 @@ public class HiveGameState extends GameState implements Serializable {
     }
     /**
      *
-     * @return sets the image popping up
+     * sets the image popping up
+     * @param flag the varaible setting the rulesClicked variable
      */
-
     public void setRulesClicked(boolean flag){
         rulesClicked = flag;
     }
