@@ -214,7 +214,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         game.sendAction(endTurn);
                         return;
                     }
-                     ArrayList<ArrayList<Tile>> gameBoard = new ArrayList<ArrayList<Tile>>();
+                    ArrayList<ArrayList<Tile>> gameBoard = new ArrayList<ArrayList<Tile>>();
                     gameBoard = hiveGame.getGameBoard();
                     int i =0;
                     int goalX = -1;
@@ -274,7 +274,6 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
             return;
         }
     }
-
 
     //setter and getters for instance variables
     public ImageButton getSelectedImageButton() {
