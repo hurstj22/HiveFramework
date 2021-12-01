@@ -223,7 +223,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         endTurnButton = (Button)activity.findViewById(R.id.endTurnButton);
         undoButton = (Button)activity.findViewById(R.id.undoButton);
         rulesButton = (Button)activity.findViewById(R.id.rulesButton);
-        rulesImage = activity.findViewById(R.id.rulesImage);
+
 
         currentTurnTextView = (TextView)activity.findViewById(R.id.currentTurnTextView); //Who's turn it is
         playerOneTextView = (TextView)activity.findViewById(R.id.playerOneTextView);
@@ -264,8 +264,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         grasshopperP2Image = (ImageButton)activity.findViewById(R.id.grasshopperP2Image);
         grasshopperP2Image.setImageResource(R.drawable.grasshopperhexcropped);
 
-        //rules display
-        rulesImage = (ImageView)activity.findViewById(R.id.rulesImage);
+
 
         // set the surfaceView instance variable
         surfaceView = (HiveSurfaceView)myActivity.findViewById(R.id.hiveSurfaceView);
