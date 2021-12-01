@@ -105,7 +105,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     //array list of buttons to easily loop through and highlight the selected one
     HiveSelectAction selectActionFromHand = null;
     HiveUndoTurnAction undoTurnAction = null;
-    private boolean rulesClicked = false;
 
     //id numbers to hold the id nums of all images
     int beeId;

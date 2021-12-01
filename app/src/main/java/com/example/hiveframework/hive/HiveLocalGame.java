@@ -8,6 +8,7 @@ import com.example.hiveframework.GameFramework.players.GamePlayer;
 import com.example.hiveframework.GameFramework.LocalGame;
 import com.example.hiveframework.GameFramework.actionMessage.GameAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
+import com.example.hiveframework.hive.hiveActionMessage.HiveRulesAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveUndoTurnAction;
 import com.example.hiveframework.hive.players.HiveHumanPlayer1;
@@ -131,12 +132,21 @@ public class HiveLocalGame extends LocalGame {
         int playerId = getPlayerIdx(action.getPlayer());
         // get the 0/1 id of the player whose move it is
         int whoseMove = hiveState.getWhoseTurn();
+
+        //end turn action
         if(action instanceof EndTurnAction){
             hiveState.setWhoseTurn(1 - whoseMove);
             hiveState.setPlacedPiece(false);
             return true; //successfully changed turns
         }
 
+        //rules action
+        if(action instanceof HiveRulesAction){
+            hiveState.setRulesClicked(!hiveState.getRulesClicked()); //toggle the button
+            return true; //successfully toggled the rules
+        }
+
+        //undo action
         if(action instanceof HiveUndoTurnAction) {
             //HiveUndoTurnAction undoTurnAction = (HiveUndoTurnAction) action;
             //HiveGameState undoTurn = undoTurnAction.getStartTurn();
