@@ -25,12 +25,10 @@ public class HiveGameState extends GameState implements Serializable {
     private static final String TAG = "HiveGameState";
     private static final long serialVersionUID = 7552321013488624386L;
 
-
     //Holds gamestate from beginning of turn
     private HiveGameState undoTurn = null;
 
     //directions used in search functions
-
     public enum Direction {
         UP_LEFT,
         UP_RIGHT,
@@ -49,14 +47,12 @@ public class HiveGameState extends GameState implements Serializable {
     private boolean selectFlag; //true if an imageButton is selected
 
     private static final int tileSize = 300;
-    private final int GBSIZE = 7; //size of the gameboard
     private ArrayList<Tile> potentialMoves; //the moves that a selected piece could move to
     private ArrayList<Tile> computerPlayersTiles; //the pieces that the computer currently has down on the board
     Queue<Tile> tileQueue; //the queue used in BFS
     private int numRows = 7; //for the gameBoard row size
     private int numCols = 14; //for the gameBoard col size
-    //boolean for placed piece
-    private boolean placedPiece;
+    private boolean placedPiece;  //boolean for placed piece
     private boolean rulesClicked; //rules method
 
     /**
@@ -182,6 +178,9 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if can move there, false if not
      */
     public boolean validMove(Tile tile){
+        if(!potentialMoves.isEmpty()){ //check if the list has already been populated
+            potentialMoves.clear(); //reset the moves before filling it
+        }
         if(tile.getIndexX() == -1) { //tile coming in from the players hand to be placed
             return selectFromHand(tile);
         }
@@ -2003,7 +2002,6 @@ public class HiveGameState extends GameState implements Serializable {
      * sets the image popping up
      * @param flag the varaible setting the rulesClicked variable
      */
-
     public void setRulesClicked(boolean flag){
         rulesClicked = flag;
     }
