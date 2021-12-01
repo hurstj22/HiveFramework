@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class HiveRulesAction extends GameAction {
 
     //Tag for logging
-    private static final String TAG = "HiveMoveAction";
+    private static final String TAG = "HiveRulesAction";
     private static final long serialVersionUID = -2242980258970485343L;
 
     /**

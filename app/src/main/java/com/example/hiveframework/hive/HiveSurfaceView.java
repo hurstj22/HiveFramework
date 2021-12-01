@@ -221,9 +221,9 @@ public class HiveSurfaceView extends FlashSurfaceView {
             //draw the rules image if the user has clicked the button
             if(state.getRulesClicked()){
                 Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.rules); //create image using tile's id
-                Bitmap resizedImage = Bitmap.createScaledBitmap(image, 100, 100, true); //scales the image down to the right size
+                Bitmap resizedImage = Bitmap.createScaledBitmap(image, 1000, 800, true); //scales the image down to the right size
 
-                canvas.drawBitmap(resizedImage, 0, 0, tileColor);
+                canvas.drawBitmap(resizedImage, this.getWidth()/2 - resizedImage.getWidth()/2, 0, tileColor); //draw the rules image on the surface view
             }
         } //end of state if statement
     }

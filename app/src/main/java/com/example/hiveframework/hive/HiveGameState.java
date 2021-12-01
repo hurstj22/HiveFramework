@@ -109,6 +109,7 @@ public class HiveGameState extends GameState implements Serializable {
         computerPlayersTiles = new ArrayList<Tile>();
         selectFlag = false; //default hasn't selected an image
         tileQueue = new LinkedList<Tile>();
+        rulesClicked = false;
     }
 
     /**
@@ -151,6 +152,7 @@ public class HiveGameState extends GameState implements Serializable {
         this.whoseTurn = other.getWhoseTurn();
         this.currentIdSelected = other.getCurrentIdSelected();
         this.placedPiece = other.getPlacedPiece();
+        this.rulesClicked = other.getRulesClicked();
     }
 
     /**
