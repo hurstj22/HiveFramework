@@ -425,6 +425,12 @@ public class HiveGameState extends GameState implements Serializable {
         return countVisited;
     }
 
+    /**
+     *
+     * @param x the xCoord
+     * @param y the yCoord
+     * @return true if in bounds, false if out of bounds
+     */
     public boolean ib(int x, int y){
         if(x < 0 || y < 0 ||
                 x >= numRows || y >= numRows * 2){
@@ -1994,7 +2000,8 @@ public class HiveGameState extends GameState implements Serializable {
     }
     /**
      *
-     * @return sets the image popping up
+     * sets the image popping up
+     * @param flag the varaible setting the rulesClicked variable
      */
 
     public void setRulesClicked(boolean flag){
