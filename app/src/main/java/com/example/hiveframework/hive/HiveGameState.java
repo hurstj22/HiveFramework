@@ -57,6 +57,7 @@ public class HiveGameState extends GameState implements Serializable {
     private int numCols = 14; //for the gameBoard col size
     //boolean for placed piece
     private boolean placedPiece;
+    private boolean rulesClicked; //rules method
 
     /**
      * Default constructor.
@@ -1989,6 +1990,22 @@ public class HiveGameState extends GameState implements Serializable {
     public HiveGameState getUndoTurn() {
         return getUndoTurn();
     }
+    /**
+     *
+     * @return sets the image popping up
+     */
+
+    public void setRulesClicked(boolean flag){
+        rulesClicked = flag;
+    }
+
+    /**
+     *
+     * @return gets the image popping up
+     */
+    public boolean getRulesClicked(){
+        return rulesClicked;
+    }
 
     /**
      *
@@ -2029,6 +2046,7 @@ public class HiveGameState extends GameState implements Serializable {
     public void setComputerPlayersTiles(ArrayList<Tile> computerPlayersTiles) {
         this.computerPlayersTiles = computerPlayersTiles;
     }
+
 
     /**
      *
@@ -2263,6 +2281,8 @@ public class HiveGameState extends GameState implements Serializable {
         }
         return whoWon;
     }
+
+
 
     /**
      * Resizes the board by adding a row to the top and bottom

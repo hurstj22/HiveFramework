@@ -21,6 +21,7 @@ import com.example.hiveframework.hive.HiveGameState;
 import com.example.hiveframework.hive.HiveSurfaceView;
 import com.example.hiveframework.hive.Tile;
 import com.example.hiveframework.hive.hiveActionMessage.HiveMoveAction;
+import com.example.hiveframework.hive.hiveActionMessage.HiveRulesAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveSelectAction;
 import com.example.hiveframework.hive.hiveActionMessage.HiveUndoTurnAction;
 
@@ -365,7 +366,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      */
     public void onClick(View view) {
         EndTurnAction endTurnAction = new EndTurnAction(this);
-
+        HiveRulesAction hiveRulesAction = new HiveRulesAction (this);
         switch(view.getId()) {
             case R.id.playButton: //restarts the game with the same selected options
                 myActivity.restartGame();
@@ -379,9 +380,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 myActivity.finishAffinity();
                 break;
             case R.id.rulesButton: //image inside after touch
-                if(rulesClicked) {
-                    game.sendAction(drawRulesAction);
-                rulesClicked = !rulesClicked; //reset clicker boolean
+                    game.sendAction(hiveRulesAction);
                break;
 
             case R.id.undoButton: //undo the last move by resetting the gameState to a previous one
