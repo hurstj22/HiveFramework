@@ -1,5 +1,6 @@
 package com.example.hiveframework.hive.players;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -202,9 +203,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 }
             }
 
-            if(hiveGame.getPiecesRemain()[1][0] != 0) { //scroll to the beginning if the game just started
-                vertScroll.scrollTo(0, 2500);
-                horzScroll.scrollTo(2500, 0);
+            if(hiveGame.pieceCount(this.playerNum) > 20) { //scroll to the beginning if the game just started (21 total bug pieces in a player's hand)
+                vertScroll.scrollTo(0, 2300);
+                horzScroll.scrollTo(2300, 0);
                 hiveGame.setFirstTurn(true);
             }
 
@@ -232,7 +233,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         endTurnButton = (Button)activity.findViewById(R.id.endTurnButton);
         undoButton = (Button)activity.findViewById(R.id.undoButton);
         rulesButton = (Button)activity.findViewById(R.id.rulesButton);
-
+        //rulesImage = (ImageView)activity.findViewById(R.drawable.rules);
 
         currentTurnTextView = (TextView)activity.findViewById(R.id.currentTurnTextView); //Who's turn it is
         playerOneTextView = (TextView)activity.findViewById(R.id.playerOneTextView);
@@ -313,21 +314,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         endTurnButton.setOnClickListener(this);
         undoButton.setOnClickListener(this);
 
-        //scroll view
+        //scroll view and horizontal scroll view initialized
         vertScroll = (ScrollView)myActivity.findViewById(R.id.scrollVert);
-        //vertScroll.post(new Runnable() {
-        //    @Override
-        //    public void run() {
-                vertScroll.scrollTo(0,surfaceView.getHeight()/2);
-        //    }
-        //});
-        horzScroll = (HorizontalScrollView)myActivity.findViewById(R.id.scrollHorz) ;
-        //vertScroll.post(new Runnable() {
-        //    @Override
-        //    public void run() {
-                horzScroll.scrollTo(surfaceView.getWidth()/2,0);
-        //    }
-        //});
+        horzScroll = (HorizontalScrollView)myActivity.findViewById(R.id.scrollHorz);
     }
 
     /**

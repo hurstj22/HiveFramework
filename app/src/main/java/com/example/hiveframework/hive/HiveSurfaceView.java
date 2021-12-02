@@ -1,6 +1,7 @@
 package com.example.hiveframework.hive;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
