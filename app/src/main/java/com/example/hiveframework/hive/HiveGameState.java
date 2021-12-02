@@ -670,36 +670,36 @@ public class HiveGameState extends GameState implements Serializable {
             // before highlighting as potential
             int x = tile.getIndexX();
             int y = tile.getIndexY();
-
+            gameBoard.get(x).set(y, new Tile(x, y, Tile.PlayerPiece.EMPTY)); //temporarily take out the beetle from the gameBoard
             if (x % 2 == 0) {
                 // For even rows
 
-                if (nextTo(tile, gameBoard.get(x - 1).get(y), true)) {
+                if (onEdge(gameBoard.get(x - 1).get(y)) && nextTo(tile, gameBoard.get(x - 1).get(y), true)) {
                     //Check tile above left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y));
                 }
-                if (nextTo(tile, gameBoard.get(x - 1).get(y + 1),true )) {
+                if (onEdge(gameBoard.get(x - 1).get(y + 1)) && nextTo(tile, gameBoard.get(x - 1).get(y + 1),true )) {
                     //Check tile above right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y + 1));
                 }
-                if (nextTo(tile, gameBoard.get(x).get(y - 1),true )) {
+                if (onEdge(gameBoard.get(x).get(y - 1)) && nextTo(tile, gameBoard.get(x).get(y - 1),true )) {
                     //Check tile to the left of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y - 1));
                 }
-                if (nextTo(tile, gameBoard.get(x).get(y + 1),true )) {
+                if (onEdge(gameBoard.get(x).get(y + 1)) && nextTo(tile, gameBoard.get(x).get(y + 1),true )) {
                     //Check tile to the right of ti is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y + 1));
                 }
-                if (nextTo(tile, gameBoard.get(x + 1).get(y),true )) {
+                if (onEdge(gameBoard.get(x + 1).get(y)) && nextTo(tile, gameBoard.get(x + 1).get(y),true )) {
                     //Check tile below left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y));
                 }
-                if (nextTo(tile, gameBoard.get(x + 1).get(y + 1),true )) {
+                if (onEdge(gameBoard.get(x + 1).get(y + 1)) && nextTo(tile, gameBoard.get(x + 1).get(y + 1),true )) {
                     //Check tile below right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y + 1));
@@ -707,38 +707,40 @@ public class HiveGameState extends GameState implements Serializable {
             } else {
                 // For odd rows
 
-                if (nextTo(tile, gameBoard.get(x - 1).get(y - 1),true )) {
+                if (onEdge(gameBoard.get(x - 1).get(y - 1)) && nextTo(tile, gameBoard.get(x - 1).get(y - 1),true )) {
                     //Check tile above left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y - 1));
                 }
-                if (nextTo(tile, gameBoard.get(x - 1).get(y), true)) {
+                if (onEdge(gameBoard.get(x - 1).get(y)) && nextTo(tile, gameBoard.get(x - 1).get(y), true)) {
                     //Check tile above right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x - 1).get(y));
                 }
-                if (nextTo(tile, gameBoard.get(x).get(y - 1), true)) {
+                if (onEdge(gameBoard.get(x).get(y - 1)) && nextTo(tile, gameBoard.get(x).get(y - 1), true)) {
                     //Check tile to the left of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y - 1));
                 }
-                if (nextTo(tile, gameBoard.get(x).get(y + 1), true)) {
+                if (onEdge(gameBoard.get(x).get(y+1)) && nextTo(tile, gameBoard.get(x).get(y + 1), true)) {
                     //Check tile to the right of ti is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x).get(y + 1));
                 }
-                if (nextTo(tile, gameBoard.get(x + 1).get(y - 1), true)) {
+                if (onEdge(gameBoard.get(x + 1).get(y - 1)) && nextTo(tile, gameBoard.get(x + 1).get(y - 1), true)) {
                     //Check tile below left of tile is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y - 1));
                 }
-                if (nextTo(tile, gameBoard.get(x + 1).get(y), true)) {
+                if (onEdge(gameBoard.get(x + 1).get(y)) && nextTo(tile, gameBoard.get(x + 1).get(y), true)) {
                     //Check tile below right of til is nextTo another tile
                     //If true, add tile to ArrayList<Tile> potentials
                     potentialMoves.add(gameBoard.get(x + 1).get(y));
                 }
 
             }
+            gameBoard.get(x).set(y, tile); //put the beetle back on the board
+
             if (!potentialMoves.isEmpty()) {
                 return true;
             }
@@ -1673,6 +1675,19 @@ public class HiveGameState extends GameState implements Serializable {
                 return piecesRemain[player][4];
         }
         return 0;
+    }
+
+    /**
+     * Returns how many pieces left total in the players hand
+     * @param playerNum the player id number coming in
+     */
+    public int pieceCount(int playerNum){
+        int count = 0;
+
+        for(int i = 0; i < piecesRemain[playerNum].length; i++) {
+            count += piecesRemain[playerNum][i];
+        }
+        return count;
     }
 
     /**

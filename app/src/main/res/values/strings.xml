@@ -8,7 +8,7 @@
     <string name="undo_move_move">Undo Move</string>
     <string name="player_one_text">Player 1</string>
     <string name="player_two_text">Player 2</string>
-    <string name="rules_text">rules</string>
+    <string name="rules_text">Rules</string>
 
     <string name="beeP1Counter">1</string>
     <string name="antP1Counter">2</string>
