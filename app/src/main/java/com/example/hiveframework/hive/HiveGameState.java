@@ -50,10 +50,11 @@ public class HiveGameState extends GameState implements Serializable {
     private ArrayList<Tile> potentialMoves; //the moves that a selected piece could move to
     private ArrayList<Tile> computerPlayersTiles; //the pieces that the computer currently has down on the board
     Queue<Tile> tileQueue; //the queue used in BFS
-    private int numRows = 7; //for the gameBoard row size
-    private int numCols = 14; //for the gameBoard col size
+    private int numRows = 50; //for the gameBoard row size
+    private int numCols = 50; //for the gameBoard col size
     private boolean placedPiece;  //boolean for placed piece
     private boolean rulesClicked; //rules method
+    private boolean firstTurn; //for setting if it's the first turn for scroll view
 
     /**
      * Default constructor.
@@ -106,6 +107,7 @@ public class HiveGameState extends GameState implements Serializable {
         selectFlag = false; //default hasn't selected an image
         tileQueue = new LinkedList<Tile>();
         rulesClicked = false;
+        firstTurn = false;
     }
 
     /**
@@ -149,6 +151,7 @@ public class HiveGameState extends GameState implements Serializable {
         this.currentIdSelected = other.getCurrentIdSelected();
         this.placedPiece = other.getPlacedPiece();
         this.rulesClicked = other.getRulesClicked();
+        this.firstTurn = other.getFirstTurn();
     }
 
     /**
@@ -311,7 +314,7 @@ public class HiveGameState extends GameState implements Serializable {
                 }
             }
             for(int i = 0; i < testBoard.size(); i++) {
-                for (int j = 0; j < testBoard.size() * 2; j++) {
+                for (int j = 0; j < testBoard.size(); j++) {
                     if(!testBoard.get(i).get(j).getVisited() && testBoard.get(i).get(j).getType() != Tile.Bug.EMPTY){
                         Log.i("BFS: ", "Found a tile that wasn't connected");
                         return true; //We didn't visit a tile during bfs
@@ -432,7 +435,7 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public boolean ib(int x, int y){
         if(x < 0 || y < 0 ||
-                x >= numRows || y >= numRows * 2){
+                x >= numRows || y >= numCols){
             return false; //out of bounds
         }
         return true;
@@ -447,7 +450,7 @@ public class HiveGameState extends GameState implements Serializable {
     public boolean isValidBFS(Tile tile){
 
         if(tile.getIndexX() < 0 || tile.getIndexY() < 0 ||
-                tile.getIndexX() >= numRows || tile.getIndexY() >= numRows * 2){
+                tile.getIndexX() >= numRows || tile.getIndexY() >= numCols){
             return false; //out of bounds
         }
 
@@ -1778,7 +1781,7 @@ public class HiveGameState extends GameState implements Serializable {
         }
         else{
             for (int i = 0; i < numRows; i++) {
-                for (int j = 0; j < numRows * 2; j++) {
+                for (int j = 0; j < numCols; j++) {
                     if (gameBoard.get(i).get(j).getPlayerPiece() == inTile.getPlayerPiece()){
                         //if(boundsCheck(i, j)) {
                             surroundingTiles(gameBoard.get(i).get(j), toggle);
@@ -2032,6 +2035,22 @@ public class HiveGameState extends GameState implements Serializable {
 
     /**
      *
+     * @return the status of the firstTurn boolean
+     */
+    public boolean getFirstTurn(){
+        return firstTurn;
+    }
+
+    /**
+     *
+     * @param first the boolean being set
+     */
+    public void setFirstTurn(boolean first){
+        firstTurn = first;
+    }
+
+    /**
+     *
      * @param id of the imageButton that should be set
      */
     public void setCurrentIdSelected(int id){
@@ -2131,7 +2150,7 @@ public class HiveGameState extends GameState implements Serializable {
      * @return true if within the gameboard and NOT on an edge
      */
     public boolean boundsCheckPlace(int row, int col){
-        if (row > 1 && row < (numRows - 2)  && col > 1 && col < (numCols - 2)) {
+        if (row > (numRows/2 - 4) && row < (numRows/2 + 4)  && col > (numCols/2 - 4) && col < (numCols/2 + 4)) {
             return true;
         }
         return false;

@@ -9,7 +9,7 @@ import com.example.hiveframework.hive.Tile;
 import java.util.ArrayList;
 
 /**
- * This class is sent when the player or computer wants to move a piece
+ * This class is sent when the player or computer wants to pull up the rules
  *  @author Isaac Reinhard
  *  @author Kelly Ngyuen
  *  @author Ali Sheehan

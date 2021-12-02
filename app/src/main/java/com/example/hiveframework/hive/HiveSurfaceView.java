@@ -137,7 +137,7 @@ public class HiveSurfaceView extends FlashSurfaceView {
             potentialCounter = 0;
             potentialList = new ArrayList<>(state.getPotentialMoves());
             for (int i = 0; i < state.getBoardSize(); i++) {
-                for (int j = 0; j < state.getBoardSize() * 2; j++) {
+                for (int j = 0; j < state.getBoardSize(); j++) {
                     //loop through all pieces in their locations and ask piece to draw itself
                     //use the id to draw the appropriate bitmap
                     switch (state.getGameBoard().get(i).get(j).getType()) {

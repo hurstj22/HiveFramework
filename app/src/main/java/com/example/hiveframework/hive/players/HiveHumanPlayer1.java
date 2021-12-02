@@ -6,9 +6,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.core.widget.NestedScrollView;
 
 import com.example.hiveframework.GameFramework.GameMainActivity;
 import com.example.hiveframework.GameFramework.actionMessage.EndTurnAction;
@@ -44,6 +48,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     private static final String TAG = "HiveHumanPlayer1";
     // the surface view
     private HiveSurfaceView surfaceView;
+    private ScrollView vertScroll = null;
+    private HorizontalScrollView horzScroll = null;
     private FrameLayout mainFrame; //the main frame which houses all the buttons on the sides
     // the ID for the layout to use
     private int layoutId;
@@ -195,9 +201,17 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                     }
                 }
             }
+
+            if(hiveGame.getPiecesRemain()[1][0] != 0) { //scroll to the beginning if the game just started
+                vertScroll.scrollTo(0, 2500);
+                horzScroll.scrollTo(2500, 0);
+                hiveGame.setFirstTurn(true);
+            }
+
             hiveGame.setSelectFlag(false);
             surfaceView.setState(hiveGame); //update the surfaceView
             surfaceView.invalidate();
+
             Logger.log(TAG, "receiving");
         }
     }
@@ -298,6 +312,22 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         rulesButton.setOnClickListener(this);
         endTurnButton.setOnClickListener(this);
         undoButton.setOnClickListener(this);
+
+        //scroll view
+        vertScroll = (ScrollView)myActivity.findViewById(R.id.scrollVert);
+        //vertScroll.post(new Runnable() {
+        //    @Override
+        //    public void run() {
+                vertScroll.scrollTo(0,surfaceView.getHeight()/2);
+        //    }
+        //});
+        horzScroll = (HorizontalScrollView)myActivity.findViewById(R.id.scrollHorz) ;
+        //vertScroll.post(new Runnable() {
+        //    @Override
+        //    public void run() {
+                horzScroll.scrollTo(surfaceView.getWidth()/2,0);
+        //    }
+        //});
     }
 
     /**
