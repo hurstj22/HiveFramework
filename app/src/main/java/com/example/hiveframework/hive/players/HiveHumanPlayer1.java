@@ -1,6 +1,7 @@
 package com.example.hiveframework.hive.players;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -12,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 
 import androidx.core.widget.NestedScrollView;
 
@@ -112,8 +115,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     //array list of buttons to easily loop through and highlight the selected one
     HiveSelectAction selectActionFromHand = null;
     HiveUndoTurnAction undoTurnAction = null;
-
     private boolean screenDragged;
+
+    private Vibrator vibrator = null; //vibrations for haptic feedback
 
     //id numbers to hold the id nums of all images
     int beeId;
@@ -286,6 +290,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         Logger.log("set listener","OnClick");
         mainFrame.setOnClickListener(this);
 
+        vibrator = (Vibrator) myActivity.getSystemService(Context.VIBRATOR_SERVICE);
+
         //set the onClickListeners for all the buttons
         beeP1Image.setOnClickListener(this);
         spiderP1Image.setOnClickListener(this);
@@ -400,8 +406,23 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     public void onClick(View view) {
         EndTurnAction endTurnAction = new EndTurnAction(this);
         HiveRulesAction hiveRulesAction = new HiveRulesAction (this);
+
+        //copied this code for haptic feedback from: https://www.geeksforgeeks.org/how-to-vibrate-a-device-programmatically-in-android/
+        final VibrationEffect vibrationEffect1;
+        // this is the only type of the vibration which requires system version Oreo (API 26)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            // this effect creates the vibration of default amplitude for 1000ms(1 sec)
+            vibrationEffect1 = VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE);
+
+            // it is safe to cancel other vibrations currently taking place
+            vibrator.cancel();
+            vibrator.vibrate(vibrationEffect1);
+        }
+
         switch(view.getId()) {
             case R.id.playButton: //restarts the game with the same selected options
+                playButton.performHapticFeedback(10);
                 myActivity.restartGame();
                 break;
             case R.id.endTurnButton: //switches the current player's turn
