@@ -112,6 +112,8 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
     HiveSelectAction selectActionFromHand = null;
     HiveUndoTurnAction undoTurnAction = null;
 
+    private boolean screenDragged;
+
     //id numbers to hold the id nums of all images
     int beeId;
     int spiderId;
@@ -347,6 +349,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
      * sends move actions to place pieces or move them on the board
      */
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        //extracts x & y values from touch, maps to position in game board, sets screenDragged to false
         if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
             inX = motionEvent.getX();
             inY = motionEvent.getY();
@@ -356,26 +359,36 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             newX = gameBoardPosition[0];
             newY = gameBoardPosition[1];
 
-            if(selectedImageButton != null){ //the player has selected one of the pieces to "place" on the board
-                HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);
-                moveActionFromHand.setSelectedImageButton(selectedImageButton);
-                selectedImageButton = null;
-                //not sure if I can reset it since possibly it's just a pointer that gets assigned in moveAction... not sure about this one
-                moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
-                game.sendAction(moveActionFromHand);
-                return true;
-            }
-            else if(!hasTapped && selectedImageButton == null){ //selecting from the board so pass a selectAction with the x and y coords
-                oldX = newX;
-                oldY = newY;
-                hasTapped = !hasTapped;
-                game.sendAction(new HiveSelectAction(this, oldX, oldY));
-                return true;
-            }
-            else if(hasTapped && oldX != -1){ //this is the second time tapping so you've selected a gameboard tile and now another gameboard tile
-                hasTapped = !hasTapped; //reset hasTapped
-                game.sendAction(new HiveMoveAction(this, newX, newY));
-                return true;
+            screenDragged = false;
+            return true;
+        }
+        else if (motionEvent.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            //sets screenDragged to true
+            screenDragged = true;
+            return true;
+        }
+        else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+            //creates action based on touch event
+            if (!screenDragged) { //only preform if screen hasn't been dragged
+                if (selectedImageButton != null) { //the player has selected one of the pieces to "place" on the board
+                    HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);
+                    moveActionFromHand.setSelectedImageButton(selectedImageButton);
+                    selectedImageButton = null;
+                    //not sure if I can reset it since possibly it's just a pointer that gets assigned in moveAction... not sure about this one
+                    moveActionFromHand.setCurrentTile(currentTile); //set the tile that the action is working on moving
+                    game.sendAction(moveActionFromHand);
+                    return true;
+                } else if (!hasTapped && selectedImageButton == null) { //selecting from the board so pass a selectAction with the x and y coords
+                    oldX = newX;
+                    oldY = newY;
+                    hasTapped = !hasTapped;
+                    game.sendAction(new HiveSelectAction(this, oldX, oldY));
+                    return true;
+                } else if (hasTapped && oldX != -1) { //this is the second time tapping so you've selected a gameboard tile and now another gameboard tile
+                    hasTapped = !hasTapped; //reset hasTapped
+                    game.sendAction(new HiveMoveAction(this, newX, newY));
+                    return true;
+                }
             }
         }
         return false;
