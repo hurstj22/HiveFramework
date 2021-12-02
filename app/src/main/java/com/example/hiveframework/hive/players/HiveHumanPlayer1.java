@@ -352,8 +352,15 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             return true;
         }
         else if (motionEvent.getActionMasked() == MotionEvent.ACTION_MOVE) {
-            //sets screenDragged to true
-            screenDragged = true;
+
+            int[] gameBoardPosition = surfaceView.mapPixelToSquare(motionEvent.getX(), motionEvent.getY());
+            int moveX = gameBoardPosition[0];
+            int moveY = gameBoardPosition[1];
+
+            //sets screenDragged to true if the positions aren't the same
+            if(moveX != newX && moveY != newY) {
+                screenDragged = true;
+            }
             return true;
         }
         else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
