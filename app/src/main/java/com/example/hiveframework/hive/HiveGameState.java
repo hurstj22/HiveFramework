@@ -42,6 +42,8 @@ public class HiveGameState extends GameState implements Serializable {
     private ArrayList<ArrayList<Tile>> gameBoard;
     private int piecesRemain[][]; //represents how many of each bug a player has
     private int whoseTurn; //whose turn it is currently 0 -> player1, 1 -> player2
+    private int turnCounter; //amount of turns that have happened thus far
+    private boolean humanPlayers[]; //represents how manyof the players are human
     private int countVisited; //number of visited tiles when performing bfs
     private int currentIdSelected; //the current id of the imageButton selected
     private boolean selectFlag; //true if an imageButton is selected
@@ -108,6 +110,11 @@ public class HiveGameState extends GameState implements Serializable {
         tileQueue = new LinkedList<Tile>();
         rulesClicked = false;
         firstTurn = false;
+        turnCounter = 0;
+        humanPlayers = new boolean[2];
+        humanPlayers[0] = false;
+        humanPlayers[1] = false;
+
     }
 
     /**
@@ -152,6 +159,9 @@ public class HiveGameState extends GameState implements Serializable {
         this.placedPiece = other.getPlacedPiece();
         this.rulesClicked = other.getRulesClicked();
         this.firstTurn = other.getFirstTurn();
+        this.tileQueue = new LinkedList<Tile>();
+        this.turnCounter = other.turnCounter;
+        this.humanPlayers = other.humanPlayers.clone();
     }
 
     /**
@@ -1972,6 +1982,42 @@ public class HiveGameState extends GameState implements Serializable {
         }
         return false;
     }
+    /**
+     * This method checks both conditions of the Queen Rule.
+     *
+     * @param playerIdx index of the current player
+     * @return false if queen must be played
+     */
+    public boolean turnFourRule(int playerIdx) {
+        if(placedQueen(playerIdx)) {            //If queen is placed, you're golden
+            return true;
+        } else if (!turnFour()) {               //If it is before turn 4, you're golden
+            return true;
+        }
+        return false;                           //Must play queen otherwise.
+
+    }
+
+    /**
+     * Returns whether or not a given player has placed their queen
+     *
+     * @param playerIdx index of a given player
+     * @return boolean, true if queen has been placed
+     */
+    public boolean placedQueen(int playerIdx) {
+        return (piecesRemain[playerIdx][0] == 0);
+    }
+    /**
+     * This method determines if it is turn 4 or after for any number of players.
+     *
+     * @return true if turn 4 or after, false if before turn four
+     */
+    public boolean turnFour() {
+        if(turnCounter/2 > 3) {
+            return true;
+        }
+        return false;                                       //Returns false if neither player is human
+    }
 
     /**
      *
@@ -2012,8 +2058,36 @@ public class HiveGameState extends GameState implements Serializable {
     public int getWhoseTurn(){
         return whoseTurn;
     }
+
+    /**
+     *
+     * @return array of booleans for humanplayers
+     */
+    public boolean[] getHumanPlayers() { return humanPlayers; }
+
+    /**
+     * Sets the index of HumanPlayers equal to true for a given player's index
+     * @param playerIdx index of player that is human
+     */
+    public void setHumanPlayers(int playerIdx) { humanPlayers[playerIdx] = true; }
+    /**
+     * Set the current turn counter
+     * @param turns number of human player turns that have happened thus far
+     */
+    public void setTurnCounter(int turns) { turnCounter = turns; }
+    /**
+     * Increment the current turn counter
+     */
+    public void upTurnCounter() { turnCounter++; }
+    /**
+     * Note: turn number is equal to turnCounter / human players.
+     *
+     * @return return the turn number
+     */
+    public int getTurnCounter() { return turnCounter; }
+
     public HiveGameState getUndoTurn() {
-        return getUndoTurn();
+        return undoTurn;
     }
     /**
      *

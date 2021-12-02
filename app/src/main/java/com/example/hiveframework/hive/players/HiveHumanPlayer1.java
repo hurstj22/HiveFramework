@@ -167,6 +167,10 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 //                undoTurnAction = new HiveUndoTurnAction(this, undo);
 //            }
 
+            //update humanplayers to reflect humanplayer count
+            hiveGame.setHumanPlayers(playerNum);
+
+
             //change the color of the turn banner to the player's color then change the text
             if(hiveGame.getWhoseTurn() == 0){ //first player
                 currentTurnTextView.setTextColor(Color.RED);
@@ -442,25 +446,43 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 //yet to be coded
                 break;
         }
-        if(view instanceof ImageButton){
+        if(view instanceof ImageButton) {
+            //Game must check the turn and if queen has been placed. If queen has not been placed,
+            //it will automatically select queen.
+            if(!hiveGame.turnFourRule(playerNum)) {                         //Auto-select Queen
+                if(playerNum == 0 ) {                    // 1st player
+                    selectedImageButton = myActivity.findViewById(R.id.beeP1Image);
+                    piece = Tile.PlayerPiece.W;
+                } else {                                //2nd player
+                    selectedImageButton = myActivity.findViewById(R.id.beeP2Image);
+                    piece = Tile.PlayerPiece.B;
+                }
+                selectActionFromHand = new HiveSelectAction(this, selectedImageButton.getId());
+                selectActionFromHand.setSelectedImageButton(selectedImageButton);
+
+
+                //If queen is placed or it is before turn 4
+            } else {                                                         //Proceed as normal
             //one of the player's bug pieces from their hand was selected, thus update the imageButton object
             selectedImageButton = (ImageButton) view; //local game can access the id and perform the appropriate actions
             selectActionFromHand = new HiveSelectAction(this, selectedImageButton.getId()); //set up the action
             selectActionFromHand.setSelectedImageButton(selectedImageButton);
 
             //create the tile to pass in as selected tile with starting coords as -1 since it belongs in the player's hand
-            if(hiveGame.getWhoseTurn() == 0){
+            if (hiveGame.getWhoseTurn() == 0) {
                 piece = Tile.PlayerPiece.W; //1st player
-            }
-            else{
+            } else {
                 piece = Tile.PlayerPiece.B; //2nd player
             }
-            currentTile = new Tile(-1,-1, piece, findBugType(selectedImageButton.getId()), selectedImageButton.getId()); //input -1's to know tile coming from board,
-                                                                                                                                        // type is determined by function, and id is set from imageButton
+           }
+            currentTile = new Tile(-1, -1, piece, findBugType(selectedImageButton.getId()), selectedImageButton.getId()); //input -1's to know tile coming from board,
+            // type is determined by function, and id is set from imageButton
             selectActionFromHand.setSelectedTile(currentTile); //assign the selected tile in the select action class to be referenced later
             //hiveGame.setSelectFlag(true); //for highlighting the background yellow SETTING THINGS IN THE hiveGame here DOESN'T WORK
             game.sendAction(selectActionFromHand); //then pass a select action
+
         }
+
 
     }
 
