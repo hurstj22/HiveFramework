@@ -149,11 +149,15 @@ public class HiveLocalGame extends LocalGame {
 
         //undo action
         if(action instanceof HiveUndoTurnAction) {
-            //HiveUndoTurnAction undoTurnAction = (HiveUndoTurnAction) action;
-            //HiveGameState undoTurn = undoTurnAction.getStartTurn();
-            hiveState = new HiveGameState(hiveState.getUndoTurn());
-            hiveState.setPlacedPiece(false);
-            return true;
+            HiveUndoTurnAction undoTurnAction = (HiveUndoTurnAction) action;
+            if(hiveState.getPreviousGameState() != null) {
+                Log.d("Success", "previousGameState not null.");
+                state = hiveState.getPreviousGameState();
+                hiveState.setPlacedPiece(false);
+                return true;
+            }
+            Log.d("Failed", "getPreviousGameState was null");
+            return false;
         }
         if(canMove(playerId)) {
             HiveSelectAction select = null; //start out as null

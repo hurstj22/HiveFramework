@@ -15,20 +15,19 @@ import java.util.ArrayList;
  *  @version November 2021
  */
 public class HiveUndoTurnAction extends GameAction {
-    HiveGameState startTurn;
+
+
+    private static final String TAG = "HiveUndoMoveAction";
+    private static final long serialVersionUID = -2242980258970485343L;
+
+
     /**
      * constructor for GameAction
      *
      * @param player the player who created the action
      */
-    public HiveUndoTurnAction(GamePlayer player, HiveGameState turn) {
+    public HiveUndoTurnAction(GamePlayer player) { super(player);  }
 
-        super(player);
-
-        startTurn = new HiveGameState(turn);
-    }
-
-    public HiveGameState getStartTurn() {return startTurn;}
 
 
 }

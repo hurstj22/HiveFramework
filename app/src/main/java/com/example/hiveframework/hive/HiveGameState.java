@@ -25,9 +25,6 @@ public class HiveGameState extends GameState implements Serializable {
     private static final String TAG = "HiveGameState";
     private static final long serialVersionUID = 7552321013488624386L;
 
-    //Holds gamestate from beginning of turn
-    private HiveGameState undoTurn = null;
-
     //directions used in search functions
     public enum Direction {
         UP_LEFT,
@@ -47,6 +44,7 @@ public class HiveGameState extends GameState implements Serializable {
     private int countVisited; //number of visited tiles when performing bfs
     private int currentIdSelected; //the current id of the imageButton selected
     private boolean selectFlag; //true if an imageButton is selected
+    private HiveGameState previousGameState;
 
     private static final int tileSize = 300;
     private ArrayList<Tile> potentialMoves; //the moves that a selected piece could move to
@@ -114,6 +112,7 @@ public class HiveGameState extends GameState implements Serializable {
         humanPlayers = new boolean[2];
         humanPlayers[0] = false;
         humanPlayers[1] = false;
+        previousGameState = null;
 
     }
 
@@ -162,6 +161,7 @@ public class HiveGameState extends GameState implements Serializable {
         this.tileQueue = new LinkedList<Tile>();
         this.turnCounter = other.turnCounter;
         this.humanPlayers = other.humanPlayers.clone();
+        this.previousGameState = null;
     }
 
     /**
@@ -639,7 +639,6 @@ public class HiveGameState extends GameState implements Serializable {
         if(placedPiece){
             return false;
         }
-        undoTurn = new HiveGameState(this);
         //we should make sure the person whose turn it is has placed their queen somewhere
         if(validMove(tile)) {
             //if the piece can be moved legally
@@ -1580,6 +1579,9 @@ public class HiveGameState extends GameState implements Serializable {
         //need to get position of newTile based on x and y coordinates
         //int[] newTileCords = positionOfTile(newXCoord, newYCoord);
 
+        //populate previousGameState
+        previousGameState = new HiveGameState(this);
+
         //hold old Position
         int[] oldTileCords = new int[2];
         oldTileCords[0] = moveTile.getIndexX();
@@ -1617,7 +1619,8 @@ public class HiveGameState extends GameState implements Serializable {
             return true;
         }
         potentialMoves.clear(); //reset potentialMoves
-       return false;
+        previousGameState = null;
+        return false;
     }
     /**
      * A helper function to determine the indices given points on the gameboard
@@ -2086,9 +2089,14 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public int getTurnCounter() { return turnCounter; }
 
-    public HiveGameState getUndoTurn() {
-        return undoTurn;
-    }
+    /**
+     * returns the state stored in previousGameState
+     * Used in undoTurn
+     * @return previousGameState, null if makemove was not successful
+     */
+    public HiveGameState getPreviousGameState() { return previousGameState; }
+
+
     /**
      *
      * sets the image popping up
@@ -2202,8 +2210,6 @@ public class HiveGameState extends GameState implements Serializable {
      *
      * @param current the current board to be stored to if the player wants to undo their move
      */
-    public void setUndoTurn(HiveGameState current) {
-        this.undoTurn = new HiveGameState(current); }
 
     /**
      *

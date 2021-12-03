@@ -167,6 +167,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
 //                undoTurnAction = new HiveUndoTurnAction(this, undo);
 //            }
 
+            undoTurnAction = new HiveUndoTurnAction(this); 
             //update humanplayers to reflect humanplayer count
             hiveGame.setHumanPlayers(playerNum);
 
@@ -186,7 +187,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
             }
             hiveGame.setPlacedPiece(false);
             //Update the undoTurn variable in HiveGameState
-            hiveGame.setUndoTurn(hiveGame);
 
             //update player 1's piece counters
             beeP1Counter.setText("" + hiveGame.getPiecesRemain()[0][0]);
