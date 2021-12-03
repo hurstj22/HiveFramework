@@ -220,9 +220,9 @@ public class HiveLocalGame extends LocalGame {
                 else if (move.isComputerMove()){ //the computer is trying to make a move
                     hiveState.setPotentialMoves(move.getComputerPotentialMoves()); //update the gameStates potentials to be compared against in the makeMove
                     if(hiveState.makeMove(move.getCurrentTile(), (int) move.getX(), (int) move.getY())){
+                        hiveState.getComputerPlayersTiles().remove(move.getCurrentTile()); //remove the old tile moving
                         move.getCurrentTile().setIndexX((int) move.getX()); //update the x and y indices
                         move.getCurrentTile().setIndexY((int) move.getY());
-
                         hiveState.addComputerPlayersTiles(move.getCurrentTile()); //now add it to the arrayList kept in the gameState of all computer tiles
                         move.setComputerMove(false); //reset the computer since it tried to make a move
                         return true; //computer was able to make the move

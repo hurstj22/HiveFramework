@@ -24,8 +24,8 @@ import java.util.Random;
 
 /**
  * HiveComputerPlayer1 serves as our less dumb computer player class
- * it randomly picks a move to carry out that would bring it
- * closer to the other player's queen bee and tries to do it
+ * it randomly picks a move to carry out and tries to do it
+ * can move from the hand to the board and from the board to the board
  *
  *  @author Isaac Reinhard
  *  @author Kelly Ngyuen
@@ -42,7 +42,6 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private int newX = -1;
     private int newY = -1; //store the coordinates that the player wants to move to, used in the touch event
     private Tile potentialTile = null;
-    private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
     private ArrayList<Tile> potentialMoves = null; //this comes from the gameState
 
@@ -61,8 +60,8 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
      * @return a randomly picked tile that the computer player has on the board
      */
     private Tile randomTileFromBoard() {
-        int sizeOfList = hiveGame.getComputerPlayersTiles().size() - 1;
-        if(sizeOfList > -1){
+        int sizeOfList = hiveGame.getComputerPlayersTiles().size();
+        if(!hiveGame.getComputerPlayersTiles().isEmpty()){
             int pick = randPick.nextInt(sizeOfList);
             return hiveGame.getComputerPlayersTiles().get(pick);
         }
@@ -78,8 +77,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     private Tile randomTileFromPotentials() {
         //need to create a random tile, then call isValid on the tile
         if(potentialMoves != null){
-            int sizeOfList = potentialMoves.size() - 1;
-            if(sizeOfList > -1) {
+            if(!potentialMoves.isEmpty()) {
                 int pick = randPick.nextInt(potentialMoves.size());
                 return potentialMoves.get(pick);
             }
@@ -156,7 +154,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
 
             int computersMove = 0;
             if(hiveGame.getComputerPlayersTiles().size() > 2){ //there's tiles on the board, so I got options :)
-                computersMove = whatAmIDoingToday.nextInt(6);
+                computersMove = whatAmIDoingToday.nextInt(7);
             }
             switch(computersMove) {
                 //This switch statement is the brains of the operation: chooses between placing on the board, moving from one spot to another, and skipping turn
@@ -180,7 +178,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                             potentialMoves = hiveGame.getPotentialMoves();
                             if (potentialMoves == null || potentialMoves.size() <= 0) { //if for some reason there was nothing to do with that Tile then end your turn :(
                                 Log.i(TAG, "receiveInfo: potentials was empty:");
-                                sleep(2);
+                                sleep(1.5);
                                 played = true;
 
                                 game.sendAction(endTurn); //ends the turn if there's nothing valid to do
@@ -196,7 +194,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers
                                                                                     // so that the gameState can be updated later in the HiveLocalGame
                                 moveAction.setComputerMove(true);
-                                sleep(2);
+                                sleep(1.5);
                                 played = true;
 
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
@@ -204,11 +202,11 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                         }Log.i(TAG, "this was not a valid move");
                    }
                     break;
-                case 2: //picking a tile from the tiles already placed on the board:
+                    case 2: case 6: //picking a tile from the tiles already placed on the board:
                     Log.i(TAG,"I'm trying to play from the board");
                     if(hiveGame.getComputerPlayersTiles().size() < 3){ //only move things on the board if there's several pieces there
                         Log.i(TAG,"There's not enough pieces for me to move around the board yet");
-                        sleep(2);
+                        sleep(1.5);
                         played = true;
 
                         game.sendAction(endTurn);
@@ -243,8 +241,8 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                             potentialMoves = hiveGame.getPotentialMoves(); //then calls selectMove on it to see about populating those gosh darn potentialMoves
                             potentialTile = randomTileFromPotentials(); //gets a random viable moving location
                             if (queenFound){
-                                potentialTile.setIndexX(goalX); //From James: this is trying to place the tile on top of the queen and that doesn't work
-                                potentialTile.setIndexY(goalY);
+                                //potentialTile.setIndexX(goalX); //From James: this is trying to place the tile on top of the queen and that doesn't work
+                                //potentialTile.setIndexY(goalY);
                             }
                             //create the action with the coordinates we'd like to move to from the potential tile
                             Log.i(TAG, "I'm moving to this location: ("+  potentialTile.getIndexX() + ","+ potentialTile.getIndexY() + ")");
@@ -263,32 +261,15 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     if( hiveGame.getPotentialMoves() != null)
                     {
                         if (hiveGame.getPotentialMoves().size()  < 1)
-                        sleep(2);
+                        sleep(1.5);
                     }
                     played = false;
                     game.sendAction(endTurn);
                     return;
             }
-
+            sleep(1.5);
             game.sendAction(endTurn); //ends the turn if there's nothing valid to do
             return;
         }
-    }
-
-    //setter and getters for instance variables
-    public ImageButton getSelectedImageButton() {
-        return selectedImageButton;
-    }
-
-    public void setSelectedImageButton(ImageButton selectedImageButton) {
-        this.selectedImageButton = selectedImageButton;
-    }
-
-    public float getNewX() {
-        return newX;
-    }
-
-    public float getNewY() {
-        return newY;
     }
 }

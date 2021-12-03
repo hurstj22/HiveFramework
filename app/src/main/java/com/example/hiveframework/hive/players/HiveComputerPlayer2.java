@@ -18,6 +18,7 @@ import java.util.Random;
 /**
  * HiveComputerPlayer2 serves as our dumb computer player class
  * it randomly picks a move to carry out
+ * can play from the hand to the board
  *
  * @author Isaac Reinhard
  * @author Kelly Ngyuen
@@ -33,10 +34,6 @@ public class HiveComputerPlayer2 extends GameComputerPlayer {
     private Random randPick = new Random();
     private int newX = -1;
     private int newY = -1; //store the coordinates that the player wants to move to, used in the touch event
-    private int oldX = -1;
-    private int oldY = -1;
-    private Tile currentTile = null;
-    private ImageButton selectedImageButton = null; //if null nothing selected, if not null this points to what is selected
     //array list of buttons to easily loop through and highlight the selected one
     private ArrayList<Tile> potentialMoves = null; //this comes from the gameState
 
