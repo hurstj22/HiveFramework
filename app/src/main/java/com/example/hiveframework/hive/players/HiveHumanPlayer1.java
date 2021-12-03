@@ -161,13 +161,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         else {
             //make a copy of the passed in gameState to pull data from
             hiveGame = new HiveGameState((HiveGameState) info);
-            //Code for undoing a move, DOESN'T WORK YET
-//            if(hiveGame.getUndoTurn() != null) {
-//                HiveGameState undo = new HiveGameState(hiveGame.getUndoTurn());
-//                undoTurnAction = new HiveUndoTurnAction(this, undo);
-//            }
-
+            //Initialize UndoTurnAction
             undoTurnAction = new HiveUndoTurnAction(this);
+
             //update humanplayers to reflect humanplayer count
             hiveGame.setHumanPlayers(playerNum);
 
@@ -186,7 +182,6 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                 hiveGame.setSelectFlag(false);
             }
             hiveGame.setPlacedPiece(false);
-            //Update the undoTurn variable in HiveGameState
 
             //update player 1's piece counters
             beeP1Counter.setText("" + hiveGame.getPiecesRemain()[0][0]);
@@ -376,6 +371,7 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
         else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
             //creates action based on touch event
             if (!screenDragged) { //only preform if screen hasn't been dragged
+
                 if (selectedImageButton != null) { //the player has selected one of the pieces to "place" on the board
                     HiveMoveAction moveActionFromHand = new HiveMoveAction(this, newX, newY);
                     moveActionFromHand.setSelectedImageButton(selectedImageButton);
@@ -385,6 +381,9 @@ public class HiveHumanPlayer1 extends GameHumanPlayer implements View.OnTouchLis
                     game.sendAction(moveActionFromHand);
                     return true;
                 } else if (!hasTapped && selectedImageButton == null) { //selecting from the board so pass a selectAction with the x and y coords
+                    if(!hiveGame.turnFourRule(playerNum)) { //do not allow move from board if queen rule is not satisfied
+                        return false;
+                    }
                     oldX = newX;
                     oldY = newY;
                     hasTapped = !hasTapped;

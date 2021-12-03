@@ -2089,7 +2089,7 @@ public class HiveGameState extends GameState implements Serializable {
 
     /**
      * returns the state stored in previousGameState
-     * Used in undoTurn
+     *
      * @return previousGameState, null if makemove was not successful
      */
     public HiveGameState getPreviousGameState() { return previousGameState; }
