@@ -120,9 +120,9 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
     }
 
     /**
-    https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum
-    */
-    
+     https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum
+     */
+
     /**
      * constructor does nothing extra other than initializes the player
      * and an array of types of bugs that could be placed
@@ -194,7 +194,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 moveAction = new HiveMoveAction(this, newX, newY);
                                 moveAction.setCurrentTile(tileFromHand); //update with what tile was originally moving from the hand
                                 moveAction.setComputerPotentialMoves(potentialMoves); //copy over the local potential moves to the computers
-                                                                                    // so that the gameState can be updated later in the HiveLocalGame
+                                // so that the gameState can be updated later in the HiveLocalGame
                                 moveAction.setComputerMove(true);
                                 sleep(2);
                                 played = true;
@@ -202,7 +202,7 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                                 game.sendAction(moveAction); //now finally SSSEEEENNNDDDD ittttt
                             }
                         }Log.i(TAG, "this was not a valid move");
-                   }
+                    }
                     break;
                 case 2: //picking a tile from the tiles already placed on the board:
                     Log.i(TAG,"I'm trying to play from the board");
@@ -222,14 +222,14 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                     boolean queenFound = false;
                     //From James: The gameboard is a 2D array you must iterate with nested loops
                     for (ArrayList<Tile> t : gameBoard) //iterate game board to see if queen is there
-                        //if queen is found set new goal X and Y
-                        //may not be able to move there
+                    //if queen is found set new goal X and Y
+                    //may not be able to move there
                     {
                         if(t != null) {
                             if (t.get(i).getType() == Tile.Bug.QUEEN_BEE) {
-                                 queenFound = true;
-                                 goalX = t.get(i).getIndexX();
-                                 goalY = t.get(i).getIndexY();
+                                queenFound = true;
+                                goalX = t.get(i).getIndexX();
+                                goalY = t.get(i).getIndexY();
                             }
                         }
                         i++;
@@ -257,13 +257,13 @@ public class HiveComputerPlayer1 extends GameComputerPlayer {
                             game.sendAction(moveAction);
                         }
                     }
-                        break;
+                    break;
                 case 1: //The computer player decides to skip their turn
                     Log.i(TAG,"Today I will skip my turn");
                     if( hiveGame.getPotentialMoves() != null)
                     {
                         if (hiveGame.getPotentialMoves().size()  < 1)
-                        sleep(2);
+                            sleep(2);
                     }
                     played = false;
                     game.sendAction(endTurn);
