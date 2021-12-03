@@ -2050,9 +2050,7 @@ public class HiveGameState extends GameState implements Serializable {
      * Set the current turn
      * @param turn, either 1 or 0
      */
-    public void setWhoseTurn(int turn){
-       this.whoseTurn = turn;
-    }
+    public void setWhoseTurn(int turn){ this.whoseTurn = turn;  }
 
     /**
      *
@@ -2096,7 +2094,11 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public HiveGameState getPreviousGameState() { return previousGameState; }
 
-
+    /**
+     * Sets the previous game state to be equal to given HiveGameState
+     * @param state, instance of HiveGameState
+     */
+    public void setPreviousGameState(HiveGameState state) { previousGameState = state; }
     /**
      *
      * sets the image popping up

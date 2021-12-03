@@ -138,6 +138,7 @@ public class HiveLocalGame extends LocalGame {
             hiveState.setWhoseTurn(1 - whoseMove);
             hiveState.setPlacedPiece(false);
             hiveState.upTurnCounter();
+            hiveState.setPreviousGameState(null);
             return true; //successfully changed turns
         }
 
