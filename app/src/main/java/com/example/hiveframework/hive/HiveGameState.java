@@ -1598,7 +1598,7 @@ public class HiveGameState extends GameState implements Serializable {
             moveTile.setIndexY(newYIndex);
 
             //not on top of something so make new empty tile
-            if (moveTile.getOnTopOf() == null) {
+            //if (moveTile.getOnTopOf() == null) {
                 gameBoard.get(newXIndex).set(newYIndex, moveTile);
                 if(oldTileCords[0] != -1) { //if the tile coming in is not from the player's hand perform swap,
                                             //otherwise just update the gameBoard with the new tile.
@@ -1608,13 +1608,12 @@ public class HiveGameState extends GameState implements Serializable {
                 else {
                     removePiecesRemain(moveTile.getType()); //from the player's hand to the board, thus update the player's hand counters
                 }
-            }
+            //}
 
             //on top of something so don't make new empty tile
-            else {
-
-                gameBoard.get(newXIndex).set(newYIndex, moveTile);
-            }
+            //else {
+            //    gameBoard.get(newXIndex).set(newYIndex, moveTile);
+            //}
             potentialMoves.clear(); //reset potentialMoves
             return true;
         }
@@ -2179,6 +2178,21 @@ public class HiveGameState extends GameState implements Serializable {
      */
     public void addComputerPlayersTiles(Tile tileToBeAdded){
         this.computerPlayersTiles.add(tileToBeAdded);
+    }
+
+    /**
+     * removes from the arrayList IFFFFF the tile already exists in the list
+     * @param tileToBeRemoved the tile to be removed to the list of computer tiles currently on the board
+     */
+    public void removeComputerPlayersTiles(Tile tileToBeRemoved){
+        int i = 0;
+        for(Tile tile : computerPlayersTiles) {
+            if(tile.getIndexX() == tileToBeRemoved.getIndexX() && tile.getIndexY() == tileToBeRemoved.getIndexY()) {
+                this.computerPlayersTiles.remove(i);
+                break; //once you remove the tile run away
+            }
+            i++;
+        }
     }
 
     /**
